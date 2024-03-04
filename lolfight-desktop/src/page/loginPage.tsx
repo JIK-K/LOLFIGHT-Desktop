@@ -21,6 +21,7 @@ const LoginPage = () => {
     login(memberId, memberPw)
       .then((response) => {
         if (response.data.isSuccess === "T") {
+          console.log(response);
           CustomAlert("success", "로그인", "로그인 성공.");
           sessionStorage.setItem("id", response.data.data.id);
           sessionStorage.setItem("memberId", response.data.data.memberId);

@@ -16,7 +16,7 @@ export const login = async (
   pw: string
 ): Promise<AxiosResponse<ResponseDTO<MemberDTO>>> => {
   let url = `${baseUrl}/login`;
-  console.log(process.env.REACT_APP_SERVER_URL);
+
   let queryParams = `?id=${id}&pw=${pw}`;
   url += queryParams;
 
