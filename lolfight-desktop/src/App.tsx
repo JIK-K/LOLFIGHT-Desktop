@@ -1,16 +1,18 @@
 import React from "react";
 import logo from "./logo.svg";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
+
+import loginPage from "./page/loginPage";
+import mainPage from "./page/mainPage";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </header>
+      <Routes>
+        <Route path="/" Component={loginPage} />
+        <Route path="/main" Component={mainPage} />
+      </Routes>
     </div>
   );
 }

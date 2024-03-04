@@ -1,14 +1,15 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const url = require("url");
+require("dotenv").config();
 
 function createWindow() {
-  /*
-   * 넓이 1920에 높이 1080의 FHD 풀스크린 앱을 실행시킵니다.
-   * */
   const win = new BrowserWindow({
-    width: 1920,
-    height: 1080,
+    width: 800,
+    height: 600,
+    resizable: false,
+    nodeIntegration: true,
+    contextIsolation: false,
   });
 
   /*
@@ -24,6 +25,7 @@ function createWindow() {
       slashes: true,
     });
 
+  win.setMenu(null);
   /*
    * startUrl에 배정되는 url을 맨 위에서 생성한 BrowserWindow에서 실행시킵니다.
    * */
