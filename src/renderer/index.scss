@@ -1,13 +1,13 @@
-@use './_theme' as *;
+@use "./_theme" as *;
 
 $navbar-height: 50px;
-$navbar-background: #1A1A1A;
+$navbar-background: #efefef;
 $navbar-gap: 1rem;
 
 html {
   user-select: none;
   box-sizing: border-box;
-  @include font('body');
+  @include font("body");
 }
 
 *,
@@ -25,10 +25,13 @@ body,
 
 #content {
   height: calc(100vh - $navbar-height);
-  background-color: color('background');
+  background-color: #11235a;
 }
 
 #navbar {
+  color: black;
+  font-weight: bold;
+  font-size: medium;
   height: $navbar-height;
   background-color: $navbar-background;
   display: flex;
@@ -49,18 +52,19 @@ body,
 
       &.selected {
         font-weight: bold;
-        color: color('secondary');
+        color: color("secondary");
       }
     }
   }
 
   .profile {
-    background-color: color('secondary');
+    background-color: #efefef;
+    color: black;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: $navbar-gap;
-    border-radius: 20px 0 0 20px;
     padding: 0.75rem;
   }
 }

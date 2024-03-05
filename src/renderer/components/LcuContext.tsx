@@ -1,24 +1,24 @@
-import type { EventResponse } from 'league-connect';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { request } from '../utils/ipcBridge';
+import type { EventResponse } from "league-connect";
+import React, { ReactNode, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { request } from "../utils/ipcBridge";
 
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer } = window.require("electron");
 
-const AVAILABILITIES = ['chat', 'away', 'dnd', 'mobile', 'offline'] as const;
+const AVAILABILITIES = ["chat", "away", "dnd", "mobile", "offline"] as const;
 
 type Availability = (typeof AVAILABILITIES)[number];
 
 const TOKEN_TIERS = [
-  'IRON',
-  'BRONZE',
-  'SILVER',
-  'GOLD',
-  'PLATINUM',
-  'DIAMOND',
-  'MASTER',
-  'GRANDMASTER',
-  'CHALLENGER',
+  "IRON",
+  "BRONZE",
+  "SILVER",
+  "GOLD",
+  "PLATINUM",
+  "DIAMOND",
+  "MASTER",
+  "GRANDMASTER",
+  "CHALLENGER",
 ] as const;
 
 type TokenTier = (typeof TOKEN_TIERS)[number];
@@ -31,30 +31,30 @@ type Token = {
 };
 
 const QUEUES = [
-  'RANKED_SOLO_5x5',
-  'RANKED_FLEX_SR',
-  'RANKED_FLEX_TT',
-  'RANKED_TFT',
-  'RANKED_TFT_TURBO',
-  'RANKED_TFT_PAIRS',
-  'RANKED_TFT_DOUBLE_UP',
+  "RANKED_SOLO_5x5",
+  "RANKED_FLEX_SR",
+  "RANKED_FLEX_TT",
+  "RANKED_TFT",
+  "RANKED_TFT_TURBO",
+  "RANKED_TFT_PAIRS",
+  "RANKED_TFT_DOUBLE_UP",
 ] as const;
 
 const TIERS = [
-  'UNRANKED',
-  'IRON',
-  'BRONZE',
-  'SILVER',
-  'GOLD',
-  'PLATINUM',
-  'EMERALD',
-  'DIAMOND',
-  'MASTER',
-  'GRANDMASTER',
-  'CHALLENGER',
+  "UNRANKED",
+  "IRON",
+  "BRONZE",
+  "SILVER",
+  "GOLD",
+  "PLATINUM",
+  "EMERALD",
+  "DIAMOND",
+  "MASTER",
+  "GRANDMASTER",
+  "CHALLENGER",
 ] as const;
 
-const DIVISIONS = ['NA', 'I', 'II', 'III', 'IV'] as const;
+const DIVISIONS = ["NA", "I", "II", "III", "IV"] as const;
 
 type Queue = (typeof QUEUES)[number];
 type Tier = (typeof TIERS)[number];
@@ -100,18 +100,18 @@ type State = {
 
 const DEFAULT_STATE: State = {
   me: {
-    puuid: '',
-    availability: 'offline',
+    puuid: "",
+    availability: "offline",
     icon: 29,
-    name: 'Loading...',
-    statusMessage: 'Loading...',
-    gameTag: '0000',
+    name: "Loading...",
+    statusMessage: "Loading...",
+    gameTag: "0000",
     lol: {
       level: 0,
-      rankedLeagueQueue: 'RANKED_SOLO_5x5',
-      rankedLeagueTier: 'UNRANKED',
-      rankedLeagueDivision: 'NA',
-      challengeCrystalLevel: 'UNRANKED',
+      rankedLeagueQueue: "RANKED_SOLO_5x5",
+      rankedLeagueTier: "UNRANKED",
+      rankedLeagueDivision: "NA",
+      challengeCrystalLevel: "UNRANKED",
       challengePoints: 0,
     },
   },
@@ -136,17 +136,17 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // reset state on reconnects
-    if (location.pathname === '/connect') setState(DEFAULT_STATE);
+    if (location.pathname === "/connect") setState(DEFAULT_STATE);
 
     // only fetch if connected and if not already fetched
     if (
       state !== DEFAULT_STATE ||
-      location.pathname === '/connect' ||
-      location.pathname === '/'
+      location.pathname === "/connect" ||
+      location.pathname === "/"
     )
       return;
 
-    request('GET', '/lol-chat/v1/me').then((response: any) => {
+    request("GET", "/lol-chat/v1/me").then((response: any) => {
       setState((oldState) => ({
         ...oldState,
         me: {
@@ -159,13 +159,13 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           lol: {
             level: response.lol.level,
             rankedLeagueQueue:
-              response.lol.rankedLeagueQueue ?? 'RANKED_SOLO_5x5',
+              response.lol.rankedLeagueQueue ?? "RANKED_SOLO_5x5",
             rankedLeagueTier: response.lol.rankedLeagueTier
-              ? response.lol.rankedLeagueTier === ''
-                ? 'UNRANKED'
+              ? response.lol.rankedLeagueTier === ""
+                ? "UNRANKED"
                 : response.lol.rankedLeagueTier
-              : 'UNRANKED',
-            rankedLeagueDivision: response.lol.rankedLeagueDivision ?? 'NA',
+              : "UNRANKED",
+            rankedLeagueDivision: response.lol.rankedLeagueDivision ?? "NA",
             challengeCrystalLevel: response.lol.challengeCrystalLevel,
             challengePoints: response.lol.challengePoints,
           },
@@ -173,7 +173,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
       }));
     });
 
-    request('GET', '/lol-summoner/v1/current-summoner/summoner-profile').then(
+    request("GET", "/lol-summoner/v1/current-summoner/summoner-profile").then(
       (response: any) => {
         setState((oldState) => ({
           ...oldState,
@@ -181,12 +181,12 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
             backgroundSkinId: response.backgroundSkinId,
           },
         }));
-      },
+      }
     );
 
     request(
-      'GET',
-      '/lol-inventory/v1/wallet?currencyTypes=["lol_blue_essence","RP"]',
+      "GET",
+      '/lol-inventory/v1/wallet?currencyTypes=["lol_blue_essence","RP"]'
     ).then((response: any) => {
       setState((oldState) => ({
         ...oldState,
@@ -197,7 +197,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
       }));
     });
 
-    request('GET', '/lol-challenges/v1/summary-player-data/local-player').then(
+    request("GET", "/lol-challenges/v1/summary-player-data/local-player").then(
       (response: any) => {
         setState((oldState) => ({
           ...oldState,
@@ -211,14 +211,14 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
             title: response.title.itemId ?? -1,
           },
         }));
-      },
+      }
     );
   }, [location]);
 
   useEffect(() => {
     const listener = (_event: never, message: EventResponse) => {
       switch (message.uri) {
-        case '/lol-chat/v1/me': {
+        case "/lol-chat/v1/me": {
           setState((oldState) => ({
             ...oldState,
             me: {
@@ -232,8 +232,8 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
                 level: message.data.lol.level,
                 rankedLeagueQueue: message.data.lol.rankedLeagueQueue,
                 rankedLeagueTier:
-                  message.data.lol.rankedLeagueTier === ''
-                    ? 'UNRANKED'
+                  message.data.lol.rankedLeagueTier === ""
+                    ? "UNRANKED"
                     : message.data.lol.rankedLeagueTier,
                 rankedLeagueDivision: message.data.lol.rankedLeagueDivision,
                 challengeCrystalLevel: message.data.lol.challengeCrystalLevel,
@@ -243,7 +243,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           }));
           break;
         }
-        case '/lol-summoner/v1/current-summoner/summoner-profile': {
+        case "/lol-summoner/v1/current-summoner/summoner-profile": {
           setState((oldState) => ({
             ...oldState,
             profile: {
@@ -252,7 +252,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           }));
           break;
         }
-        case '/lol-inventory/v1/wallet': {
+        case "/lol-inventory/v1/wallet": {
           setState((oldState) => ({
             ...oldState,
             wallet: {
@@ -272,7 +272,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
                   name: token.name,
                   tier: token.currentLevel,
                   legacy: token.retireTimestamp !== 0,
-                }),
+                })
               ),
               title: message.data.title.itemId ?? -1,
             },
@@ -282,10 +282,10 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
       }
     };
 
-    ipcRenderer.on('lcu-event', listener);
+    ipcRenderer.on("lcu-event", listener);
 
     return () => {
-      ipcRenderer.off('lcu-event', listener);
+      ipcRenderer.off("lcu-event", listener);
     };
   });
 

@@ -22,3 +22,18 @@ export const login = async (
 
   return await axios.get(url);
 };
+
+/**
+ * member 찾기
+ * @param id
+ * @returns
+ */
+export const findMember = async (
+  id: string
+): Promise<AxiosResponse<ResponseDTO<MemberDTO>>> => {
+  let url = `${baseUrl}/find`;
+
+  let queryParams = `?id=${id}`;
+  url += queryParams;
+  return await axios.get(url);
+};

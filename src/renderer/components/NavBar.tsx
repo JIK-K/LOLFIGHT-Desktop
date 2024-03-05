@@ -1,7 +1,7 @@
-import React from 'react';
-import { useLocation, NavLink } from 'react-router-dom';
-import { useLcuData } from './LcuContext';
-import { Badge, SummonerIcon } from '../components';
+import React from "react";
+import { useLocation, NavLink } from "react-router-dom";
+import { useLcuData } from "./LcuContext";
+import { Badge, SummonerIcon } from "../components";
 
 interface NavItemProps {
   title: string;
@@ -13,7 +13,7 @@ const NavItem: React.FC<NavItemProps> = ({ title, href }) => {
     <NavLink
       to={href}
       className={({ isActive }) =>
-        isActive ? 'nav-item selected' : 'nav-item'
+        isActive ? "nav-item selected" : "nav-item"
       }
     >
       <span>{title}</span>
@@ -26,36 +26,27 @@ const NavBar: React.FC = () => {
   const lcuData = useLcuData();
 
   // Hide navbar on connect page
-  if (location.pathname === '/connect') return <></>;
+  if (location.pathname === "/" || location.pathname === "/connect")
+    return <></>;
 
   return (
-    <div id='navbar'>
-      <div className='nav'>
-        <NavItem title='Home' href='/home' />
-        <NavItem title='Icon' href='/icons' />
-        <NavItem title='Background' href='/backgrounds' />
-        <NavItem title='Status' href='/status' />
-        <NavItem title='Challenges' href='/challenges' />
-        <NavItem title='Chat Rank' href='/rank' />
-        <NavItem title='Settings' href='/settings' />
+    <div id="navbar">
+      <div className="nav">
+        <NavItem title="홈" href="/home" />
+        {/* <NavItem title="Icon" href="/icons" />
+        <NavItem title="Background" href="/backgrounds" /> */}
+        <NavItem title="상태" href="/status" />
+        {/* <NavItem title="Challenges" href="/challenges" /> */}
+        {/* <NavItem title='Chat Rank' href='/rank' /> */}
+        <NavItem title="설정" href="/settings" />
       </div>
-      <div className='profile'>
+      <div className="profile">
         <SummonerIcon
           size={35}
           iconId={lcuData.me.icon}
           availability={lcuData.me.availability}
         />
         <span>{lcuData.me.name}</span>
-        <Badge
-          text={lcuData.wallet.blueEssence.toString()}
-          icon={<img src='assets/be.png' alt='Blue Essence' />}
-          backgroundColor='#5098DA'
-        />
-        <Badge
-          text={lcuData.wallet.riotPoints.toString()}
-          icon={<img src='assets/rp.png' alt='Riot Points' />}
-          backgroundColor='#EA5D5F'
-        />
       </div>
     </div>
   );

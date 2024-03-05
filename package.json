@@ -92,6 +92,7 @@
     "dotenv": "^16.4.5",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
+    "file-loader": "^6.2.0",
     "league-connect": "6.0.0-rc12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './Badge.module.scss';
+import React from "react";
+import styles from "./Badge.module.scss";
 
 export interface BadgeProps {
   text?: string;
@@ -10,7 +10,7 @@ export interface BadgeProps {
 
 const adjustColor = (color: string, anmount: number) => {
   return color.replace(/\w\w/g, (m) =>
-    Math.min(255, Math.max(0, parseInt(m, 16) + anmount)).toString(16),
+    Math.min(255, Math.max(0, parseInt(m, 16) + anmount)).toString(16)
   );
 };
 
@@ -22,12 +22,12 @@ const Badge = React.forwardRef<
     {
       text,
       icon,
-      backgroundColor = '#d86ada',
-      color = '#fffbf4',
+      backgroundColor = "#97cceb",
+      color = "#fffbf4",
       style,
       ...props
     },
-    ref,
+    ref
   ) => {
     const customStyle: React.CSSProperties = {
       backgroundColor: backgroundColor,
@@ -46,7 +46,7 @@ const Badge = React.forwardRef<
         {text && <span className={styles.text}>{text}</span>}
       </div>
     );
-  },
+  }
 );
 
 export default Badge;
