@@ -1,0 +1,106 @@
+{
+  "name": "lolfight-desktop",
+  "description": "A simple application with many useful functions which work with the LCU api of Riot Games ",
+  "version": "2.1.0",
+  "author": "Nils Osswald",
+  "license": "MIT",
+  "private": true,
+  "main": ".webpack/main",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "lint": "biome lint ./src"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "lolfight-desktop"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "plugins": [
+        {
+          "name": "@electron-forge/plugin-webpack",
+          "config": {
+            "mainConfig": "./webpack.main.config.js",
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./src/renderer/index.html",
+                  "js": "./src/renderer/index.ts",
+                  "name": "main"
+                }
+              ]
+            },
+            "port": 5000
+          }
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.5.3",
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-deb": "^7.2.0",
+    "@electron-forge/maker-rpm": "^7.2.0",
+    "@electron-forge/maker-squirrel": "^7.2.0",
+    "@electron-forge/maker-zip": "^7.2.0",
+    "@electron-forge/plugin-webpack": "^7.2.0",
+    "@types/node": "^20.11.16",
+    "@types/react": "^18.2.52",
+    "@types/react-dom": "^18.2.18",
+    "@types/uuid": "^9.0.8",
+    "@types/ws": "^8.5.10",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^6.10.0",
+    "electron": "28.2.1",
+    "electron-devtools-installer": "^3.2.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "node-loader": "^2.0.0",
+    "sass": "^1.70.0",
+    "sass-loader": "^14.1.0",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "~5.3.3"
+  },
+  "dependencies": {
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-switch": "^1.0.3",
+    "dotenv": "^16.4.5",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.1.0",
+    "league-connect": "6.0.0-rc12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.0.1",
+    "react-router-dom": "^6.22.0",
+    "sweetalert2": "^11.10.5",
+    "uuid": "^9.0.1",
+    "webpack": "^5.90.1",
+    "ws": "^8.16.0"
+  }
+}

@@ -1,0 +1,73 @@
+/* Login.scss */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #11235a;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo-container img {
+  /* 이미지에 대한 스타일링 */
+}
+
+.logo-text {
+  font-weight: bold;
+  color: #fff;
+  font-size: 3xl;
+}
+
+.form-wrapper {
+  width: 350px;
+}
+
+.input-field {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.input-field input {
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  padding: 0 10px;
+  background-color: #f2f2f2;
+}
+
+.login-btn {
+  width: 100%;
+  display: flex;
+  font-weight: bold;
+  background-color: white;
+  color: #11235a;
+  font-size: 16px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.link-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.link-container .link-item {
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0 5px;
+}

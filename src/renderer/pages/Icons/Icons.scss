@@ -1,0 +1,82 @@
+@use '../../_theme' as *;
+
+$gap: 20px;
+$border-radius: 20px;
+
+.icons-page {
+  height: 100%;
+  display: flex;
+  gap: $gap;
+  padding: $gap;
+
+  .filter {
+    background-color: color('surface');
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $gap;
+    padding: $gap;
+    border-radius: $border-radius;
+
+    .settings {
+      background-color: color('background');
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: calc($gap / 2);
+      border-radius: $border-radius;
+      padding: $gap;
+
+      .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      > * {
+        width: 100%;
+      }
+    }
+
+    .info {
+      @include font('subtitle');
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .tip {
+      @include font('subtitle');
+      text-align: center;
+      font-size: 12px;
+      max-width: 35ch;
+      margin-top: auto;
+    }
+  }
+
+  .icons {
+    background-color: color('surface');
+    width: 100%;
+    display: flex;
+    align-content: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: $gap;
+    border-radius: $border-radius;
+    padding: $gap;
+    overflow-y: scroll;
+
+    > * {
+      cursor: pointer;
+    }
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: color('primary');
+      height: 50px;
+    }
+  }
+}

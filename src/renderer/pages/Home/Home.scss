@@ -1,0 +1,40 @@
+@use '../../_theme' as *;
+
+$gap: 20px;
+$border-radius: 20px;
+
+.home-page {
+  padding: $gap;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .profile {
+    width: fit-content;
+    background-color: color('surface');
+    border-radius: $border-radius;
+    display: flex;
+    gap: $gap;
+    padding: $gap;
+
+    .info {
+      @include font('headline');
+      font-size: 22px;
+      font-weight: 400;
+      display: flex;
+      flex-direction: column;
+      gap: calc($gap / 2);
+
+      .id {
+        color: lightgray;
+        font-weight: 200;
+      }
+
+      .badges {
+        display: flex;
+        gap: calc($gap / 2);
+      }
+    }
+  }
+}
