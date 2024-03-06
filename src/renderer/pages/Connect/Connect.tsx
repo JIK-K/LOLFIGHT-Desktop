@@ -5,9 +5,12 @@ import { Button } from "../../components";
 import { toast } from "react-hot-toast";
 
 import "./Connect.scss";
+import useMemberStore from "../../../common/zustand/member.zustand";
+import { findMember } from "../../../api/member.api";
 
 const Connect: React.FC = () => {
   const navigate = useNavigate();
+  const { member, setMember } = useMemberStore();
   const [status, setStatus] = useState<string>("Connect");
 
   const handleConnect = () => {
@@ -15,6 +18,9 @@ const Connect: React.FC = () => {
       () => {
         navigate("/home");
         toast.success("Connected");
+        findMember(sessionStorage.getItem("memberId")).then((response) => {
+          setMember(response.data.data);
+        });
       },
       () => {
         toast.error("Connection failed!");
@@ -34,6 +40,10 @@ const Connect: React.FC = () => {
             </p>
             <p className="subtitle">
               리그 오브 레전드 클라이언트에 연결하여 시작하세요.
+            </p>
+            <p className="subtitle">
+              연결뢴 리그 오브 레전드 계정은 LOL.FIGHT 계정에 자동으로
+              저장됩니다.
             </p>
           </div>
           <div className="button-wrapper">

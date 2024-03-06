@@ -21,6 +21,21 @@ const NavItem: React.FC<NavItemProps> = ({ title, href }) => {
   );
 };
 
+const RANK_CREST_URL =
+  "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/";
+const COLORS = new Map<string, string>([
+  ["UNRANKED", "#404241"],
+  ["IRON", "#6b6b64"],
+  ["BRONZE", "#a46628"],
+  ["SILVER", "#b5b5b5"],
+  ["GOLD", "#d6a738"],
+  ["PLATINUM", "#80aba4"],
+  ["DIAMOND", "#71b0d1"],
+  ["MASTER", "#7840a3"],
+  ["GRANDMASTER", "#9e3342"],
+  ["CHALLENGER", "#288fc7"],
+]);
+
 const NavBar: React.FC = () => {
   const location = useLocation();
   const lcuData = useLcuData();
@@ -28,6 +43,15 @@ const NavBar: React.FC = () => {
   // Hide navbar on connect page
   if (location.pathname === "/" || location.pathname === "/connect")
     return <></>;
+
+  const getRankText = () => {
+    const rank = lcuData.me.lol.rankedLeagueTier;
+    const division = lcuData.me.lol.rankedLeagueDivision;
+
+    return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${
+      division === "NA" ? "" : division
+    }`;
+  };
 
   return (
     <div id="navbar">
@@ -46,7 +70,17 @@ const NavBar: React.FC = () => {
           iconId={lcuData.me.icon}
           availability={lcuData.me.availability}
         />
-        <span>{lcuData.me.name}</span>
+        {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span>
+        <Badge
+          text={getRankText()}
+          icon={
+            <img
+              src={`${RANK_CREST_URL}${lcuData.me.lol.rankedLeagueTier.toLowerCase()}.svg`}
+              alt="Rank"
+            />
+          }
+          backgroundColor={COLORS.get(lcuData.me.lol.rankedLeagueTier)}
+        />
       </div>
     </div>
   );
