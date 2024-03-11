@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../api/member.api";
 import CustomAlert from "../../../common/components/alert/CustomAlert";
-// const logo = "../../../image/icon.png";
-
 import "./Login.scss";
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -27,7 +25,6 @@ const LoginPage = () => {
           sessionStorage.setItem("memberId", response.data.data.memberId);
           sessionStorage.setItem("memberName", response.data.data.memberName);
           navigate("/connect");
-          // navigate("/home");
         } else {
           CustomAlert("warning", "로그인", "아이디 비밀번호를 확인해주세요.");
         }
@@ -40,7 +37,6 @@ const LoginPage = () => {
   return (
     <div className="login-container">
       <div className="logo-container">
-        {/* <img src={logo} alt="logo" /> */}
         <p className="logo-text">LOL.FIGHT</p>
       </div>
       <div className="form-wrapper">

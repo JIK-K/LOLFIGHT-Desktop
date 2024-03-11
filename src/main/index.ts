@@ -1,4 +1,12 @@
-import { app, BrowserWindow, session, ipcMain, Menu, dialog } from "electron";
+import {
+  app,
+  BrowserWindow,
+  session,
+  ipcMain,
+  Menu,
+  dialog,
+  protocol,
+} from "electron";
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
@@ -25,9 +33,10 @@ const createWindow = (): BrowserWindow => {
   // const bounds = getBounds();
   const mainWindow = new BrowserWindow({
     show: false,
-    width: 800,
-    height: 600,
+    width: 1024,
+    height: 768,
     // resizable: false,
+    icon: "assets/icon-blue.png",
     webPreferences: {
       devTools: isDevelopment,
       nodeIntegration: true,
