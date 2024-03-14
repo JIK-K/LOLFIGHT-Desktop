@@ -11,10 +11,10 @@ import {
   Status,
   Rank,
   Settings,
+  Room,
 } from "./pages";
 import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/Login/Login";
-
 const App: React.FC = () => {
   return (
     <HashRouter>
@@ -32,6 +32,7 @@ const App: React.FC = () => {
             {/* <Route path="/challenges" element={<Challenges />} /> */}
             {/* <Route path="/rank" element={<Rank />} /> */}
             <Route path="/settings" element={<Settings />} />
+            <Route path="/room" element={<Room/>} />
           </Routes>
           <Toaster
             position="top-right"

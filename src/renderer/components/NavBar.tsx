@@ -48,9 +48,13 @@ const NavBar: React.FC = () => {
     const rank = lcuData.me.lol.rankedLeagueTier;
     const division = lcuData.me.lol.rankedLeagueDivision;
 
-    return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${
-      division === "NA" ? "" : division
-    }`;
+    if (rank === undefined) {
+      return `UNRANKED`;
+    } else {
+      return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${
+        division === "NA" ? "" : division
+      }`;
+    }
   };
 
   return (
@@ -71,16 +75,24 @@ const NavBar: React.FC = () => {
           availability={lcuData.me.availability}
         />
         {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span>
-        <Badge
-          text={getRankText()}
-          icon={
-            <img
-              src={`${RANK_CREST_URL}${lcuData.me.lol.rankedLeagueTier.toLowerCase()}.svg`}
-              alt="Rank"
-            />
-          }
-          backgroundColor={COLORS.get(lcuData.me.lol.rankedLeagueTier)}
-        />
+        {lcuData.me.lol.rankedLeagueTier === undefined ? (
+          <Badge
+            text={"UNRANKED"}
+            icon={<img src={`${RANK_CREST_URL}unranked.svg`} alt="Rank" />}
+            backgroundColor={COLORS.get("UNRANKED")}
+          />
+        ) : (
+          <Badge
+            text={getRankText()}
+            icon={
+              <img
+                src={`${RANK_CREST_URL}${lcuData.me.lol.rankedLeagueTier.toLowerCase()}.svg`}
+                alt="Rank"
+              />
+            }
+            backgroundColor={COLORS.get(lcuData.me.lol.rankedLeagueTier)}
+          />
+        )}
       </div>
     </div>
   );

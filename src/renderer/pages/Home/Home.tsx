@@ -8,6 +8,8 @@ import { MemberGameDTO } from "../../../common/DTOs/member/member_game.dto";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import { toast } from "react-hot-toast";
 import { request } from "../../../renderer/utils/ipcBridge";
+import GuildRoomList from "./components/GuildRoomList";
+import { useNavigate } from "react-router-dom";
 
 const RANK_CREST_URL =
   "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/";
@@ -25,6 +27,7 @@ const COLORS = new Map<string, string>([
 ]);
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const lcuData = useLcuData();
   const { member, setMember } = useMemberStore();
   const getRankText = () => {
@@ -64,29 +67,31 @@ const Home: React.FC = () => {
   };
 
   const createRoom = () => {
-    const requestBody = {
-      customGameLobby: {
-        configuration: {
-          gameMode: "CLASSIC",
-          // gameServerRegion: "",
-          mapId: 11,
-          // maxPlayerCount: 0,
-          mutators: { id: 6 },
-          spectatorPolicy: "AllAllowed",
-          teamSize: 5,
-        },
-        lobbyName: "king",
-        lobbyPassword: "123123",
-      },
-      isCustom: true,
-    };
-    request("POST", "/lol-lobby/v2/lobby", requestBody)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    navigate("/room");
+
+    // const requestBody = {
+    //   customGameLobby: {
+    //     configuration: {
+    //       gameMode: "CLASSIC",
+    //       // gameServerRegion: "",
+    //       mapId: 11,
+    //       // maxPlayerCount: 0,
+    //       mutators: { id: 6 },
+    //       spectatorPolicy: "AllAllowed",
+    //       teamSize: 5,
+    //     },
+    //     lobbyName: "king",
+    //     lobbyPassword: "123123",
+    //   },
+    //   isCustom: true,
+    // };
+    // request("POST", "/lol-lobby/v2/lobby", requestBody)
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   const testGetGameData = () => {
@@ -135,6 +140,10 @@ const Home: React.FC = () => {
       </div>
       <button onClick={createRoom}>방만들기</button>
       <button onClick={testGetGameData}>정보보기</button>
+      <div className="guild-game">
+        <div className="guild-rooms"><GuildRoomList/></div>
+        <div className="guild-online">tet</div>
+      </div>
     </div>
   );
 };
