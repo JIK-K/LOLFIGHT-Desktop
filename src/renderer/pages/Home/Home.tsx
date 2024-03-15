@@ -53,6 +53,9 @@ const Home: React.FC = () => {
         " " +
         lcuData.me.lol.rankedLeagueDivision,
     };
+    if (lcuData.me.lol.rankedLeagueTier === undefined) {
+      memberGame.gameTier = "UNRANKED";
+    }
     update(
       member.id,
       member.memberId,
@@ -141,7 +144,9 @@ const Home: React.FC = () => {
       <button onClick={createRoom}>방만들기</button>
       <button onClick={testGetGameData}>정보보기</button>
       <div className="guild-game">
-        <div className="guild-rooms"><GuildRoomList/></div>
+        <div className="guild-rooms">
+          <GuildRoomList />
+        </div>
         <div className="guild-online">tet</div>
       </div>
     </div>

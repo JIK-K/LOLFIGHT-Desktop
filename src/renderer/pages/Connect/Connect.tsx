@@ -42,8 +42,8 @@ const Connect: React.FC = () => {
               리그 오브 레전드 클라이언트에 연결하여 시작하세요.
             </p>
             <p className="subtitle">
-              연결뢴 리그 오브 레전드 계정은 LOL.FIGHT 계정에 자동으로
-              저장됩니다.
+              연결된 리그 오브 레전드 계정은 동기화 버튼을 누른후 LOL.FIGHT
+              계정에 자동으로 저장됩니다.
             </p>
           </div>
           <div className="button-wrapper">
