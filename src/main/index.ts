@@ -38,10 +38,11 @@ const createWindow = (): BrowserWindow => {
     // resizable: false,
     icon: "assets/icon-blue.png",
     webPreferences: {
-      devTools: isDevelopment,
+      // devTools: isDevelopment,
       nodeIntegration: true,
       contextIsolation: false,
     },
+    // frame: false,
   });
   mainWindow.setMenu(null);
 
@@ -78,6 +79,18 @@ app.on("ready", () => {
       .catch(() => event.reply(`lcu-response-${id}`, {}));
   });
 
+  ipcMain.on("minimize-window", () => {
+    browserWindow.minimize();
+  });
+
+  ipcMain.on("close-window", () => {
+    app.quit();
+  });
+
+  ipcMain.on("move-window", (event, { x, y }) => {
+    console.log(x, y);
+    browserWindow.setPosition(x, y);
+  });
   // ipcMain.on("store-get-favorites", (event) => {
   //   event.reply("store-favorites", getFavorites());
   // });

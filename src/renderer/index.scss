@@ -1,8 +1,8 @@
 @use "./_theme" as *;
 
-$navbar-height: 50px;
-$navbar-background: #efefef;
-$navbar-gap: 1rem;
+$navbar-height: 100px;
+$navbar-background: #282a2e;
+$navbar-gap: 2rem;
 
 html {
   user-select: none;
@@ -25,16 +25,17 @@ body,
 
 #content {
   height: calc(100vh - $navbar-height);
-  background-color: #11235a;
+  background-color: #212326;
 }
 
 #navbar {
-  color: black;
+  color: #616366;
   font-weight: bold;
   font-size: medium;
   height: $navbar-height;
   background-color: $navbar-background;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 
   .nav {
@@ -52,24 +53,41 @@ body,
 
       &.selected {
         font-weight: bold;
-        color: color("secondary");
+        color: white;
       }
     }
   }
 
-  .id {
-    color: gray;
-    font-weight: 200;
-  }
-
-  .profile {
-    background-color: #efefef;
-    color: black;
-    font-weight: bold;
+  .title-bar {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: $navbar-gap;
-    padding: 0.75rem;
+    flex-direction: row;
+    padding-left: 20px;
+    .id {
+      color: gray;
+      font-weight: 200;
+    }
+
+    .profile {
+      color: white;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: $navbar-gap;
+      padding: 0.75rem;
+      margin-left: auto;
+    }
+
+    .custom-button {
+      padding-top: 5px;
+      .button-option {
+        justify-content: center;
+        background: none;
+        border: none;
+        :hover {
+          cursor: pointer;
+        }
+      }
+    }
   }
 }

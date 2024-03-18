@@ -36,35 +36,42 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      <div className="logo-container">
-        <p className="logo-text">LOL.FIGHT</p>
-      </div>
-      <div className="form-wrapper">
-        <div className="input-field">
-          <input type="text" placeholder="이메일" onChange={handleIdChange} />
+      <div className="left-container">
+        <div className="logo-container">
+          {/* <p className="logo-text">LOL.FIGHT</p> */}
+          <p className="logo-text">
+            무자비하게 <br />
+            우리와 함께하세요
+          </p>
         </div>
-        <div className="input-field">
-          <input
-            type="password"
-            placeholder="비밀번호"
-            onChange={handlePwChange}
-          />
+        <div className="form-wrapper">
+          <div className="input-field">
+            <input type="text" placeholder="이메일" onChange={handleIdChange} />
+          </div>
+          <div className="input-field">
+            <input
+              type="password"
+              placeholder="비밀번호"
+              onChange={handlePwChange}
+            />
+          </div>
+          <button className="login-btn" onClick={handleLoginClick}>
+            로그인
+          </button>
+          <div className="link-container">
+            <span className="link-item">
+              <a href="http://localhost:4000/register" target="_blank">
+                회원가입
+              </a>
+            </span>
+            <span className="link-item">
+              <a href="http://localhost:4000/register/find" target="_blank">
+                비밀번호 찾기
+              </a>
+            </span>
+          </div>
         </div>
-        <button className="login-btn" onClick={handleLoginClick}>
-          로그인
-        </button>
-        <div className="link-container">
-          <span className="link-item">
-            <a href="http://localhost:4000/register" target="_blank">
-              회원가입
-            </a>
-          </span>
-          <span className="link-item">
-            <a href="http://localhost:4000/register/find" target="_blank">
-              비밀번호 찾기
-            </a>
-          </span>
-        </div>
+        <div className="personal-agreement">개인 약관 설명</div>
       </div>
     </div>
   );
