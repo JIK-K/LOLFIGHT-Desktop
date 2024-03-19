@@ -66,3 +66,4 @@ This project is licensed under the MIT License - see the [LICENSE file](/LICENSE
 ## 🔗 Related Projects
 
 [Awesome League](https://github.com/CommunityDragon/awesome-league), a list of things that work with the League of Legends API.
+https://nyagm.tistory.com/243

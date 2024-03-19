@@ -14,7 +14,7 @@ import {
   Room,
 } from "./pages";
 import { Toaster } from "react-hot-toast";
-import LoginPage from "./pages/Login/Login";
+import LoginPage from "./pages/login/Login";
 const App: React.FC = () => {
   return (
     <HashRouter>
