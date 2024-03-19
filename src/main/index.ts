@@ -26,23 +26,26 @@ import "dotenv/config";
 declare const MAIN_WEBPACK_ENTRY: string;
 
 const isDevelopment = process.env.NODE_ENV !== "production";
+let mouseDiffX = 0;
+let mouseDiffY = 0;
+let mainWindow: BrowserWindow;
 
 if (require("electron-squirrel-startup")) app.quit();
 
 const createWindow = (): BrowserWindow => {
   // const bounds = getBounds();
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
+    width: 1366,
     height: 768,
     // resizable: false,
     icon: "assets/icon-blue.png",
     webPreferences: {
-      // devTools: isDevelopment,
+      devTools: isDevelopment,
       nodeIntegration: true,
       contextIsolation: false,
     },
-    // frame: false,
+    frame: false,
   });
   mainWindow.setMenu(null);
 
@@ -87,10 +90,19 @@ app.on("ready", () => {
     app.quit();
   });
 
-  ipcMain.on("move-window", (event, { x, y }) => {
-    console.log(x, y);
-    browserWindow.setPosition(x, y);
+  ipcMain.on("windowMouseMoving", (_event, { mouseX, mouseY }) => {
+    const bounds = browserWindow.getBounds();
+    const newX = mouseX - mouseDiffX;
+    const newY = mouseY - mouseDiffY;
+    browserWindow.setPosition(newX, newY);
   });
+
+  ipcMain.on("windowMouseDown", (_event, { startMouseX, startMouseY }) => {
+    const bounds = browserWindow.getBounds();
+    mouseDiffX = startMouseX - bounds.x;
+    mouseDiffY = startMouseY - bounds.y;
+  });
+
   // ipcMain.on("store-get-favorites", (event) => {
   //   event.reply("store-favorites", getFavorites());
   // });

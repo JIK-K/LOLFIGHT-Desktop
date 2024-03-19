@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../api/member.api";
 import CustomAlert from "../../../common/components/alert/CustomAlert";
+import { toast } from "react-hot-toast";
 import "./Login.scss";
+const { ipcRenderer } = window.require("electron");
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const [memberId, setMemberId] = useState("");
@@ -20,18 +23,25 @@ const LoginPage = () => {
     login(memberId, memberPw)
       .then((response: any) => {
         if (response.data.isSuccess === "T") {
-          CustomAlert("success", "로그인", "로그인 성공.");
+          // CustomAlert("success", "로그인", "로그인 성공.");
+          toast.success("로그인 성공");
           sessionStorage.setItem("id", response.data.data.id);
           sessionStorage.setItem("memberId", response.data.data.memberId);
           sessionStorage.setItem("memberName", response.data.data.memberName);
           navigate("/connect");
         } else {
-          CustomAlert("warning", "로그인", "아이디 비밀번호를 확인해주세요.");
+          toast.success("로그인 실패");
+          // CustomAlert("warning", "로그인", "아이디 비밀번호를 확인해주세요.");
         }
       })
       .catch((error: any) => {
-        CustomAlert("warning", "로그인", "아이디 비밀번호를 확인해주세요.");
+        // CustomAlert("warning", "로그인", "아이디 비밀번호를 확인해주세요.");
+        toast.success("error");
       });
+  };
+
+  const closeWindow = () => {
+    ipcRenderer.send("close-window");
   };
 
   return (
@@ -73,6 +83,13 @@ const LoginPage = () => {
         </div>
         <div className="personal-agreement">개인 약관 설명</div>
       </div>
+      <button type="button" className="button-close" onClick={closeWindow}>
+        <img
+          src="http://localhost:3000/public/close.png"
+          alt="close"
+          height={20}
+        />
+      </button>
     </div>
   );
 };

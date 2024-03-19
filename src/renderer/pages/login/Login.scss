@@ -1,5 +1,6 @@
 /* Login.scss */
 .login-container {
+  -webkit-app-region: drag;
   display: flex;
   // flex-direction: column;
   flex-direction: row;
@@ -15,7 +16,11 @@
 }
 
 .left-container {
+  -webkit-app-region: no-drag;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: #ffffff;
   width: 450px;
   height: 100%;
@@ -96,4 +101,16 @@
   width: max-content;
   padding: 10px;
   text-align: center;
+}
+.button-close {
+  -webkit-app-region: no-drag;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 15px;
+  background: none;
+  border: none;
+  :hover {
+    cursor: pointer;
+  }
 }

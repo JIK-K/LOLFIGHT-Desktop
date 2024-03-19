@@ -1,51 +1,43 @@
-@use '../../theme' as *;
-
 .connect-page {
+  -webkit-app-region: drag;
   position: relative;
   height: 100vh; // overrides navbar height
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  background-color: #212326;
 
   .content {
+    position: relative;
     width: 80%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 3;
+    flex-direction: column;
+    gap: 20px;
+  }
 
-    .wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+  .loader {
+    position: absolute;
+    top: calc(90% + 50px);
+    left: calc(50% - 20px);
+    width: 40px;
+    height: 40px;
+    border: 4px solid white;
+    border-radius: 50%;
+    border-top: 4px solid #212326;
+    animation: spin 2s linear infinite;
+    z-index: 1;
+  }
 
-      .title {
-        @include font('headline');
-        margin: 0;
-
-        .name {
-          color: color('primary');
-          font-weight: 700;
-        }
-      }
-
-      .subtitle {
-        @include font('subtitle');
-      }
-
-      .button-wrapper {
-        display: flex;
-        flex-direction: row;
-        gap: 40px;
-      }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
     }
-
-    .preview {
-      height: 375px;
-      width: 250px;
-      background-color: color('surface');
-      border: 2px solid color('primary');
+    100% {
+      transform: rotate(360deg);
     }
   }
 
@@ -53,20 +45,23 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    @include font('subtitle');
     font-size: 13px;
     margin: 5px;
+    color: gray;
   }
 
-  .wave {
+  .button-option {
+    -webkit-app-region: no-drag;
     position: absolute;
-    bottom: 0;
-    z-index: 2;
-
-    &.second {
-      bottom: 7%;
-      transform: scaleX(1.2);
-      z-index: 1;
+    right: 0;
+    top: 0;
+    padding: 15px;
+    background: none;
+    border: none;
+    filter: invert(39%) sepia(6%) saturate(236%) hue-rotate(177deg)
+      brightness(94%) contrast(92%);
+    :hover {
+      cursor: pointer;
     }
   }
 }

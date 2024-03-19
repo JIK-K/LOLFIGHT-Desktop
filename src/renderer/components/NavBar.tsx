@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { useLcuData } from "./LcuContext";
 import { Badge, SummonerIcon } from "../components";
@@ -39,13 +39,38 @@ const COLORS = new Map<string, string>([
 const NavBar: React.FC = () => {
   const location = useLocation();
   const lcuData = useLcuData();
-
+  const [isDrag, setIsDrag] = useState(false);
   const minimizeWindow = () => {
     ipcRenderer.send("minimize-window");
   };
 
   const closeWindow = () => {
     ipcRenderer.send("close-window");
+  };
+
+  const onMouseMove = (event: { screenX: any; screenY: any }) => {
+    if (isDrag) {
+      ipcRenderer.send("windowMouseMoving", {
+        mouseX: event.screenX,
+        mouseY: event.screenY,
+      });
+    }
+  };
+
+  const onMouseUp = () => {
+    setIsDrag(false);
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  };
+
+  const onMouseDown = (event: { screenX: any; screenY: any }) => {
+    setIsDrag(true);
+    ipcRenderer.send("windowMouseDown", {
+      startMouseX: event.screenX,
+      startMouseY: event.screenY,
+    });
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
   };
 
   // Hide navbar on connect page
@@ -67,7 +92,12 @@ const NavBar: React.FC = () => {
 
   return (
     <div id="navbar">
-      <div className="title-bar">
+      <div
+        className="title-bar"
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}
+      >
         <div>
           <p style={{ color: "white" }}>LOLFIGHT</p>
         </div>
@@ -113,7 +143,7 @@ const NavBar: React.FC = () => {
             <img
               src="http://localhost:3000/public/close.png"
               alt="close"
-              width={15}
+              height={15}
             />
           </button>
         </div>

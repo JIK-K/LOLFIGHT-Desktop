@@ -80,10 +80,13 @@ body,
 
     .custom-button {
       padding-top: 5px;
+      padding-right: 5px;
       .button-option {
         justify-content: center;
         background: none;
         border: none;
+        filter: invert(39%) sepia(6%) saturate(236%) hue-rotate(177deg)
+          brightness(94%) contrast(92%);
         :hover {
           cursor: pointer;
         }
