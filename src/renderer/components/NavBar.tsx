@@ -107,7 +107,7 @@ const NavBar: React.FC = () => {
             iconId={lcuData.me.icon}
             availability={lcuData.me.availability}
           />
-          {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span>
+          {/* {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span> */}
           {lcuData.me.lol.rankedLeagueTier === undefined ? (
             <Badge
               text={"UNRANKED"}

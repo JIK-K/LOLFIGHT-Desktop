@@ -60,6 +60,10 @@ type Queue = (typeof QUEUES)[number];
 type Tier = (typeof TIERS)[number];
 type Division = (typeof DIVISIONS)[number];
 
+type RankInfo = {
+  leaguePoint: number;
+};
+
 type MeState = {
   puuid: string;
   icon: number;
@@ -96,6 +100,7 @@ type State = {
   wallet: WalletState;
   profile: ProfileState;
   challenges: ChallengesState;
+  leaguePoint: RankInfo;
 };
 
 const DEFAULT_STATE: State = {
@@ -125,6 +130,9 @@ const DEFAULT_STATE: State = {
   challenges: {
     tokens: [],
     title: -1,
+  },
+  leaguePoint: {
+    leaguePoint: 0,
   },
 };
 
@@ -196,6 +204,17 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
         },
       }));
     });
+
+    request("GET", "/lol-ranked/v1/current-ranked-stats").then(
+      (response: any) => {
+        setState((oldState) => ({
+          ...oldState,
+          leaguePoint: {
+            leaguePoint: response.highestRankedEntry.leaguePoints,
+          },
+        }));
+      }
+    );
 
     request("GET", "/lol-challenges/v1/summary-player-data/local-player").then(
       (response: any) => {

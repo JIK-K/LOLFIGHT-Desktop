@@ -1,15 +1,14 @@
-import { Badge, NavBar, SummonerIcon } from "../../components";
 import React, { useEffect, useState } from "react";
 import { useLcuData } from "../../components/LcuContext";
 import "./Home.scss";
 import { findMember, update } from "../../../api/member.api";
-import { MemberDTO } from "../../../common/DTOs/member/member.dto";
 import { MemberGameDTO } from "../../../common/DTOs/member/member_game.dto";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import { toast } from "react-hot-toast";
 import { request } from "../../../renderer/utils/ipcBridge";
-import GuildRoomList from "./components/GuildRoomList";
 import { useNavigate } from "react-router-dom";
+import { SummonerIcon } from "../../components";
+import SummonerRank from "./components/SummonerRank";
 
 const RANK_CREST_URL =
   "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/";
@@ -123,31 +122,33 @@ const Home: React.FC = () => {
   return (
     <div className="home-page">
       <div className="profile-game">
-        {member?.memberGuild === undefined || null ? null : (
-          <img
-            src={`http://localhost:3000/public/guild/${member?.memberGuild?.guildName}.png`}
-            alt="Guild"
-            height={60}
-            width={60}
-          />
-        )}
-        <div className="info-game">
-          <div className="guild">
-            <div>회원명: {member?.memberName}</div>
-            <div>소속길드: {member?.memberGuild?.guildName}</div>
-          </div>
+        <SummonerIcon
+          size={100}
+          iconId={lcuData.me.icon}
+          availability={lcuData.me.availability}
+        />
+        <div className="summoner-name">
+          {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span>
         </div>
-        <button className="sync-btn" onClick={syncMemberData}>
-          동기화하기
-        </button>
       </div>
-      <button onClick={createRoom}>방만들기</button>
-      <button onClick={testGetGameData}>정보보기</button>
-      <div className="guild-game">
-        <div className="guild-rooms">
-          <GuildRoomList />
+      <div className="rank-info">
+        <div className="rank-game">
+          {/* Solo Rank */}
+          <SummonerRank
+            LeagueTier={lcuData.me.lol.rankedLeagueTier}
+            LeagueDivision={lcuData.me.lol.rankedLeagueDivision}
+            LeaguePoint={lcuData.leaguePoint.leaguePoint}
+          />
+          {/* Team Rank */}
+          <SummonerRank
+            LeagueTier={lcuData.me.lol.rankedLeagueTier}
+            LeagueDivision={lcuData.me.lol.rankedLeagueDivision}
+            LeaguePoint={lcuData.leaguePoint.leaguePoint}
+          />
         </div>
-        <div className="guild-online">tet</div>
+        <div className="rank-indicators">
+          <div>yaya</div>
+        </div>
       </div>
     </div>
   );

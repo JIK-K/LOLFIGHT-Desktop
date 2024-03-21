@@ -5,75 +5,45 @@ $border-radius: 20px;
 
 .home-page {
   padding: $gap;
-  width: 100%;
+  width: 1366px;
   height: 100%;
   display: flex;
   gap: $gap;
   flex-direction: column;
-  // align-items: center;
-  // justify-content: center;
+  align-items: center;
 
   .profile-game {
     width: fit-content;
-    height: 80px;
-    background-color: #efefef;
-    border-radius: $border-radius;
     display: flex;
+    align-items: center;
     gap: $gap;
     padding: $gap;
+    font-family: "GmarketSansMedium", sans-serif;
+    margin-right: 580px;
 
-    .info {
-      @include font("headline");
-      font-size: 22px;
-      font-weight: 400;
-      display: flex;
-      flex-direction: column;
-      gap: calc($gap / 2);
-    }
-
-    .info-game {
-      @include font("headline");
-      font-size: 22px;
-      font-weight: 600;
-      display: flex;
-      flex-direction: column;
-      gap: calc($gap / 2);
-      color: black;
-      justify-content: center;
-
+    .summoner-name {
+      font-size: 20px;
+      font-weight: bold;
       .id {
         color: gray;
-        font-weight: 200;
-      }
-
-      .badges {
-        display: flex;
-        gap: calc($gap / 2);
-      }
-
-      .guild {
-        font-size: 15px;
-        display: flex;
-        flex-direction: column;
       }
     }
   }
-  .guild-game {
+
+  .rank-info {
     width: 100%;
-    height: 450px;
     display: flex;
-    justify-content: center;
-    background-color: #ffffff;
-    border-radius: 5px 5px 5px 5px;
-    padding: 3px;
-    gap: 3px;
-    .guild-rooms {
-      width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    .rank-game {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-    .guild-online {
-      width: 100%;
+    .rank-indicators {
     }
   }
+
   .sync-btn {
     width: 120px;
     display: flex;
