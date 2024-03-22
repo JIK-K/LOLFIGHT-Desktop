@@ -3,6 +3,7 @@ import { useLcuData } from "../../../components/LcuContext";
 import "./SummonerRank.scss";
 
 interface Props {
+  rankText: string;
   LeagueTier: string;
   LeagueDivision: string;
   LeaguePoint: number;
@@ -12,7 +13,7 @@ const SummonerRank = (props: Props) => {
   const lcuData = useLcuData();
   return (
     <div className="rank-banner">
-      <div className="rank-type">개인 / 2인랭크</div>
+      <div className="rank-type">{props.rankText}</div>
       <div className="rank-data">
         <img
           src={`http://localhost:3000/public/rank/${props.LeagueTier}.png`}

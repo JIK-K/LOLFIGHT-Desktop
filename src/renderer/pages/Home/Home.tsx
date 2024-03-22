@@ -135,15 +135,17 @@ const Home: React.FC = () => {
         <div className="rank-game">
           {/* Solo Rank */}
           <SummonerRank
+            rankText="개인 / 2인랭크"
             LeagueTier={lcuData.me.lol.rankedLeagueTier}
             LeagueDivision={lcuData.me.lol.rankedLeagueDivision}
             LeaguePoint={lcuData.leaguePoint.leaguePoint}
           />
           {/* Team Rank */}
           <SummonerRank
-            LeagueTier={lcuData.me.lol.rankedLeagueTier}
-            LeagueDivision={lcuData.me.lol.rankedLeagueDivision}
-            LeaguePoint={lcuData.leaguePoint.leaguePoint}
+            rankText="자유 5대5 대전"
+            LeagueTier={lcuData.flexRank.rankedFlexTier}
+            LeagueDivision={lcuData.flexRank.rankedFlexDivision}
+            LeaguePoint={lcuData.flexRank.flexLeaguePoint}
           />
         </div>
         <div className="rank-indicators">

@@ -60,6 +60,12 @@ type Queue = (typeof QUEUES)[number];
 type Tier = (typeof TIERS)[number];
 type Division = (typeof DIVISIONS)[number];
 
+type FlexRankInfo = {
+  rankedFlexTier: Tier;
+  rankedFlexDivision: Division;
+  flexLeaguePoint: number;
+};
+
 type RankInfo = {
   leaguePoint: number;
 };
@@ -101,6 +107,7 @@ type State = {
   profile: ProfileState;
   challenges: ChallengesState;
   leaguePoint: RankInfo;
+  flexRank: FlexRankInfo;
 };
 
 const DEFAULT_STATE: State = {
@@ -133,6 +140,11 @@ const DEFAULT_STATE: State = {
   },
   leaguePoint: {
     leaguePoint: 0,
+  },
+  flexRank: {
+    rankedFlexDivision: "NA",
+    rankedFlexTier: "UNRANKED",
+    flexLeaguePoint: 0,
   },
 };
 
@@ -211,6 +223,12 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           ...oldState,
           leaguePoint: {
             leaguePoint: response.highestRankedEntry.leaguePoints,
+          },
+          flexRank: {
+            rankedFlexTier: response.queueMap.RANKED_FLEX_SR.highestTier,
+            rankedFlexDivision:
+              response.queueMap.RANKED_FLEX_SR.highestDivision,
+            flexLeaguePoint: response.queueMap.RANKED_FLEX_SR.leaguePoints,
           },
         }));
       }
