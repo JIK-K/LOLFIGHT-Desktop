@@ -107,7 +107,7 @@ const NavBar: React.FC = () => {
             iconId={lcuData.me.icon}
             availability={lcuData.me.availability}
           />
-          {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span>
+          {/* {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span> */}
           {lcuData.me.lol.rankedLeagueTier === undefined ? (
             <Badge
               text={"UNRANKED"}
@@ -152,6 +152,8 @@ const NavBar: React.FC = () => {
         <NavItem title="홈" href="/home" />
         {/* <NavItem title="Icon" href="/icons" />
         <NavItem title="Background" href="/backgrounds" /> */}
+        <NavItem title="길드" href="/guild" />
+        <NavItem title="배틀" href="/battle" />
         <NavItem title="상태" href="/status" />
         {/* <NavItem title="Challenges" href="/challenges" /> */}
         {/* <NavItem title='Chat Rank' href='/rank' /> */}

@@ -6,4 +6,5 @@ export { default as Backgrounds } from "./Backgrounds";
 export { default as Challenges } from "./Challenges";
 export { default as Rank } from "./Rank";
 export { default as Settings } from "./Settings";
-export { default as Room } from "./Room";
+export { default as Guild } from "./Guild";
+export { default as Battle } from "./Battle";

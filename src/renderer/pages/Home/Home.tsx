@@ -1,15 +1,15 @@
-import { Badge, NavBar, SummonerIcon } from "../../components";
 import React, { useEffect, useState } from "react";
 import { useLcuData } from "../../components/LcuContext";
 import "./Home.scss";
 import { findMember, update } from "../../../api/member.api";
-import { MemberDTO } from "../../../common/DTOs/member/member.dto";
 import { MemberGameDTO } from "../../../common/DTOs/member/member_game.dto";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import { toast } from "react-hot-toast";
 import { request } from "../../../renderer/utils/ipcBridge";
-import GuildRoomList from "./components/GuildRoomList";
 import { useNavigate } from "react-router-dom";
+import { SummonerIcon } from "../../components";
+import SummonerRank from "./components/SummonerRank";
+import SummonerStatsBox from "./components/SummonerStatsBox";
 
 const RANK_CREST_URL =
   "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/";
@@ -30,6 +30,16 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const lcuData = useLcuData();
   const { member, setMember } = useMemberStore();
+  const data = {
+    kill: 0,
+    deaths: 0,
+    assists: 0,
+    damage: 0,
+    gold: 0,
+    visionScore: 0,
+    victory: 0,
+  };
+
   const getRankText = () => {
     const rank = lcuData.me.lol.rankedLeagueTier;
     const division = lcuData.me.lol.rankedLeagueDivision;
@@ -71,7 +81,6 @@ const Home: React.FC = () => {
 
   const createRoom = () => {
     navigate("/room");
-
     // const requestBody = {
     //   customGameLobby: {
     //     configuration: {
@@ -123,31 +132,87 @@ const Home: React.FC = () => {
   return (
     <div className="home-page">
       <div className="profile-game">
-        {member?.memberGuild === undefined || null ? null : (
-          <img
-            src={`http://localhost:3000/public/guild/${member?.memberGuild?.guildName}.png`}
-            alt="Guild"
-            height={60}
-            width={60}
+        <SummonerIcon
+          size={100}
+          iconId={lcuData.me.icon}
+          availability={lcuData.me.availability}
+        />
+        <div className="summoner-name" onClick={syncMemberData}>
+          {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span>
+        </div>
+      </div>
+      <div className="rank-info">
+        <div className="rank-game">
+          {/* Solo Rank */}
+          <SummonerRank
+            rankText="개인 / 2인랭크"
+            LeagueTier={lcuData.me.lol.rankedLeagueTier}
+            LeagueDivision={lcuData.me.lol.rankedLeagueDivision}
+            LeaguePoint={lcuData.leaguePoint.leaguePoint}
           />
-        )}
-        <div className="info-game">
-          <div className="guild">
-            <div>회원명: {member?.memberName}</div>
-            <div>소속길드: {member?.memberGuild?.guildName}</div>
+          {/* Team Rank */}
+          <SummonerRank
+            rankText="자유 5대5 대전"
+            LeagueTier={lcuData.flexRank.rankedFlexTier}
+            LeagueDivision={lcuData.flexRank.rankedFlexDivision}
+            LeaguePoint={lcuData.flexRank.flexLeaguePoint}
+          />
+        </div>
+        <div className="rank-indicators">
+          <div className="win-rate">
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                승률 <span style={{ fontSize: "12px" }}>(최근 30판)</span>
+              </div>
+              <div>{(lcuData.gameData.victory * 100).toFixed(2)}%</div>
+            </div>
+            <progress
+              id="progress"
+              value={lcuData.gameData.victory * 100}
+              max="100"
+            ></progress>
+          </div>
+          <div className="rank-stats">
+            <SummonerStatsBox
+              stats="KDA"
+              value={`${(
+                (lcuData.gameData.kills + lcuData.gameData.assists) /
+                lcuData.gameData.deaths
+              ).toFixed(2)}`}
+              text="KDA"
+            />
+            <SummonerStatsBox
+              stats="킬"
+              value={`${lcuData.gameData.kills.toFixed(2)}`}
+              text="Kill"
+            />
+            <SummonerStatsBox
+              stats="데스"
+              value={`${lcuData.gameData.deaths.toFixed(2)}`}
+              text="Death"
+            />
+            <SummonerStatsBox
+              stats="어시스트"
+              value={`${lcuData.gameData.assists.toFixed(2)}`}
+              text="Assists"
+            />
+            <SummonerStatsBox
+              stats="골드"
+              value={`${lcuData.gameData.gold.toFixed(0)}`}
+              text="Gold"
+            />
+            <SummonerStatsBox
+              stats="시야점수"
+              value={`${lcuData.gameData.visionScore.toFixed(0)}`}
+              text="Vision"
+            />
+            <SummonerStatsBox
+              stats="데미지"
+              value={`${lcuData.gameData.damage.toFixed(0)}`}
+              text="Damage"
+            />
           </div>
         </div>
-        <button className="sync-btn" onClick={syncMemberData}>
-          동기화하기
-        </button>
-      </div>
-      <button onClick={createRoom}>방만들기</button>
-      <button onClick={testGetGameData}>정보보기</button>
-      <div className="guild-game">
-        <div className="guild-rooms">
-          <GuildRoomList />
-        </div>
-        <div className="guild-online">tet</div>
       </div>
     </div>
   );

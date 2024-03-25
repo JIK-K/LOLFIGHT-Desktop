@@ -1,0 +1,45 @@
+.rank-banner {
+  width: 350px;
+  background-color: #282a2e;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid #616366;
+  border-radius: 10px;
+  font-family: "GmarketSansMedium", sans-serif;
+  .rank-type {
+    font-size: 15px;
+  }
+  .rank-data {
+    display: flex;
+    gap: 5%;
+    .rank-score {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      padding-bottom: 30px;
+      .rank-tier {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      #progress {
+        appearance: none;
+      }
+      #progress::-webkit-progress-bar {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid white;
+        height: 8px;
+        width: 210px;
+        overflow: hidden;
+      }
+
+      #progress::-webkit-progress-value {
+        background: #5eff00;
+        border-radius: 0px;
+      }
+    }
+  }
+}

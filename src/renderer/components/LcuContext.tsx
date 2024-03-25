@@ -60,6 +60,26 @@ type Queue = (typeof QUEUES)[number];
 type Tier = (typeof TIERS)[number];
 type Division = (typeof DIVISIONS)[number];
 
+type FlexRankInfo = {
+  rankedFlexTier: Tier;
+  rankedFlexDivision: Division;
+  flexLeaguePoint: number;
+};
+
+type RankInfo = {
+  leaguePoint: number;
+};
+
+type GameStats = {
+  kills: number;
+  deaths: number;
+  assists: number;
+  damage: number;
+  gold: number;
+  visionScore: number;
+  victory: number;
+};
+
 type MeState = {
   puuid: string;
   icon: number;
@@ -96,6 +116,9 @@ type State = {
   wallet: WalletState;
   profile: ProfileState;
   challenges: ChallengesState;
+  leaguePoint: RankInfo;
+  flexRank: FlexRankInfo;
+  gameData: GameStats;
 };
 
 const DEFAULT_STATE: State = {
@@ -125,6 +148,23 @@ const DEFAULT_STATE: State = {
   challenges: {
     tokens: [],
     title: -1,
+  },
+  leaguePoint: {
+    leaguePoint: 0,
+  },
+  flexRank: {
+    rankedFlexDivision: "NA",
+    rankedFlexTier: "UNRANKED",
+    flexLeaguePoint: 0,
+  },
+  gameData: {
+    kills: 0,
+    deaths: 0,
+    assists: 0,
+    damage: 0,
+    gold: 0,
+    visionScore: 0,
+    victory: 0,
   },
 };
 
@@ -171,6 +211,57 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           },
         },
       }));
+      // 8b3b97ef-a0c6-5e0c-86e8-c1e1a6f96484
+      request(
+        "GET",
+        `/lol-career-stats/v1/summoner-games/${response.puuid}`
+      ).then((response: any) => {
+        const recentData: GameStats[] = response.slice(-30);
+
+        const statsData: GameStats[] = recentData.map((game: any) => ({
+          kills: game.stats?.["CareerStats.js"].kills,
+          deaths: game.stats?.["CareerStats.js"].deaths,
+          assists: game.stats?.["CareerStats.js"].assists,
+          damage: game.stats?.["CareerStats.js"].damage,
+          gold: game.stats?.["CareerStats.js"].goldEarned,
+          visionScore: game.stats?.["CareerStats.js"].visionScore,
+          victory: game.stats?.["CareerStats.js"].victory,
+        }));
+
+        let totalKills = 0;
+        let totalDeaths = 0;
+        let totalAssists = 0;
+        let totalDamage = 0;
+        let totalGold = 0;
+        let totalVisionScore = 0;
+        let totalVictory = 0;
+
+        statsData.forEach((game) => {
+          totalKills += game.kills || 0;
+          totalDeaths += game.deaths || 0;
+          totalAssists += game.assists || 0;
+          totalDamage += game.damage || 0;
+          totalGold += game.gold || 0;
+          totalVisionScore += game.visionScore || 0;
+          totalVictory += game.victory || 0;
+        });
+        3;
+
+        const averageStats: GameStats = {
+          kills: totalKills / statsData.length,
+          deaths: totalDeaths / statsData.length,
+          assists: totalAssists / statsData.length,
+          damage: totalDamage / statsData.length,
+          gold: totalGold / statsData.length,
+          visionScore: totalVisionScore / statsData.length,
+          victory: totalVictory / statsData.length,
+        };
+
+        setState((oldState) => ({
+          ...oldState,
+          gameData: averageStats,
+        }));
+      });
     });
 
     request("GET", "/lol-summoner/v1/current-summoner/summoner-profile").then(
@@ -196,6 +287,26 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
         },
       }));
     });
+
+    request("GET", "/lol-ranked/v1/current-ranked-stats").then(
+      (response: any) => {
+        setState((oldState) => ({
+          ...oldState,
+          leaguePoint: {
+            leaguePoint: response.highestRankedEntry.leaguePoints,
+          },
+          flexRank: {
+            rankedFlexTier:
+              response.queueMap.RANKED_FLEX_SR.highestTier === ""
+                ? "UNRANKED"
+                : response.queueMap.RANKED_FLEX_SR.highestTier,
+            rankedFlexDivision:
+              response.queueMap.RANKED_FLEX_SR.highestDivision,
+            flexLeaguePoint: response.queueMap.RANKED_FLEX_SR.leaguePoints,
+          },
+        }));
+      }
+    );
 
     request("GET", "/lol-challenges/v1/summary-player-data/local-player").then(
       (response: any) => {
