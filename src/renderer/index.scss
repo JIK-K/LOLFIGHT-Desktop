@@ -24,8 +24,10 @@ body,
 }
 
 #content {
+  display: flex;
   height: calc(100vh - $navbar-height);
   background-color: #212326;
+  justify-content: center;
 }
 
 #navbar {

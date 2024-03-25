@@ -9,6 +9,7 @@ import { request } from "../../../renderer/utils/ipcBridge";
 import { useNavigate } from "react-router-dom";
 import { SummonerIcon } from "../../components";
 import SummonerRank from "./components/SummonerRank";
+import SummonerStatsBox from "./components/SummonerStatsBox";
 
 const RANK_CREST_URL =
   "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/";
@@ -29,6 +30,16 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const lcuData = useLcuData();
   const { member, setMember } = useMemberStore();
+  const data = {
+    kill: 0,
+    deaths: 0,
+    assists: 0,
+    damage: 0,
+    gold: 0,
+    visionScore: 0,
+    victory: 0,
+  };
+
   const getRankText = () => {
     const rank = lcuData.me.lol.rankedLeagueTier;
     const division = lcuData.me.lol.rankedLeagueDivision;
@@ -70,7 +81,6 @@ const Home: React.FC = () => {
 
   const createRoom = () => {
     navigate("/room");
-
     // const requestBody = {
     //   customGameLobby: {
     //     configuration: {
@@ -127,7 +137,7 @@ const Home: React.FC = () => {
           iconId={lcuData.me.icon}
           availability={lcuData.me.availability}
         />
-        <div className="summoner-name">
+        <div className="summoner-name" onClick={syncMemberData}>
           {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span>
         </div>
       </div>
@@ -149,7 +159,59 @@ const Home: React.FC = () => {
           />
         </div>
         <div className="rank-indicators">
-          <div>yaya</div>
+          <div className="win-rate">
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                승률 <span style={{ fontSize: "12px" }}>(최근 30판)</span>
+              </div>
+              <div>{(lcuData.gameData.victory * 100).toFixed(2)}%</div>
+            </div>
+            <progress
+              id="progress"
+              value={lcuData.gameData.victory * 100}
+              max="100"
+            ></progress>
+          </div>
+          <div className="rank-stats">
+            <SummonerStatsBox
+              stats="KDA"
+              value={`${(
+                (lcuData.gameData.kills + lcuData.gameData.assists) /
+                lcuData.gameData.deaths
+              ).toFixed(2)}`}
+              text="KDA"
+            />
+            <SummonerStatsBox
+              stats="킬"
+              value={`${lcuData.gameData.kills.toFixed(2)}`}
+              text="Kill"
+            />
+            <SummonerStatsBox
+              stats="데스"
+              value={`${lcuData.gameData.deaths.toFixed(2)}`}
+              text="Death"
+            />
+            <SummonerStatsBox
+              stats="어시스트"
+              value={`${lcuData.gameData.assists.toFixed(2)}`}
+              text="Assists"
+            />
+            <SummonerStatsBox
+              stats="골드"
+              value={`${lcuData.gameData.gold.toFixed(0)}`}
+              text="Gold"
+            />
+            <SummonerStatsBox
+              stats="시야점수"
+              value={`${lcuData.gameData.visionScore.toFixed(0)}`}
+              text="Vision"
+            />
+            <SummonerStatsBox
+              stats="데미지"
+              value={`${lcuData.gameData.damage.toFixed(0)}`}
+              text="Damage"
+            />
+          </div>
         </div>
       </div>
     </div>

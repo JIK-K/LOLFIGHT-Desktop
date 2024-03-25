@@ -5,21 +5,20 @@ $border-radius: 20px;
 
 .home-page {
   padding: $gap;
-  width: 1366px;
-  height: 100%;
+  // width: 1366px;
+  width: 900px;
   display: flex;
   gap: $gap;
   flex-direction: column;
   align-items: center;
 
   .profile-game {
-    width: fit-content;
+    width: 100%;
     display: flex;
     align-items: center;
     gap: $gap;
     padding: $gap;
     font-family: "GmarketSansMedium", sans-serif;
-    margin-right: 580px;
 
     .summoner-name {
       font-size: 20px;
@@ -28,37 +27,60 @@ $border-radius: 20px;
         color: gray;
       }
     }
+    :hover {
+      cursor: pointer;
+      color: #007bff;
+    }
   }
 
   .rank-info {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 10%;
+    font-family: "GmarketSansMedium", sans-serif;
+
     .rank-game {
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-    .rank-indicators {
-    }
-  }
 
-  .sync-btn {
-    width: 120px;
-    display: flex;
-    font-weight: bold;
-    background-color: white;
-    color: #11235a;
-    font-size: 16px;
-    height: 40px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 10px 0;
-    &:hover {
-      box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px;
+    .rank-indicators {
+      display: flex;
+      flex-direction: column;
+      gap: 10%;
+
+      .win-rate {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        font-size: 15px;
+
+        #progress {
+          appearance: none;
+        }
+        #progress::-webkit-progress-bar {
+          background: white;
+          border-radius: 12px;
+          border: 1px solid white;
+          height: 10px;
+          width: 430px;
+          overflow: hidden;
+        }
+
+        #progress::-webkit-progress-value {
+          background: #006eff;
+          border-radius: 0px;
+        }
+      }
+
+      .rank-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
     }
   }
 }

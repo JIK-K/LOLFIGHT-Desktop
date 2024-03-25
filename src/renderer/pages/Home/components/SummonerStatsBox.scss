@@ -1,0 +1,11 @@
+.stats-box {
+  display: flex;
+  flex-direction: column;
+  background-color: #282a2e;
+  width: 100px;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5%;
+  gap: 15px;
+}

@@ -152,6 +152,8 @@ const NavBar: React.FC = () => {
         <NavItem title="홈" href="/home" />
         {/* <NavItem title="Icon" href="/icons" />
         <NavItem title="Background" href="/backgrounds" /> */}
+        <NavItem title="길드" href="/guild" />
+        <NavItem title="배틀" href="/battle" />
         <NavItem title="상태" href="/status" />
         {/* <NavItem title="Challenges" href="/challenges" /> */}
         {/* <NavItem title='Chat Rank' href='/rank' /> */}
