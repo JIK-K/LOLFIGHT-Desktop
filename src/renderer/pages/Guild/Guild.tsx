@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Guild.scss";
 import useMemberStore from "../../../common/zustand/member.zustand";
+import useSocketStore from "../../../common/zustand/socket.zustand";
 import { findMember } from "../../../api/member.api";
 import { MemberDTO } from "../../../common/DTOs/member/member.dto";
 import { getGuildMemberList } from "../../../api/guild.api";
@@ -8,6 +9,7 @@ import GuildMemberBox from "./components/GuildMemberBox";
 
 const Guild: React.FC = () => {
   const { member, setMember } = useMemberStore();
+  const { socket } = useSocketStore();
   const [message, setMessage] = useState<string>("");
   const [guildMembers, setGuildMembers] = useState<MemberDTO[]>([]);
 
@@ -19,6 +21,8 @@ const Guild: React.FC = () => {
         console.log(response.data.data);
         setGuildMembers(response.data.data);
       });
+
+      console.log(socket);
     });
   }, []);
 
