@@ -1,9 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "./Guild.scss";
 import useMemberStore from "../../../common/zustand/member.zustand";
-const Guild = () => {
+import { findMember } from "../../../api/member.api";
+import { MemberDTO } from "../../../common/DTOs/member/member.dto";
+import { getGuildMemberList } from "../../../api/guild.api";
+import GuildMemberBox from "./components/GuildMemberBox";
+
+const Guild: React.FC = () => {
+  const { member, setMember } = useMemberStore();
   const [message, setMessage] = useState<string>("");
-  const { member } = useMemberStore();
+  const [guildMembers, setGuildMembers] = useState<MemberDTO[]>([]);
+
+  useEffect(() => {
+    findMember(sessionStorage.getItem("memberId")).then((response) => {
+      setMember(response.data.data);
+
+      getGuildMemberList(member.memberGuild.guildName).then((response) => {
+        console.log(response.data.data);
+        setGuildMembers(response.data.data);
+      });
+    });
+  }, []);
+
   const sendMessage = () => {
     console.log("message", message);
     setMessage("");
@@ -26,7 +44,7 @@ const Guild = () => {
         <div className="message-area">여백의미</div>
         <div className="input-area">
           <img
-            src="http://localhost:3000/public/emoticon.png"
+            src={`${process.env.SERVER_URL}/public/emoticon.png`}
             alt="emoticon"
             height={20}
             color="white"
@@ -41,7 +59,7 @@ const Guild = () => {
           />
           <button type="button" className="send-button" onClick={sendMessage}>
             <img
-              src="http://localhost:3000/public/send.png"
+              src={`${process.env.SERVER_URL}/public/send.png`}
               alt="emoticon"
               height={20}
               color="white"
@@ -55,7 +73,7 @@ const Guild = () => {
           <div style={{ fontSize: "18px" }}>길드 랭크</div>
           <div className="guild-data">
             <img
-              src={`http://localhost:3000/public/rank/CHALLENGER.png`}
+              src={`${process.env.SERVER_URL}/public/rank/CHALLENGER.png`}
               width={70}
               height={70}
             />
@@ -70,12 +88,16 @@ const Guild = () => {
         </div>
         <div className="guild-member">
           <div className="component-title">길드원</div>
-          <div className="member-list">ya</div>
+          <div className="member-list">
+            {guildMembers.map((member) => (
+              <GuildMemberBox key={member.id} member={member} />
+            ))}
+          </div>
         </div>
       </div>
       <div className="guild-desc">
         <img
-          src={`http://localhost:3000/${member.memberGuild.guildIcon}`}
+          src={`${process.env.SERVER_URL}/${member.memberGuild.guildIcon}`}
           width={200}
           height={200}
           style={{ border: "1px solid #616366", marginBottom: "20px" }}

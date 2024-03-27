@@ -70,12 +70,18 @@ const LoginPage = () => {
           </button>
           <div className="link-container">
             <span className="link-item">
-              <a href="http://localhost:4000/register" target="_blank">
+              <a
+                href={`${process.env.SERVER_URL}/public/register`}
+                target="_blank"
+              >
                 회원가입
               </a>
             </span>
             <span className="link-item">
-              <a href="http://localhost:4000/register/find" target="_blank">
+              <a
+                href={`${process.env.SERVER_URL}/public/register/find`}
+                target="_blank"
+              >
                 비밀번호 찾기
               </a>
             </span>
@@ -85,7 +91,7 @@ const LoginPage = () => {
       </div>
       <button type="button" className="button-close" onClick={closeWindow}>
         <img
-          src="http://localhost:3000/public/close.png"
+          src={`${process.env.SERVER_URL}/public/close.png`}
           alt="close"
           height={20}
         />

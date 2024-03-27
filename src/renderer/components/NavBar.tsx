@@ -134,14 +134,13 @@ const NavBar: React.FC = () => {
             onClick={minimizeWindow}
           >
             <img
-              src="http://localhost:3000/public/minimize.png"
-              alt="minimize"
+              src={`${process.env.SERVER_URL}/public/minimize.png`}
               width={30}
             />
           </button>
           <button type="button" className="button-option" onClick={closeWindow}>
             <img
-              src="http://localhost:3000/public/close.png"
+              src={`${process.env.SERVER_URL}/public/close.png`}
               alt="close"
               height={15}
             />

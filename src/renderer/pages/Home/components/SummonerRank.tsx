@@ -16,7 +16,7 @@ const SummonerRank = (props: Props) => {
       <div className="rank-type">{props.rankText}</div>
       <div className="rank-data">
         <img
-          src={`http://localhost:3000/public/rank/${props.LeagueTier}.png`}
+          src={`${process.env.SERVER_URL}/public/rank/${props.LeagueTier}.png`}
           width={80}
           height={80}
         />
