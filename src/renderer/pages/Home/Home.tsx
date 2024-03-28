@@ -53,24 +53,9 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    findMember(sessionStorage.getItem("memberId")).then((response) => {
-      setMember(response.data.data);
-
-      console.log(member);
-      setSocket(
-        SocketIOClient(`${process.env.SOCKET_URL}`, {
-          query: {
-            memberName: member.memberName,
-          },
-        })
-      );
-    });
-  }, []);
-
-  useEffect(() => {
     if (socket) {
       socket.on("connect", () => {
-        console.log("지홍이보댕이");
+        console.log("connet");
       });
     }
   }, [socket]);

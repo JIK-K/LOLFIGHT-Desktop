@@ -2,32 +2,60 @@ import React, { useEffect, useState } from "react";
 import "./Guild.scss";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import useSocketStore from "../../../common/zustand/socket.zustand";
+import useGuildStore from "../../../common/zustand/guild.zustand";
 import { findMember } from "../../../api/member.api";
 import { MemberDTO } from "../../../common/DTOs/member/member.dto";
+import { GuildDTO } from "../../../common/DTOs/guild/guild.dto";
 import { getGuildMemberList } from "../../../api/guild.api";
 import GuildMemberBox from "./components/GuildMemberBox";
+import { useNavigate } from "react-router-dom";
 
 const Guild: React.FC = () => {
+  const navigate = useNavigate();
   const { member, setMember } = useMemberStore();
+  const { guild, setGuild } = useGuildStore();
   const { socket } = useSocketStore();
   const [message, setMessage] = useState<string>("");
   const [guildMembers, setGuildMembers] = useState<MemberDTO[]>([]);
+  const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    findMember(sessionStorage.getItem("memberId")).then((response) => {
-      setMember(response.data.data);
+    if (!member.memberGuild) {
+      navigate("/home");
+      return; // return을 사용하여 이후의 코드 실행을 막음
+    }
 
-      getGuildMemberList(member.memberGuild.guildName).then((response) => {
-        console.log(response.data.data);
-        setGuildMembers(response.data.data);
-      });
-
-      console.log(socket);
+    getGuildMemberList(member.memberGuild.guildName).then((response) => {
+      setGuildMembers(response.data.data);
     });
+
+    socket.on("message", (receivedMessage: string) => {
+      setReceivedMessages((prevMessages) => [...prevMessages, receivedMessage]);
+    });
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      socket.off("message");
+    };
   }, []);
 
+  const calNextGuildRank = () => {
+    // 1200브
+    // 1600실
+    // 1800골
+    // 2000플
+    // 2200다
+    // 2450마
+    // 2750그마
+    // 3000++ 챌
+    console.log("히이잉 나중에해야지~");
+  };
   const sendMessage = () => {
-    console.log("message", message);
+    socket.emit("message", {
+      memberName: member.memberName,
+      guildName: member.memberGuild.guildName,
+      message: message,
+    });
     setMessage("");
   };
 
@@ -36,7 +64,11 @@ const Guild: React.FC = () => {
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      console.log("Enter Message", message);
+      socket.emit("message", {
+        memberName: member.memberName,
+        guildName: member.memberGuild.guildName,
+        message: message,
+      });
       setMessage("");
     }
   };
@@ -45,7 +77,11 @@ const Guild: React.FC = () => {
     <div className="guild-page">
       <div className="guild-talk">
         <div className="component-title">길드톡방</div>
-        <div className="message-area">여백의미</div>
+        <div className="message-area">
+          {receivedMessages.map((receivedMessage, index) => (
+            <div key={index}>{receivedMessage}</div>
+          ))}
+        </div>
         <div className="input-area">
           <img
             src={`${process.env.SERVER_URL}/public/emoticon.png`}
@@ -77,16 +113,18 @@ const Guild: React.FC = () => {
           <div style={{ fontSize: "18px" }}>길드 랭크</div>
           <div className="guild-data">
             <img
-              src={`${process.env.SERVER_URL}/public/rank/CHALLENGER.png`}
+              src={`${process.env.SERVER_URL}/public/rank/${guild.guildTier}.png`}
               width={70}
               height={70}
             />
             <div className="guild-score">
               <div className="guild-tier">
-                <p>더미 V</p>
-                <p>더미LP</p>
+                <p>{guild.guildTier}</p>
+                <p>{guild.guildRecord.recordLadder}LP</p>
               </div>
-              <progress id="progress" value={10} max="100"></progress>
+              <progress id="progress" value={10} max="100">
+                승률
+              </progress>
             </div>
           </div>
         </div>
