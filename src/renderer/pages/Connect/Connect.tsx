@@ -45,12 +45,15 @@ const Connect: React.FC = () => {
   return (
     <div className="connect-page">
       <div className="content">
-        <img src="http://localhost:3000/public/image/icon.png" height={200} />
+        <img
+          src={`${process.env.SERVER_URL}/public/image/icon.png`}
+          height={200}
+        />
         <div className="loader"></div>
       </div>
       <button type="button" className="button-option" onClick={closeWindow}>
         <img
-          src="http://localhost:3000/public/close.png"
+          src={`${process.env.SERVER_URL}/public/close.png`}
           alt="close"
           height={20}
         />

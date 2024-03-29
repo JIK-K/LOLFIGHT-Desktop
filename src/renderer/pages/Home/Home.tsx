@@ -4,12 +4,14 @@ import "./Home.scss";
 import { findMember, update } from "../../../api/member.api";
 import { MemberGameDTO } from "../../../common/DTOs/member/member_game.dto";
 import useMemberStore from "../../../common/zustand/member.zustand";
+import useSocketStore from "../../..//common/zustand/socket.zustand";
 import { toast } from "react-hot-toast";
 import { request } from "../../../renderer/utils/ipcBridge";
 import { useNavigate } from "react-router-dom";
 import { SummonerIcon } from "../../components";
 import SummonerRank from "./components/SummonerRank";
 import SummonerStatsBox from "./components/SummonerStatsBox";
+import SocketIOClient, { Socket } from "socket.io-client";
 
 const RANK_CREST_URL =
   "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/";
@@ -30,6 +32,7 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const lcuData = useLcuData();
   const { member, setMember } = useMemberStore();
+  const { socket, setSocket } = useSocketStore();
   const data = {
     kill: 0,
     deaths: 0,
@@ -50,10 +53,12 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    findMember(sessionStorage.getItem("memberId")).then((response) => {
-      setMember(response.data.data);
-    });
-  }, []);
+    if (socket) {
+      socket.on("connect", () => {
+        console.log("connet");
+      });
+    }
+  }, [socket]);
 
   const syncMemberData = () => {
     const memberGame: MemberGameDTO = {

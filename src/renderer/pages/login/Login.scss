@@ -9,7 +9,7 @@
   height: 100vh;
   // background-color: #11235a;
   background-color: #ffffff;
-  background-image: url("http://localhost:3000/public/banner/illi.png");
+  background-image: url("http://localhost:3000/public/banner/ashe.gif");
   background-size: cover; /* 이미지를 확대하여 컨테이너를 꽉 채우도록 설정 */
   background-position: center; /* 이미지를 가운데 정렬 */
   background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
@@ -24,7 +24,7 @@
   background-color: #ffffff;
   width: 450px;
   height: 100%;
-  padding: 5%;
+  padding: 4%;
 
   .logo-container {
     display: flex;

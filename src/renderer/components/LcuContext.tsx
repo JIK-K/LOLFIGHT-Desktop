@@ -2,6 +2,12 @@ import type { EventResponse } from "league-connect";
 import React, { ReactNode, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { request } from "../utils/ipcBridge";
+import { findMember } from "../../api/member.api";
+import { getGuildInfo } from "../../api/guild.api";
+import useMemberStore from "../../common/zustand/member.zustand";
+import useSocketStore from "../../common/zustand/socket.zustand";
+import useGuildStore from "../../common/zustand/guild.zustand";
+import SocketIOClient, { Socket } from "socket.io-client";
 
 const { ipcRenderer } = window.require("electron");
 
@@ -173,6 +179,9 @@ const context = React.createContext<State>(DEFAULT_STATE);
 export const LcuContext = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const [state, setState] = useState<State>(DEFAULT_STATE);
+  const { member, setMember } = useMemberStore();
+  const { guild, setGuild } = useGuildStore();
+  const { socket, setSocket } = useSocketStore();
 
   useEffect(() => {
     // reset state on reconnects
@@ -185,6 +194,28 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
       location.pathname === "/"
     )
       return;
+
+    findMember(sessionStorage.getItem("memberId")).then((response) => {
+      setMember(response.data.data);
+
+      getGuildInfo(response.data.data.memberGuild.guildName).then(
+        (response) => {
+          console.log(response);
+          setGuild(response.data.data);
+        }
+      );
+
+      setSocket(
+        SocketIOClient(`${process.env.SOCKET_URL}`, {
+          query: {
+            memberName: response.data.data.memberName,
+            guildName: response.data.data.memberGuild.guildName,
+          },
+        })
+      );
+    });
+
+    //==============================================================//
 
     request("GET", "/lol-chat/v1/me").then((response: any) => {
       setState((oldState) => ({
