@@ -18,11 +18,12 @@ const Guild: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [guildMembers, setGuildMembers] = useState<MemberDTO[]>([]);
   const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
+  const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
 
   useEffect(() => {
     if (!member.memberGuild) {
       navigate("/home");
-      return; // return을 사용하여 이후의 코드 실행을 막음
+      return;
     }
 
     getGuildMemberList(member.memberGuild.guildName).then((response) => {
@@ -33,9 +34,17 @@ const Guild: React.FC = () => {
       setReceivedMessages((prevMessages) => [...prevMessages, receivedMessage]);
     });
 
+    socket.on("online", (onlineMembers: string[]) => {
+      console.log("Online members:", onlineMembers);
+      setOnlineMembers(onlineMembers);
+    });
+
+    socket.emit("online", { guildName: member.memberGuild.guildName });
+
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       socket.off("message");
+      socket.off("online");
     };
   }, []);
 
@@ -132,7 +141,11 @@ const Guild: React.FC = () => {
           <div className="component-title">길드원</div>
           <div className="member-list">
             {guildMembers.map((member) => (
-              <GuildMemberBox key={member.id} member={member} />
+              <GuildMemberBox
+                key={member.id}
+                member={member}
+                online={onlineMembers}
+              />
             ))}
           </div>
         </div>
