@@ -84,84 +84,94 @@ const Guild: React.FC = () => {
 
   return (
     <div className="guild-page">
-      <div className="guild-talk">
-        <div className="component-title">길드톡방</div>
-        <div className="message-area">
-          {receivedMessages.map((receivedMessage, index) => (
-            <div key={index}>{receivedMessage}</div>
-          ))}
-        </div>
-        <div className="input-area">
-          <img
-            src={`${process.env.SERVER_URL}/public/emoticon.png`}
-            alt="emoticon"
-            height={20}
-            color="white"
-          />
-          <input
-            className="message-input"
-            type="text"
-            placeholder="메세지보내기"
-            value={message}
-            onChange={handleInputMessage}
-            onKeyDown={handleKeyPress}
-          />
-          <button type="button" className="send-button" onClick={sendMessage}>
+      <div className="guild-top">
+        <div className="guild-talk">
+          <div className="component-title">길드톡방</div>
+          <div className="message-area">
+            {receivedMessages.map((receivedMessage, index) => (
+              <div key={index}>{receivedMessage}</div>
+            ))}
+          </div>
+          <div className="input-area">
             <img
-              src={`${process.env.SERVER_URL}/public/send.png`}
+              src={`${process.env.SERVER_URL}/public/emoticon.png`}
               alt="emoticon"
               height={20}
               color="white"
             />
-          </button>
-        </div>
-      </div>
-
-      <div className="guild-info">
-        <div className="guild-banner">
-          <div style={{ fontSize: "18px" }}>길드 랭크</div>
-          <div className="guild-data">
-            <img
-              src={`${process.env.SERVER_URL}/public/rank/${guild.guildTier}.png`}
-              width={70}
-              height={70}
+            <input
+              className="message-input"
+              type="text"
+              placeholder="메세지보내기"
+              value={message}
+              onChange={handleInputMessage}
+              onKeyDown={handleKeyPress}
             />
-            <div className="guild-score">
-              <div className="guild-tier">
-                <p>{guild.guildTier}</p>
-                <p>{guild.guildRecord.recordLadder}LP</p>
+            <button type="button" className="send-button" onClick={sendMessage}>
+              <img
+                src={`${process.env.SERVER_URL}/public/send.png`}
+                alt="emoticon"
+                height={20}
+                color="white"
+              />
+            </button>
+          </div>
+        </div>
+
+        <div className="guild-info">
+          <div className="guild-banner">
+            <div style={{ fontSize: "18px" }}>길드 랭크</div>
+            <div className="guild-data">
+              <img
+                src={`${process.env.SERVER_URL}/public/rank/${guild.guildTier}.png`}
+                width={70}
+                height={70}
+              />
+              <div className="guild-score">
+                <div className="guild-tier">
+                  <p>{guild.guildTier}</p>
+                  <p>{guild.guildRecord.recordLadder}LP</p>
+                </div>
+                <progress id="progress" value={10} max="100">
+                  승률
+                </progress>
               </div>
-              <progress id="progress" value={10} max="100">
-                승률
-              </progress>
+            </div>
+          </div>
+          <div className="guild-member">
+            <div className="component-title">길드원</div>
+            <div className="member-list">
+              {guildMembers.map((member) => (
+                <GuildMemberBox
+                  key={member.id}
+                  member={member}
+                  online={onlineMembers}
+                />
+              ))}
             </div>
           </div>
         </div>
-        <div className="guild-member">
-          <div className="component-title">길드원</div>
-          <div className="member-list">
-            {guildMembers.map((member) => (
-              <GuildMemberBox
-                key={member.id}
-                member={member}
-                online={onlineMembers}
-              />
-            ))}
+        <div className="guild-desc">
+          <img
+            src={`${process.env.SERVER_URL}/${member.memberGuild.guildIcon}`}
+            width={200}
+            height={200}
+            style={{ border: "1px solid #616366", marginBottom: "20px" }}
+          />
+          <div>{member.memberGuild.guildName}</div>
+          <div>길드마스터 : {member.memberGuild.guildMaster}</div>
+          <div>길드원 수 : {member.memberGuild.guildMembers}</div>
+          <div>
+            길드 설립일 :{" "}
+            {member.memberGuild.createdAt.toString().split("T")[0]}
           </div>
+          <button>길드전 내전방 생성하기</button>
         </div>
       </div>
-      <div className="guild-desc">
-        <img
-          src={`${process.env.SERVER_URL}/${member.memberGuild.guildIcon}`}
-          width={200}
-          height={200}
-          style={{ border: "1px solid #616366", marginBottom: "20px" }}
-        />
-        <div>{member.memberGuild.guildName}</div>
-        <div>길드마스터 : {member.memberGuild.guildMaster}</div>
-        <div>길드원 수 : {member.memberGuild.guildMembers}</div>
-        <div>
-          길드 설립일 : {member.memberGuild.createdAt.toString().split("T")[0]}
+
+      <div className="guild-bottom">
+        <div className="guild-fight-room">
+          <div className="component-title">길드전 방 목록</div>
         </div>
       </div>
     </div>

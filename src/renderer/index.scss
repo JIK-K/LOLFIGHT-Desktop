@@ -1,6 +1,6 @@
 @use "./_theme" as *;
 
-$navbar-height: 100px;
+$navbar-height: 96px;
 $navbar-background: #282a2e;
 $navbar-gap: 2rem;
 
@@ -21,13 +21,18 @@ body,
 #main {
   height: 100%;
   margin: 0;
+  background-color: #212326;
 }
 
 #content {
   display: flex;
-  height: calc(100vh - $navbar-height);
-  background-color: #212326;
+  // height: calc(100vh - $navbar-height);
+  // background-color: #212326;
+  -ms-overflow-style: none;
   justify-content: center;
+}
+::-webkit-scrollbar {
+  display: none;
 }
 
 #navbar {
