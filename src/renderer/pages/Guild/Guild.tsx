@@ -9,6 +9,8 @@ import { GuildDTO } from "../../../common/DTOs/guild/guild.dto";
 import { getGuildMemberList } from "../../../api/guild.api";
 import GuildMemberBox from "./components/GuildMemberBox";
 import { useNavigate } from "react-router-dom";
+import GuildFightRoomBox from "./components/GuildFightRoomBox";
+import toast from "react-hot-toast";
 
 const Guild: React.FC = () => {
   const navigate = useNavigate();
@@ -80,6 +82,11 @@ const Guild: React.FC = () => {
       });
       setMessage("");
     }
+  };
+
+  const createBattleRoom = () => {
+    toast.success("testyayamandon'tgiveupluckyguy");
+    navigate("/fightroom");
   };
 
   return (
@@ -165,13 +172,19 @@ const Guild: React.FC = () => {
             길드 설립일 :{" "}
             {member.memberGuild.createdAt.toString().split("T")[0]}
           </div>
-          <button>길드전 내전방 생성하기</button>
+          <button onClick={createBattleRoom}>길드전 내전방 생성하기</button>
         </div>
       </div>
 
       <div className="guild-bottom">
         <div className="guild-fight-room">
           <div className="component-title">길드전 방 목록</div>
+          <div className="fight-room-list">
+            <GuildFightRoomBox />
+            <GuildFightRoomBox />
+            <GuildFightRoomBox />
+            <GuildFightRoomBox />
+          </div>
         </div>
       </div>
     </div>

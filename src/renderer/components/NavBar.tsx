@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { useLcuData } from "./LcuContext";
 import { Badge, SummonerIcon } from "../components";
@@ -9,12 +9,21 @@ interface NavItemProps {
 }
 
 const NavItem: React.FC<NavItemProps> = ({ title, href }) => {
+  const location = useLocation();
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (location.pathname === "/fightroom") {
+      console.log("여긴클릭되면안된다니까?");
+      event.preventDefault();
+    }
+  };
+
   return (
     <NavLink
       to={href}
       className={({ isActive }) =>
         isActive ? "nav-item selected" : "nav-item"
       }
+      onClick={handleClick}
     >
       <span>{title}</span>
     </NavLink>
@@ -157,6 +166,7 @@ const NavBar: React.FC = () => {
         {/* <NavItem title="Challenges" href="/challenges" /> */}
         {/* <NavItem title='Chat Rank' href='/rank' /> */}
         <NavItem title="설정" href="/settings" />
+        {/* <NavItem title="말썽꾸러기" href="/fightroom" /> */}
       </div>
     </div>
   );

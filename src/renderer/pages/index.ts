@@ -8,3 +8,4 @@ export { default as Rank } from "./Rank";
 export { default as Settings } from "./Settings";
 export { default as Guild } from "./Guild";
 export { default as Battle } from "./Battle";
+export { default as FightRoom } from "./FightRoom";

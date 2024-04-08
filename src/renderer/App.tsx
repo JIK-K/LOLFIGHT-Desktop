@@ -13,6 +13,7 @@ import {
   Settings,
   Guild,
   Battle,
+  FightRoom,
 } from "./pages";
 import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/login/Login";
@@ -35,6 +36,7 @@ const App: React.FC = () => {
             {/* <Route path="/challenges" element={<Challenges />} /> */}
             {/* <Route path="/rank" element={<Rank />} /> */}
             <Route path="/settings" element={<Settings />} />
+            <Route path="/fightroom" element={<FightRoom />} />
           </Routes>
           <Toaster
             position="top-right"

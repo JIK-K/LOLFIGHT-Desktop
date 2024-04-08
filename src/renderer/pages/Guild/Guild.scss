@@ -165,6 +165,14 @@
       background-color: #282a2e;
       border: 2px solid #616366;
       border-radius: 5px;
+      gap: 5px;
+
+      .fight-room-list {
+        overflow: auto;
+        ::-webkit-scrollbar {
+          display: none;
+        }
+      }
     }
   }
 }
