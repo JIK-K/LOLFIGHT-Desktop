@@ -149,6 +149,23 @@
       flex-direction: column;
       gap: 10px;
       padding-left: 55px;
+
+      .create-battle-button {
+        background: linear-gradient(to bottom, #45484d, #2d2e31);
+        border: 2px solid #212326;
+        color: white;
+        padding: 8px 14px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+        font-family: "GmarketSansMedium", sans-serif;
+        &:hover {
+          background: linear-gradient(to bottom, #2d2e31, #45484d);
+          color: white;
+        }
+      }
     }
   }
 

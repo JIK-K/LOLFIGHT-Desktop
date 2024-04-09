@@ -85,7 +85,6 @@ const Guild: React.FC = () => {
   };
 
   const createBattleRoom = () => {
-    toast.success("testyayamandon'tgiveupluckyguy");
     navigate("/fightroom");
   };
 
@@ -172,7 +171,9 @@ const Guild: React.FC = () => {
             길드 설립일 :{" "}
             {member.memberGuild.createdAt.toString().split("T")[0]}
           </div>
-          <button onClick={createBattleRoom}>길드전 내전방 생성하기</button>
+          <button className="create-battle-button" onClick={createBattleRoom}>
+            길드전 내전방 생성하기
+          </button>
         </div>
       </div>
 
