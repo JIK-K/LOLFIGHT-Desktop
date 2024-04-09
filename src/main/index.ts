@@ -38,8 +38,8 @@ const createWindow = (): BrowserWindow => {
     show: false,
     width: 1366,
     height: 768,
-    // resizable: false,
-    icon: "assets/icon_blue.png",
+    resizable: false,
+    icon: "assets/icon-blue.png",
     webPreferences: {
       devTools: isDevelopment,
       nodeIntegration: true,

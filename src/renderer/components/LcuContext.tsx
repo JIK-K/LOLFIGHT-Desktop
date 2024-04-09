@@ -242,7 +242,6 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           },
         },
       }));
-      // 8b3b97ef-a0c6-5e0c-86e8-c1e1a6f96484
       request(
         "GET",
         `/lol-career-stats/v1/summoner-games/${response.puuid}`
