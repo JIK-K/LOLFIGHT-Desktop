@@ -85,6 +85,12 @@ const Guild: React.FC = () => {
   };
 
   const createBattleRoom = () => {
+    socket.emit("createRoom", {
+      member: member,
+      roomName: member.memberName,
+      memberCount: 1,
+      status: "대기중",
+    });
     navigate("/fightroom");
   };
 

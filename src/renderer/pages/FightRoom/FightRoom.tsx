@@ -3,12 +3,21 @@ import "./FightRoom.scss";
 import { useNavigate } from "react-router-dom";
 import BattleMemberBox from "./components/BattleMemberBox";
 import toast from "react-hot-toast";
+import useSocketStore from "../../../common/zustand/socket.zustand";
+import { MemberDTO } from "../../../common/DTOs/member/member.dto";
+import { RoomDTO } from "../../../common/DTOs/room/room.dto";
+import useGuildStore from "../../../common/zustand/guild.zustand";
 const FightRoom = () => {
   const navigate = useNavigate();
+  const { socket } = useSocketStore();
   const [currentTab, setCurrentTab] = useState(0);
   const [allMessage, setAllMessage] = useState<string[]>([]);
   const [guildMessage, setGuildMessage] = useState<string[]>([]);
   const [message, setMessage] = useState<string>("");
+  const { guild } = useGuildStore();
+
+  const [fightHomeMembers, setFightHomeMembers] = useState<MemberDTO[]>([]);
+  const [fightAwayMembers, setFightAwayMembers] = useState<MemberDTO[]>([]);
 
   const tabArr = [
     { name: "전체", content: allMessage },
@@ -17,6 +26,21 @@ const FightRoom = () => {
   const leaveFightRoom = () => {
     navigate("/guild");
   };
+
+  useEffect(() => {
+    socket.on("createRoom", (roomData: RoomDTO) => {
+      console.log(roomData);
+      setFightHomeMembers((prevMembers) => [
+        ...prevMembers,
+        ...roomData.members,
+      ]);
+    });
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      socket.off("createRoom");
+    };
+  }, []);
 
   //====================================================================//
   //Button Func
@@ -79,18 +103,16 @@ const FightRoom = () => {
         <div className="battle-guild">
           <div className="guild-info">
             <img
-              src={`${process.env.SERVER_URL}/public/image/icon.png`}
+              src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
               width={50}
               height={50}
             />
-            뜨거운사나이
+            {guild.guildName}
           </div>
           <div className="guild-members">
-            <BattleMemberBox />
-            <BattleMemberBox />
-            <BattleMemberBox />
-            <BattleMemberBox />
-            <BattleMemberBox />
+            {fightHomeMembers.map((member) => (
+              <BattleMemberBox key={member.id} member={member} />
+            ))}
           </div>
         </div>
 
@@ -113,11 +135,11 @@ const FightRoom = () => {
             뜨거운사나이
           </div>
           <div className="guild-members">
+            {/* <BattleMemberBox />
             <BattleMemberBox />
             <BattleMemberBox />
             <BattleMemberBox />
-            <BattleMemberBox />
-            <BattleMemberBox />
+            <BattleMemberBox /> */}
           </div>
         </div>
       </div>
@@ -155,6 +177,7 @@ const FightRoom = () => {
           <div className="chat-tab">
             {tabArr.map((el, index) => (
               <div
+                key={index}
                 className={index === currentTab ? "subtab focused" : "subtab"}
                 onClick={() => selectTabHandler(index)}
               >
