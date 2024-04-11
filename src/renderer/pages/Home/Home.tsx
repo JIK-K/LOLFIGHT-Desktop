@@ -80,6 +80,7 @@ const Home: React.FC = () => {
       memberGame
     ).then((response) => {
       console.log(response);
+      setMember(response.data.data);
       toast.success("롤 정보 동기화 완료");
     });
   };
