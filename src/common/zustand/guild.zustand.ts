@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import { GuildDTO } from "../DTOs/guild/guild.dto";
 
 // MemberDTO를 상태로 갖는 store를 생성합니다.

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./FightRoom.scss";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BattleMemberBox from "./components/BattleMemberBox";
 import toast from "react-hot-toast";
 import useSocketStore from "../../../common/zustand/socket.zustand";
 import { MemberDTO } from "../../../common/DTOs/member/member.dto";
-import { RoomDTO } from "../../../common/DTOs/room/room.dto";
+import { WaitingRoomDTO } from "../../../common/DTOs/room/waitingRoom.dto";
 import useGuildStore from "../../../common/zustand/guild.zustand";
+import { MatchMembersDTO } from "../../../common/DTOs/room/matchMembers.dto";
+
 const FightRoom = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const test = { ...location.state };
   const { socket } = useSocketStore();
   const [currentTab, setCurrentTab] = useState(0);
   const [allMessage, setAllMessage] = useState<string[]>([]);
@@ -16,7 +20,11 @@ const FightRoom = () => {
   const [message, setMessage] = useState<string>("");
   const { guild } = useGuildStore();
 
-  const [fightHomeMembers, setFightHomeMembers] = useState<MemberDTO[]>([]);
+  const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>();
+
+  const [fightHomeMembers, setFightHomeMembers] = useState<MatchMembersDTO[]>(
+    []
+  );
   const [fightAwayMembers, setFightAwayMembers] = useState<MemberDTO[]>([]);
 
   const tabArr = [
@@ -28,12 +36,16 @@ const FightRoom = () => {
   };
 
   useEffect(() => {
-    socket.on("createRoom", (roomData: RoomDTO) => {
-      console.log(roomData);
-      setFightHomeMembers((prevMembers) => [
-        ...prevMembers,
-        ...roomData.members,
-      ]);
+    console.log(test);
+    socket.on("createRoom", (roomData: WaitingRoomDTO) => {
+      console.log("createRoom", roomData);
+      setFightHomeMembers(roomData.members);
+    });
+
+    socket.on("joinRoom", (roomData: WaitingRoomDTO) => {
+      console.log("joinRoom", roomData);
+      setWaitingRoomData(roomData);
+      setFightHomeMembers(roomData.members);
     });
 
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
@@ -46,10 +58,10 @@ const FightRoom = () => {
   //Button Func
   //====================================================================//
   const readyBattle = () => {
-    toast.success("yaya this team is jotFood ready gogo man");
+    toast.success("레디");
   };
   const searchBattleGuild = () => {
-    toast.success("testyaya search Guild max jax");
+    toast.success("매칭");
   };
   //====================================================================//
 
@@ -110,8 +122,8 @@ const FightRoom = () => {
             {guild.guildName}
           </div>
           <div className="guild-members">
-            {fightHomeMembers.map((member) => (
-              <BattleMemberBox key={member.id} member={member} />
+            {fightHomeMembers.map((matchMember, index) => (
+              <BattleMemberBox key={index} matchMember={matchMember} />
             ))}
           </div>
         </div>

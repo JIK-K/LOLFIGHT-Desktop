@@ -11,6 +11,8 @@ import GuildMemberBox from "./components/GuildMemberBox";
 import { useNavigate } from "react-router-dom";
 import GuildFightRoomBox from "./components/GuildFightRoomBox";
 import toast from "react-hot-toast";
+import { MatchMembersDTO } from "../../../common/DTOs/room/matchMembers.dto";
+import { WaitingRoomDTO } from "../../../common/DTOs/room/waitingRoom.dto";
 
 const Guild: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ const Guild: React.FC = () => {
   const [guildMembers, setGuildMembers] = useState<MemberDTO[]>([]);
   const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
+  const [guildRooms, setGuildRooms] = useState<WaitingRoomDTO[]>([]);
 
   useEffect(() => {
     if (!member.memberGuild) {
@@ -41,12 +44,19 @@ const Guild: React.FC = () => {
       setOnlineMembers(onlineMembers);
     });
 
+    socket.on("roomList", (guildRoomList: WaitingRoomDTO[]) => {
+      console.log("RoomList", guildRoomList);
+      setGuildRooms(guildRoomList);
+    });
+
     socket.emit("online", { guildName: member.memberGuild.guildName });
+    socket.emit("roomList", { guildName: member.memberGuild.guildName });
 
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       socket.off("message");
       socket.off("online");
+      socket.off("roomList");
     };
   }, []);
 
@@ -85,8 +95,12 @@ const Guild: React.FC = () => {
   };
 
   const createBattleRoom = () => {
-    socket.emit("createRoom", {
+    const matchMember: MatchMembersDTO = {
       member: member,
+      isReady: false,
+    };
+    socket.emit("createRoom", {
+      members: matchMember,
       roomName: member.memberName,
       memberCount: 1,
       status: "대기중",
@@ -187,10 +201,9 @@ const Guild: React.FC = () => {
         <div className="guild-fight-room">
           <div className="component-title">길드전 방 목록</div>
           <div className="fight-room-list">
-            <GuildFightRoomBox />
-            <GuildFightRoomBox />
-            <GuildFightRoomBox />
-            <GuildFightRoomBox />
+            {guildRooms.map((room, index) => (
+              <GuildFightRoomBox key={index} roomData={room} />
+            ))}
           </div>
         </div>
       </div>
