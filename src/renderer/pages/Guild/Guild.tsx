@@ -39,6 +39,12 @@ const Guild: React.FC = () => {
       setReceivedMessages((prevMessages) => [...prevMessages, receivedMessage]);
     });
 
+    // socket.on("createRoom", (roomData: WaitingRoomDTO) => {
+    //   console.log("createRoom", roomData);
+
+    //   navigate("/fightroom", { state: { roomData } });
+    // });
+
     socket.on("online", (onlineMembers: string[]) => {
       console.log("Online members:", onlineMembers);
       setOnlineMembers(onlineMembers);
@@ -54,6 +60,7 @@ const Guild: React.FC = () => {
 
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
+      socket.off("createRoom");
       socket.off("message");
       socket.off("online");
       socket.off("roomList");

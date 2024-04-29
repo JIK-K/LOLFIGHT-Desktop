@@ -2,7 +2,7 @@
   "name": "lolfight-desktop",
   "description": "A simple application with many useful functions which work with the LCU api of Riot Games ",
   "version": "2.1.0",
-  "author": "Nils Osswald",
+  "author": "LOLFIGHT",
   "license": "MIT",
   "private": true,
   "main": ".webpack/main",

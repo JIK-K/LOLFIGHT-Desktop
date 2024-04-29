@@ -9,6 +9,7 @@ import { WaitingRoomDTO } from "../../../common/DTOs/room/waitingRoom.dto";
 import useGuildStore from "../../../common/zustand/guild.zustand";
 import { MatchMembersDTO } from "../../../common/DTOs/room/matchMembers.dto";
 import useMemberStore from "../../../common/zustand/member.zustand";
+import { FightingRoomDTO } from "../../../common/DTOs/room/FightingRoom.dto";
 
 const FightRoom = () => {
   const navigate = useNavigate();
@@ -22,12 +23,8 @@ const FightRoom = () => {
   const [message, setMessage] = useState<string>("");
   const { guild } = useGuildStore();
 
-  const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>(data);
-
-  const [fightHomeMembers, setFightHomeMembers] = useState<MatchMembersDTO[]>(
-    []
-  );
-  const [fightAwayMembers, setFightAwayMembers] = useState<MemberDTO[]>([]);
+  const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>();
+  const [fightingRoomData, setFightingRoomData] = useState<FightingRoomDTO>();
 
   const tabArr = [
     { name: "전체", content: allMessage },
@@ -50,13 +47,11 @@ const FightRoom = () => {
     socket.on("createRoom", (roomData: WaitingRoomDTO) => {
       console.log("createRoom", roomData);
       setWaitingRoomData(roomData);
-      setFightHomeMembers(roomData.members);
     });
 
     socket.on("joinRoom", (roomData: WaitingRoomDTO) => {
       console.log("joinRoom", roomData);
       setWaitingRoomData(roomData);
-      setFightHomeMembers(roomData.members);
     });
 
     socket.on("leaveRoom", (roomData: WaitingRoomDTO) => {
@@ -66,8 +61,12 @@ const FightRoom = () => {
         toast("매치리더가 방을 떠났습니다.", { icon: "💔" });
       } else {
         setWaitingRoomData(roomData);
-        setFightHomeMembers(roomData.members);
       }
+    });
+
+    socket.on("searchFight", (roomData: FightingRoomDTO) => {
+      console.log(roomData);
+      toast.success("매칭완료");
     });
 
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
@@ -75,6 +74,7 @@ const FightRoom = () => {
       socket.off("createRoom");
       socket.off("joinRoom");
       socket.off("leaveRoom");
+      socket.off("searchFight");
     };
   }, []);
 
@@ -85,7 +85,9 @@ const FightRoom = () => {
     toast.success("레디");
   };
   const searchBattleGuild = () => {
-    toast.success("매칭");
+    socket.emit("searchFight", {
+      roomName: waitingRoomData.roomName,
+    });
   };
   //====================================================================//
 
@@ -146,9 +148,11 @@ const FightRoom = () => {
             {guild.guildName}
           </div>
           <div className="guild-members">
-            {waitingRoomData.members.map((matchMember, index) => (
-              <BattleMemberBox key={index} matchMember={matchMember} />
-            ))}
+            {waitingRoomData === undefined
+              ? "error"
+              : waitingRoomData.members.map((matchMember, index) => (
+                  <BattleMemberBox key={index} matchMember={matchMember} />
+                ))}
           </div>
         </div>
 
