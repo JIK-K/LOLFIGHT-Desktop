@@ -24,7 +24,11 @@ const FightRoom = () => {
   const { guild } = useGuildStore();
 
   const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>();
+  const [enemyRoomData, setEnemyRoomData] = useState<WaitingRoomDTO>();
   const [fightingRoomData, setFightingRoomData] = useState<FightingRoomDTO>();
+
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   const tabArr = [
     { name: "전체", content: allMessage },
@@ -36,6 +40,12 @@ const FightRoom = () => {
       member: member,
       isReady: false,
     };
+    if (fightingRoomData) {
+      console.log(fightingRoomData.fightRoomName);
+      socket.emit("searchCancel", {
+        roomName: fightingRoomData.fightRoomName,
+      });
+    }
     socket.emit("leaveRoom", {
       roomName: waitingRoomData.roomName,
       matchMember: matchMember,
@@ -66,28 +76,82 @@ const FightRoom = () => {
 
     socket.on("searchFight", (roomData: FightingRoomDTO) => {
       console.log(roomData);
-      toast.success("매칭완료");
+      setFightingRoomData(roomData);
     });
 
+    socket.on("searchCancel", (data: any) => {
+      setEnemyRoomData(null);
+      setFightingRoomData(null);
+    });
+
+    socket.on("readyFight", (roomData: FightingRoomDTO) => {
+      console.log(roomData);
+    });
+
+    socket.on("cancelReady", (roomData: FightingRoomDTO) => {
+      console.log(roomData);
+    });
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       socket.off("createRoom");
       socket.off("joinRoom");
       socket.off("leaveRoom");
       socket.off("searchFight");
+      socket.off("searchCancel");
     };
   }, []);
+
+  useEffect(() => {
+    if (fightingRoomData) {
+      console.log(fightingRoomData);
+      if (fightingRoomData.team_B != null) {
+        const enemyTeam =
+          fightingRoomData.team_A.roomName === waitingRoomData.roomName
+            ? fightingRoomData.team_B
+            : fightingRoomData.team_A;
+        setEnemyRoomData(enemyTeam);
+      } else {
+        //상대방이 떠나버렸어 그면 그냥 그 방을 아예 없에버려
+        setEnemyRoomData(null);
+        // setFightingRoomData(null);
+      }
+    }
+  }, [fightingRoomData]);
+
+  useEffect(() => {
+    console.log(enemyRoomData);
+    if (enemyRoomData) {
+      setIsSearching(false);
+      setIsReady(false);
+
+      toast.success("매칭 완료");
+    }
+  }, [enemyRoomData]);
 
   //====================================================================//
   //Button Func
   //====================================================================//
   const readyBattle = () => {
-    toast.success("레디");
+    if (!isReady) {
+      socket.emit("readyFight", { fightRoom: fightingRoomData.fightRoomName });
+      toast.success("준비 완료");
+    } else {
+      socket.emit("cancelReady", { fightRoom: fightingRoomData.fightRoomName });
+      toast.success("준비 취소");
+    }
+    setIsReady(!isReady);
   };
+
   const searchBattleGuild = () => {
-    socket.emit("searchFight", {
-      roomName: waitingRoomData.roomName,
-    });
+    if (isSearching) {
+      toast.success("매칭 취소");
+      socket.emit("searchCancel", { roomName: fightingRoomData.fightRoomName });
+    } else {
+      socket.emit("searchFight", {
+        roomName: waitingRoomData.roomName,
+      });
+    }
+    setIsSearching(!isSearching);
   };
   //====================================================================//
 
@@ -149,7 +213,7 @@ const FightRoom = () => {
           </div>
           <div className="guild-members">
             {waitingRoomData === undefined
-              ? "error"
+              ? ""
               : waitingRoomData.members.map((matchMember, index) => (
                   <BattleMemberBox key={index} matchMember={matchMember} />
                 ))}
@@ -167,45 +231,65 @@ const FightRoom = () => {
 
         <div className="battle-guild">
           <div className="guild-info">
-            <img
-              src={`${process.env.SERVER_URL}/public/image/icon.png`}
-              width={50}
-              height={50}
-            />
-            뜨거운사나이
+            {enemyRoomData &&
+              enemyRoomData.members[0] &&
+              enemyRoomData.members[0].member.memberGuild && (
+                <img
+                  src={`${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon}`}
+                  width={50}
+                  height={50}
+                />
+              )}
+            {enemyRoomData &&
+              enemyRoomData.members[0] &&
+              enemyRoomData.members[0].member.memberGuild &&
+              enemyRoomData.members[0].member.memberGuild.guildName}
           </div>
-          <div className="guild-members"></div>
+          <div className="guild-members">
+            {enemyRoomData
+              ? enemyRoomData.members.map((matchMember, index) => (
+                  <BattleMemberBox key={index} matchMember={matchMember} />
+                ))
+              : ""}
+          </div>
         </div>
       </div>
 
       <div className="battle-info-container">
         <div className="info-action-buttons">
-          <button
-            type="button"
-            className="ready-button"
-            onClick={readyBattle}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src={`${process.env.SERVER_URL}/public/ready.png`}
-              alt="leave"
-              width={40}
-            />
-            <div>준비 완료</div>
-          </button>
+          {enemyRoomData && (
+            <button
+              type="button"
+              className={isReady ? "ready-cancel-button" : "ready-button"}
+              onClick={readyBattle}
+              style={{ cursor: "pointer" }}
+            >
+              <img
+                src={`${process.env.SERVER_URL}/public/ready.png`}
+                alt="leave"
+                width={40}
+              />
+              <div>{isReady ? "준비 취소" : "준비 완료"}</div>
+            </button>
+          )}
 
-          <button
-            type="button"
-            className="search-button"
-            onClick={searchBattleGuild}
-          >
-            <img
-              src={`${process.env.SERVER_URL}/public/search.png`}
-              alt="leave"
-              width={40}
-            />
-            <div>상대 팀 찾기</div>
-          </button>
+          {waitingRoomData &&
+            waitingRoomData.roomName.includes(member.memberName) && (
+              <button
+                type="button"
+                className={
+                  isSearching ? "search-cancel-button" : "search-button"
+                }
+                onClick={searchBattleGuild}
+              >
+                <img
+                  src={`${process.env.SERVER_URL}/public/search.png`}
+                  alt="leave"
+                  width={40}
+                />
+                <div>{isSearching ? "매칭 취소" : "상대 팀 찾기"}</div>
+              </button>
+            )}
         </div>
 
         <div className="info-chat">

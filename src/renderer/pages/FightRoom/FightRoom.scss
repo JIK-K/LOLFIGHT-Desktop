@@ -99,6 +99,29 @@
         color: #fff;
       }
 
+      .ready-cancel-button {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(to bottom, #78acfa, #4a8cce);
+        border: 1px solid #4a8cce;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 10px 20px;
+        font-size: 20px;
+        color: white;
+        font-family: "GmarketSansMedium", sans-serif;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .ready-cancel-button:hover {
+        background: linear-gradient(to bottom, #4a8cce, #78acfa);
+        color: #fff;
+      }
+
       .search-button {
         display: flex;
         width: 100%;
@@ -119,6 +142,29 @@
       }
       .search-button:hover {
         background: linear-gradient(to bottom, #ff1a1a, #ff4d4d);
+        color: #fff;
+      }
+
+      .search-cancel-button {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(to bottom, #994747, #ca4c3c);
+        border: 1px solid #ca4c3c;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 10px 20px;
+        font-size: 20px;
+        color: white;
+        font-family: "GmarketSansMedium", sans-serif;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .search-cancel-button:hover {
+        background: linear-gradient(to bottom, #ca4c3c, #994747);
         color: #fff;
       }
     }
