@@ -48,7 +48,14 @@ const LoginPage = () => {
     <div className="login-container">
       <div className="left-container">
         <div className="logo-container">
-          {/* <p className="logo-text">LOL.FIGHT</p> */}
+          <div className="logo-image">
+            <img
+              src={`${process.env.SERVER_URL}/public/image/icon-blue.png`}
+              alt="logo"
+              width={40}
+            />
+            LOLFIGHT
+          </div>
           <p className="logo-text">
             무자비하게 <br />
             우리와 함께하세요

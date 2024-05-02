@@ -25,6 +25,7 @@ const FightRoom = () => {
 
   const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>();
   const [enemyRoomData, setEnemyRoomData] = useState<WaitingRoomDTO>();
+  const [prevEnemyRoomName, setPrevEnemyRoomName] = useState<string>();
   const [fightingRoomData, setFightingRoomData] = useState<FightingRoomDTO>();
 
   const [isSearching, setIsSearching] = useState<boolean>(false);
@@ -35,13 +36,13 @@ const FightRoom = () => {
     { name: "길드", content: guildMessage },
   ];
   const leaveFightRoom = () => {
-    console.log(waitingRoomData);
+    // console.log(waitingRoomData);
     const matchMember: MatchMembersDTO = {
       member: member,
       isReady: false,
     };
     if (fightingRoomData) {
-      console.log(fightingRoomData.fightRoomName);
+      // console.log(fightingRoomData.fightRoomName);
       socket.emit("searchCancel", {
         roomName: fightingRoomData.fightRoomName,
       });
@@ -55,17 +56,17 @@ const FightRoom = () => {
 
   useEffect(() => {
     socket.on("createRoom", (roomData: WaitingRoomDTO) => {
-      console.log("createRoom", roomData);
+      // console.log("createRoom", roomData);
       setWaitingRoomData(roomData);
     });
 
     socket.on("joinRoom", (roomData: WaitingRoomDTO) => {
-      console.log("joinRoom", roomData);
+      // console.log("joinRoom", roomData);
       setWaitingRoomData(roomData);
     });
 
     socket.on("leaveRoom", (roomData: WaitingRoomDTO) => {
-      console.log("leaveRoom", roomData);
+      // console.log("leaveRoom", roomData);
       if (roomData === null) {
         navigate("/guild");
         toast("매치리더가 방을 떠났습니다.", { icon: "💔" });
@@ -75,7 +76,6 @@ const FightRoom = () => {
     });
 
     socket.on("searchFight", (roomData: FightingRoomDTO) => {
-      console.log(roomData);
       setFightingRoomData(roomData);
     });
 
@@ -85,11 +85,11 @@ const FightRoom = () => {
     });
 
     socket.on("readyFight", (roomData: FightingRoomDTO) => {
-      console.log(roomData);
+      setFightingRoomData(roomData);
     });
 
     socket.on("cancelReady", (roomData: FightingRoomDTO) => {
-      console.log(roomData);
+      setFightingRoomData(roomData);
     });
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
@@ -98,6 +98,8 @@ const FightRoom = () => {
       socket.off("leaveRoom");
       socket.off("searchFight");
       socket.off("searchCancel");
+      socket.off("readyFight");
+      socket.off("cancelReady");
     };
   }, []);
 
@@ -109,34 +111,68 @@ const FightRoom = () => {
           fightingRoomData.team_A.roomName === waitingRoomData.roomName
             ? fightingRoomData.team_B
             : fightingRoomData.team_A;
+        const homeTeam =
+          fightingRoomData.team_A.roomName === waitingRoomData.roomName
+            ? fightingRoomData.team_A
+            : fightingRoomData.team_B;
+        setWaitingRoomData(homeTeam);
         setEnemyRoomData(enemyTeam);
       } else {
         //상대방이 떠나버렸어 그면 그냥 그 방을 아예 없에버려
         setEnemyRoomData(null);
+        setPrevEnemyRoomName(null);
+        initRoomData();
         // setFightingRoomData(null);
       }
     }
   }, [fightingRoomData]);
 
   useEffect(() => {
-    console.log(enemyRoomData);
     if (enemyRoomData) {
-      setIsSearching(false);
-      setIsReady(false);
-
-      toast.success("매칭 완료");
+      if (!prevEnemyRoomName || prevEnemyRoomName !== enemyRoomData.roomName) {
+        setIsSearching(false);
+        setIsReady(false);
+        toast.success("매칭 완료");
+      }
+      setPrevEnemyRoomName(enemyRoomData.roomName);
     }
   }, [enemyRoomData]);
+
+  //====================================================================//
+  //Waiting Room Func
+  //====================================================================//
+  const initRoomData = () => {
+    if (waitingRoomData) {
+      const updatedMembers = waitingRoomData.members.map((member) => ({
+        ...member,
+        isReady: false,
+      }));
+      setWaitingRoomData((prevRoomData) => ({
+        ...prevRoomData,
+        members: updatedMembers,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    console.log(waitingRoomData);
+  }, [waitingRoomData]);
 
   //====================================================================//
   //Button Func
   //====================================================================//
   const readyBattle = () => {
     if (!isReady) {
-      socket.emit("readyFight", { fightRoom: fightingRoomData.fightRoomName });
+      socket.emit("readyFight", {
+        fightRoom: fightingRoomData.fightRoomName,
+        memberName: member.memberName,
+      });
       toast.success("준비 완료");
     } else {
-      socket.emit("cancelReady", { fightRoom: fightingRoomData.fightRoomName });
+      socket.emit("cancelReady", {
+        fightRoom: fightingRoomData.fightRoomName,
+        memberName: member.memberName,
+      });
       toast.success("준비 취소");
     }
     setIsReady(!isReady);
