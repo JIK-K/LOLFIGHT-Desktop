@@ -4,6 +4,6 @@ export interface FightingRoomDTO {
   fightRoomName: string;
   team_A: WaitingRoomDTO;
   team_B: WaitingRoomDTO;
-  ReadyCount: number;
+  readyCount: number;
   status: string;
 }

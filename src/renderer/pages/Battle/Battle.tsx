@@ -2,6 +2,12 @@ import React from "react";
 import "./Battle.scss";
 
 const Battle: React.FC = () => {
+  const testPlayMp3 = () => {
+    const audio = new Audio(`${process.env.SERVER_URL}/public/sound/test.mp3`);
+    audio.volume = 0.2; // 볼륨 조절 (0.0 ~ 1.0)
+    audio.play();
+  };
+
   return (
     <div className="battle-page">
       <div className="one">
@@ -16,7 +22,7 @@ const Battle: React.FC = () => {
           <span>공식 클랜전</span>
           <span>계속한다</span>
           <span>1.7k</span>
-          <button>참여하기</button>
+          <button onClick={testPlayMp3}>test.mp3 재생하기</button>
         </div>
       </div>
     </div>

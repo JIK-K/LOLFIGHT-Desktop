@@ -17,11 +17,12 @@ const FightRoom = () => {
   const data = { ...location.state };
   const { socket } = useSocketStore();
   const { member } = useMemberStore();
+  const { guild } = useGuildStore();
+
   const [currentTab, setCurrentTab] = useState(0);
   const [allMessage, setAllMessage] = useState<string[]>([]);
   const [guildMessage, setGuildMessage] = useState<string[]>([]);
   const [message, setMessage] = useState<string>("");
-  const { guild } = useGuildStore();
 
   const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>();
   const [enemyRoomData, setEnemyRoomData] = useState<WaitingRoomDTO>();
@@ -30,6 +31,8 @@ const FightRoom = () => {
 
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
+
+  const [allReady, setAllReady] = useState<boolean>(false);
 
   const tabArr = [
     { name: "전체", content: allMessage },
@@ -91,6 +94,18 @@ const FightRoom = () => {
     socket.on("cancelReady", (roomData: FightingRoomDTO) => {
       setFightingRoomData(roomData);
     });
+
+    socket.on("startFight", (fightData: FightingRoomDTO) => {
+      console.log(fightData);
+    });
+
+    socket.on("message", (receivedMessage: string) => {
+      setGuildMessage((prevMessages) => [...prevMessages, receivedMessage]);
+    });
+
+    socket.on("fightMessage", (receivedMessage: string) => {
+      setAllMessage((prevMessages) => [...prevMessages, receivedMessage]);
+    });
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       socket.off("createRoom");
@@ -100,6 +115,9 @@ const FightRoom = () => {
       socket.off("searchCancel");
       socket.off("readyFight");
       socket.off("cancelReady");
+      socket.off("startFight");
+      socket.off("message");
+      socket.off("fightMessage");
     };
   }, []);
 
@@ -115,8 +133,16 @@ const FightRoom = () => {
           fightingRoomData.team_A.roomName === waitingRoomData.roomName
             ? fightingRoomData.team_A
             : fightingRoomData.team_B;
+
         setWaitingRoomData(homeTeam);
         setEnemyRoomData(enemyTeam);
+        console.log(fightingRoomData.readyCount);
+        if (fightingRoomData.readyCount === 2) {
+          console.log("레디완");
+          setAllReady(true);
+        } else {
+          setAllReady(false);
+        }
       } else {
         //상대방이 떠나버렸어 그면 그냥 그 방을 아예 없에버려
         setEnemyRoomData(null);
@@ -132,6 +158,7 @@ const FightRoom = () => {
       if (!prevEnemyRoomName || prevEnemyRoomName !== enemyRoomData.roomName) {
         setIsSearching(false);
         setIsReady(false);
+        matchingSuccessSound();
         toast.success("매칭 완료");
       }
       setPrevEnemyRoomName(enemyRoomData.roomName);
@@ -182,12 +209,26 @@ const FightRoom = () => {
     if (isSearching) {
       toast.success("매칭 취소");
       socket.emit("searchCancel", { roomName: fightingRoomData.fightRoomName });
+      setIsSearching(!isSearching);
     } else {
-      socket.emit("searchFight", {
-        roomName: waitingRoomData.roomName,
-      });
+      if (allReady) {
+        if (fightingRoomData.team_A.roomName.includes(member.memberName)) {
+          //내가 team_A의 방장이다 = 이 매치의 리더이다
+          console.log("게임 시작");
+          socket.emit("startFight", {
+            fightRoom: fightingRoomData.fightRoomName,
+          });
+        } else {
+          toast.error("매치리더만이 게임을 시작할수있다.");
+        }
+      } else {
+        console.log("돌리기");
+        socket.emit("searchFight", {
+          roomName: waitingRoomData.roomName,
+        });
+        setIsSearching(!isSearching);
+      }
     }
-    setIsSearching(!isSearching);
   };
   //====================================================================//
 
@@ -198,30 +239,63 @@ const FightRoom = () => {
     setCurrentTab(index);
   };
   const sendMessage = () => {
-    setMessage("");
     switch (currentTab) {
       case 0:
-        setAllMessage((prevMessages) => [...prevMessages, message]);
+        socket.emit("fightMessage", {
+          fightRoom: fightingRoomData.fightRoomName,
+          memberName: member.memberName,
+          message: message,
+        });
+        // setAllMessage((prevMessages) => [...prevMessages, message]);
         break;
       case 1:
-        setGuildMessage((prevMessages) => [...prevMessages, message]);
+        socket.emit("message", {
+          memberName: member.memberName,
+          guildName: member.memberGuild.guildName,
+          message: message,
+        });
+      // setGuildMessage((prevMessages) => [...prevMessages, message]);
     }
+    setMessage("");
   };
   const handleInputMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setMessage("");
       switch (currentTab) {
         case 0:
-          setAllMessage((prevMessages) => [...prevMessages, message]);
+          socket.emit("fightMessage", {
+            fightRoom: fightingRoomData.fightRoomName,
+            memberName: member.memberName,
+            message: message,
+          });
+          // setAllMessage((prevMessages) => [...prevMessages, message]);
           break;
         case 1:
-          setGuildMessage((prevMessages) => [...prevMessages, message]);
+          socket.emit("message", {
+            memberName: member.memberName,
+            guildName: member.memberGuild.guildName,
+            message: message,
+          });
+        // setGuildMessage((prevMessages) => [...prevMessages, message]);
       }
+      setMessage("");
     }
   };
+  //====================================================================//
+
+  //====================================================================//
+  //Sound Func
+  //====================================================================//
+  const matchingSuccessSound = () => {
+    const audio = new Audio(
+      `${process.env.SERVER_URL}/public/sound/matchingSuccess.mp3`
+    );
+    audio.volume = 0.2; // 볼륨 조절 (0.0 ~ 1.0)
+    audio.play();
+  };
+
   //====================================================================//
 
   return (
@@ -314,7 +388,11 @@ const FightRoom = () => {
               <button
                 type="button"
                 className={
-                  isSearching ? "search-cancel-button" : "search-button"
+                  isSearching
+                    ? "search-cancel-button"
+                    : allReady
+                    ? "start-button"
+                    : "search-button"
                 }
                 onClick={searchBattleGuild}
               >
@@ -323,7 +401,13 @@ const FightRoom = () => {
                   alt="leave"
                   width={40}
                 />
-                <div>{isSearching ? "매칭 취소" : "상대 팀 찾기"}</div>
+                <div>
+                  {isSearching
+                    ? "매칭 취소"
+                    : allReady
+                    ? "게임 시작"
+                    : "상대 팀 찾기"}
+                </div>
               </button>
             )}
         </div>
