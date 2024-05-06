@@ -5,10 +5,11 @@ import {
   EventResponse,
   JsonObjectLike,
   LeagueClient,
-} from 'league-connect';
-import { WebSocket } from 'ws';
-import { BrowserWindow } from 'electron';
-import https from 'https';
+  createWebSocketConnection,
+} from "league-connect";
+import { WebSocket } from "ws";
+import { BrowserWindow } from "electron";
+import https from "https";
 
 class LCU {
   private window: BrowserWindow;
@@ -30,26 +31,44 @@ class LCU {
     this.webSocket = this.createSocket();
 
     new LeagueClient(this.credentials)
-      .on('disconnect', () => {
+      .on("disconnect", () => {
         this.connected = false;
-        this.window.webContents.send('lcu-disconnect');
+        this.window.webContents.send("lcu-disconnect");
       })
       .start();
 
     this.connected = true;
+
+    const ws = await createWebSocketConnection({
+      authenticationOptions: {
+        awaitConnection: true,
+      },
+    });
+
+    // ws.subscribe("/lol-champ-select/v1/session", (data) => {
+    //   console.log(data.actions);
+    // });
+    ws.subscribe("/lol-end-of-game/v1/eog-stats-block", (data) => {
+      console.log("data.actions : eog", data.actions);
+      console.log("data : eog", data);
+    });
+    ws.subscribe("/lol-end-of-game/v1/champion-mastery-updates", (data) => {
+      console.log("data.actions : master", data.actions);
+      console.log("data : master");
+    });
   };
 
   request = async (
-    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
     endpoint: string,
-    body?: JsonObjectLike,
+    body?: JsonObjectLike
   ): Promise<JsonObjectLike> => {
     if (!this.connected) return {};
 
     return new Promise((resolve, reject) => {
       createHttp1Request(
         { method: method, url: endpoint, body: body },
-        this.credentials,
+        this.credentials
       )
         .then((response) => response.json())
         .then((json) => resolve(json))
@@ -65,13 +84,13 @@ class LCU {
       socket = new WebSocket(url, {
         headers: {
           Authorization: `Basic ${Buffer.from(
-            `riot:${this.credentials.password}`,
-          ).toString('base64')}`,
+            `riot:${this.credentials.password}`
+          ).toString("base64")}`,
         },
         agent: new https.Agent(
-          typeof this.credentials?.certificate === 'undefined'
+          typeof this.credentials?.certificate === "undefined"
             ? { rejectUnauthorized: false }
-            : { ca: this.credentials?.certificate },
+            : { ca: this.credentials?.certificate }
         ),
       });
     } while (
@@ -80,21 +99,21 @@ class LCU {
     );
 
     // Handle incoming messages
-    socket.on('message', (content: string) => {
+    socket.on("message", (content: string) => {
       try {
         const json = JSON.parse(content);
         const [res]: [EventResponse] = json.slice(2);
 
-        this.window.webContents.send('lcu-event', res);
+        this.window.webContents.send("lcu-event", res);
       } catch {}
     });
 
     // Subscribe to Json API
     if (socket.readyState === WebSocket.OPEN)
-      socket.send(JSON.stringify([5, 'OnJsonApiEvent']));
+      socket.send(JSON.stringify([5, "OnJsonApiEvent"]));
     else {
-      socket.on('open', () => {
-        socket.send(JSON.stringify([5, 'OnJsonApiEvent']));
+      socket.on("open", () => {
+        socket.send(JSON.stringify([5, "OnJsonApiEvent"]));
       });
     }
 

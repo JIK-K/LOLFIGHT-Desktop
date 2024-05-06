@@ -4,12 +4,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import BattleMemberBox from "./components/BattleMemberBox";
 import toast from "react-hot-toast";
 import useSocketStore from "../../../common/zustand/socket.zustand";
-import { MemberDTO } from "../../../common/DTOs/member/member.dto";
 import { WaitingRoomDTO } from "../../../common/DTOs/room/waitingRoom.dto";
 import useGuildStore from "../../../common/zustand/guild.zustand";
 import { MatchMembersDTO } from "../../../common/DTOs/room/matchMembers.dto";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import { FightingRoomDTO } from "../../../common/DTOs/room/FightingRoom.dto";
+import { request } from "../../../renderer/utils/ipcBridge";
 
 const FightRoom = () => {
   const navigate = useNavigate();
@@ -38,6 +38,7 @@ const FightRoom = () => {
     { name: "전체", content: allMessage },
     { name: "길드", content: guildMessage },
   ];
+
   const leaveFightRoom = () => {
     // console.log(waitingRoomData);
     const matchMember: MatchMembersDTO = {
@@ -97,6 +98,8 @@ const FightRoom = () => {
 
     socket.on("startFight", (fightData: FightingRoomDTO) => {
       console.log(fightData);
+      setFightingRoomData(fightData);
+      createCustomRame(fightData);
     });
 
     socket.on("message", (receivedMessage: string) => {
@@ -164,6 +167,64 @@ const FightRoom = () => {
       setPrevEnemyRoomName(enemyRoomData.roomName);
     }
   }, [enemyRoomData]);
+
+  //====================================================================//
+  //Riot Custom Game Func
+  //====================================================================//
+  const createCustomRame = (fightData: FightingRoomDTO) => {
+    const requestBody = {
+      customGameLobby: {
+        configuration: {
+          gameMode: "CLASSIC",
+          // gameServerRegion: "",
+          mapId: 11,
+          /*
+          11: 소환사협곡
+          12: 칼바람
+          */
+          // maxPlayerCount: 0,
+          mutators: { id: 6 },
+          spectatorPolicy: "AllAllowed",
+          teamSize: 5,
+        },
+        lobbyName:
+          fightData.team_A.roomName + " VS " + fightData.team_B.roomName,
+        lobbyPassword: fightData.fightRoomName,
+      },
+      isCustom: true,
+    };
+    request("POST", "/lol-lobby/v2/lobby", requestBody)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    request("GET", "/lol-end-of-game/v1/eog-stats-block");
+  };
+
+  // /lol-lobby/v2/lobby
+  // /lol-lobby/v1/custom-games/11
+  // const gameID = 6978951773;
+  // const yaya = {
+  //   password: null,
+  //   asSpectator: true,
+  // };
+  // request("POST", `/lol-lobby/v1/custom-games/${gameID}/join`, yaya)
+  // /lol-match-history/v1/products/lol/{summoner["puuid"]}/matches
+  // "1e9dd0ac-3dd4-57ef-98ca-864fe40ecd2b"
+  // request(
+  //   "GET",
+  //   `/lol-match-history/v1/products/lol/1e9dd0ac-3dd4-57ef-98ca-864fe40ecd2b/matches`
+  // )
+  //   .then((response) => {
+  //     console.log(response);
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+
+  //====================================================================//
 
   //====================================================================//
   //Waiting Room Func
