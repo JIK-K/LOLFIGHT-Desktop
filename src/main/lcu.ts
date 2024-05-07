@@ -10,6 +10,7 @@ import {
 import { WebSocket } from "ws";
 import { BrowserWindow } from "electron";
 import https from "https";
+import { testyaya } from "../api/guild.api";
 
 class LCU {
   private window: BrowserWindow;
@@ -49,13 +50,14 @@ class LCU {
     //   console.log(data.actions);
     // });
     ws.subscribe("/lol-end-of-game/v1/eog-stats-block", (data) => {
-      console.log("data.actions : eog", data.actions);
-      console.log("data : eog", data);
+      // console.log("data : eog", data);
+      // setBattle(data);
+      testyaya(data);
     });
-    ws.subscribe("/lol-end-of-game/v1/champion-mastery-updates", (data) => {
-      console.log("data.actions : master", data.actions);
-      console.log("data : master");
-    });
+    // ws.subscribe("/lol-end-of-game/v1/champion-mastery-updates", (data) => {
+    //   console.log("data.actions : master", data.actions);
+    //   console.log("data : master");
+    // });
   };
 
   request = async (
