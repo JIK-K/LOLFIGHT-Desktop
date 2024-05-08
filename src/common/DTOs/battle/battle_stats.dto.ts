@@ -2,15 +2,15 @@ import { BaseDTO } from "../base.dto";
 
 export interface BattleStatsDTO extends BaseDTO {
   id: string;
-  ASSISTS: number;
-  CHAMPIONS_KILLED: number;
-  GOLD_EARNED: number;
-  LEVEL: number;
-  MINIONS_KILLED: number;
+  ASSISTS: number; //어시
+  CHAMPIONS_KILLED: number; //킬
+  GOLD_EARNED: number; //돈
+  LEVEL: number; //레벨
+  MINIONS_KILLED: number; //cs
   NEUTRAL_MINIONS_KILLED: number;
   NEUTRAL_MINIONS_KILLED_ENEMY_JUNGLE: number;
   NEUTRAL_MINIONS_KILLED_YOUR_JUNGLE: number;
-  NUM_DEATHS: number;
+  NUM_DEATHS: number; //데스
   TOTAL_DAMAGE_DEALT: number; //적에게 가한 피해량
   TOTAL_DAMAGE_DEALT_TO_CHAMPIONS: number; //챔피언에게 가한 피해량
   TOTAL_DAMAGE_DEALT_TO_OBJECTIVES: number; //목표물에게 가한 피해량

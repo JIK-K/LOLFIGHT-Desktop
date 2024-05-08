@@ -39,23 +39,20 @@ export const getGuildInfo = async (
 };
 
 export const testyaya = async (data: any) => {
-  // let url = `${baseUrl}/info`;
-
-  // const queryParams = `?name=${guildName}`;
-  // url += queryParams;
-  console.log(data);
-  console.log("속성만 보자", data.teams);
-  console.log("속성만 보자2", data.teams[0].stats);
+  // console.log(data);
+  console.log("data-teams", data.teams);
+  console.log("team-stats", data.teams[0].stats);
+  console.log("team-players", data.teams[0].players);
   const testData: BattleDTO = {
-    id: "", // 여기서 id를 어떻게 설정할지에 따라 다를 수 있습니다.
+    id: "",
     gameId: data.gameId,
     gameMode: data.gameMode,
     teams: data.teams.map((team: any) => ({
-      id: "", // 여기서 id를 어떻게 설정할지에 따라 다를 수 있습니다.
+      id: "",
       isPlayerTeam: team.isPlayerTeam,
       isWinningTeam: team.isWinningTeam,
       players: team.players.map((player: any) => ({
-        id: "", // 여기서 id를 어떻게 설정할지에 따라 다를 수 있습니다.
+        id: "",
         ...player,
         stats: {
           ...player.stats,
@@ -68,26 +65,25 @@ export const testyaya = async (data: any) => {
     })),
   };
 
-  console.log("아제발", testData);
+  console.log("plz come to me", testData);
 
-  // 모든 속성의 값을 출력하는 함수
-  function printAllValues(obj: any) {
-    // 객체의 모든 속성에 대해 반복
-    Object.keys(obj).forEach((key) => {
-      const value = obj[key];
-      // 값이 객체이면 재귀적으로 처리
-      console.log("플리즈컴프리즈", value);
-      if (typeof value === "object" && value !== null) {
-        printAllValues(value);
-      } else {
-        // 값이 객체가 아니면 출력
-        console.log(`${key}: ${value}`);
-      }
-    });
-  }
+  // // 모든 속성의 값을 출력하는 함수
+  // function printAllValues(obj: any) {
+  //   // 객체의 모든 속성에 대해 반복
+  //   Object.keys(obj).forEach((key) => {
+  //     const value = obj[key];
+  //     // 값이 객체이면 재귀적으로 처리
+  //     console.log("value-ref", value);
+  //     if (typeof value === "object" && value !== null) {
+  //       printAllValues(value);
+  //     } else {
+  //       // 값이 객체가 아니면 출력
+  //       console.log(`${key}: ${value}`);
+  //     }
+  //   });
+  // }
 
-  // testData의 모든 값을 출력
-  printAllValues(testData);
+  // printAllValues(testData);
 
   // return await axios.get(url);
 };

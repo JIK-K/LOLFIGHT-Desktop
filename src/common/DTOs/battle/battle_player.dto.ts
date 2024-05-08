@@ -9,5 +9,6 @@ export interface BattlePlayerDTO extends BaseDTO {
   puuid: string;
   spell1Id: number;
   spell2id: number;
+  summonerName: string;
   stats: BattleStatsDTO;
 }
