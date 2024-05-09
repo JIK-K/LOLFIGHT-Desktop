@@ -179,8 +179,8 @@ const FightRoom = () => {
           // gameServerRegion: "",
           mapId: 11,
           /*
-          11: 소환사협곡
-          12: 칼바람
+          11: Summoner's Rift
+          12: HowlingAbyss
           */
           // maxPlayerCount: 0,
           mutators: { id: 6 },
@@ -200,7 +200,7 @@ const FightRoom = () => {
       .catch((error) => {
         console.log(error);
       });
-    request("GET", "/lol-end-of-game/v1/eog-stats-block");
+    // request("GET", "/lol-end-of-game/v1/eog-stats-block");
   };
 
   // /lol-lobby/v2/lobby

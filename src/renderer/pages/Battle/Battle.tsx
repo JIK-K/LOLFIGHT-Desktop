@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Battle.scss";
+import { createWebSocketConnection } from "league-connect";
+import { recordBattle } from "../../../api/battle.api";
 
 const Battle: React.FC = () => {
   const testPlayMp3 = () => {

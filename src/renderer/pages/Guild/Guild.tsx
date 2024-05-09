@@ -69,13 +69,13 @@ const Guild: React.FC = () => {
 
   const calNextGuildRank = () => {
     // 1200브
-    // 1600실
-    // 1800골
-    // 2000플
+    // 1400실
+    // 1600골
+    // 1900플
     // 2200다
-    // 2450마
-    // 2750그마
-    // 3000++ 챌
+    // 2600마
+    // 3000그마
+    // 3500++ 챌
     console.log("히이잉 나중에해야지~");
   };
   const sendMessage = () => {
@@ -165,9 +165,9 @@ const Guild: React.FC = () => {
                   <p>{guild.guildTier}</p>
                   <p>{guild.guildRecord.recordLadder}LP</p>
                 </div>
-                <progress id="progress" value={10} max="100">
+                {/* <progress id="progress" value={10} max="100">
                   승률
-                </progress>
+                </progress> */}
               </div>
             </div>
           </div>

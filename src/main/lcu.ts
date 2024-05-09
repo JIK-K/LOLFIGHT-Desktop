@@ -5,12 +5,12 @@ import {
   EventResponse,
   JsonObjectLike,
   LeagueClient,
-  createWebSocketConnection,
 } from "league-connect";
 import { WebSocket } from "ws";
 import { BrowserWindow } from "electron";
 import https from "https";
-import { testyaya } from "../api/guild.api";
+import { recordBattle } from "../api/battle.api";
+import { getGuildInfo } from "../api/guild.api";
 
 class LCU {
   private window: BrowserWindow;
@@ -39,25 +39,6 @@ class LCU {
       .start();
 
     this.connected = true;
-
-    const ws = await createWebSocketConnection({
-      authenticationOptions: {
-        awaitConnection: true,
-      },
-    });
-
-    // ws.subscribe("/lol-champ-select/v1/session", (data) => {
-    //   console.log(data.actions);
-    // });
-    ws.subscribe("/lol-end-of-game/v1/eog-stats-block", (data) => {
-      // console.log("data : eog", data);
-      // setBattle(data);
-      testyaya(data);
-    });
-    // ws.subscribe("/lol-end-of-game/v1/champion-mastery-updates", (data) => {
-    //   console.log("data.actions : master", data.actions);
-    //   console.log("data : master");
-    // });
   };
 
   request = async (

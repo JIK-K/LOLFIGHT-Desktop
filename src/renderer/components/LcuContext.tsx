@@ -8,6 +8,7 @@ import useMemberStore from "../../common/zustand/member.zustand";
 import useSocketStore from "../../common/zustand/socket.zustand";
 import useGuildStore from "../../common/zustand/guild.zustand";
 import SocketIOClient, { Socket } from "socket.io-client";
+import { recordBattle } from "../../api/battle.api";
 
 const { ipcRenderer } = window.require("electron");
 
@@ -419,6 +420,10 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
             },
           }));
           break;
+        }
+        case "/lol-end-of-game/v1/eog-stats-block": {
+          console.log("yayaman", message.data);
+          recordBattle(message.data);
         }
       }
     };

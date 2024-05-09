@@ -2,10 +2,12 @@ import { BaseDTO } from "../base.dto";
 import { BattlePlayerDTO } from "./battle_player.dto";
 
 export interface BattleTeamDTO extends BaseDTO {
-  id: string;
-  isPlayerTeam: boolean;
-  isWinningTeam: boolean;
-  players: BattlePlayerDTO[];
-  stats: any;
-  teamId: number;
+  id?: string;
+  isWinning: boolean;
+  guildName: string;
+  player1: BattlePlayerDTO;
+  player2: BattlePlayerDTO;
+  player3: BattlePlayerDTO;
+  player4: BattlePlayerDTO;
+  player5: BattlePlayerDTO;
 }
