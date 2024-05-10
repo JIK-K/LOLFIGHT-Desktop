@@ -10,9 +10,14 @@ const baseUrl = `${process.env.SERVER_URL}/battle`;
  * @param data
  */
 export const recordBattle = async (
+  teamAGuild: string,
+  teamBGuild: string,
+  fightRoomName: string,
   data: any
 ): Promise<AxiosResponse<ResponseDTO<BattleDTO[]>>> => {
   let url = `${baseUrl}`;
+  const queryParams = `?fightRoomName=${fightRoomName}`;
+  url += queryParams;
 
   const battleResultData: BattleDTO = {
     battleId: data.gameId,
@@ -20,7 +25,7 @@ export const recordBattle = async (
     battleLength: data.gameLength,
     teamA: {
       isWinning: data.teams[0].isWinningTeam,
-      guildName: "롤파이트",
+      guildName: teamAGuild,
       player1: createPlayerDTO(data.teams[0]?.players[0]),
       player2: createPlayerDTO(data.teams[0]?.players[1]),
       player3: createPlayerDTO(data.teams[0]?.players[2]),
@@ -29,7 +34,7 @@ export const recordBattle = async (
     },
     teamB: {
       isWinning: data.teams[1].isWinningTeam,
-      guildName: "hank",
+      guildName: teamBGuild,
       player1: createPlayerDTO(data.teams[1]?.players[0]),
       player2: createPlayerDTO(data.teams[1]?.players[1]),
       player3: createPlayerDTO(data.teams[1]?.players[2]),

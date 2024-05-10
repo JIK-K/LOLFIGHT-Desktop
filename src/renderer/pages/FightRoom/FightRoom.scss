@@ -276,3 +276,15 @@
     }
   }
 }
+.fight-room-gaming {
+  display: flex;
+  width: 900px;
+  height: calc(100vh - 96px);
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #616366;
+  border-radius: 5px;
+  background-color: #282a2e;
+  font-family: "GmarketSansMedium", sans-serif;
+  font-size: 20px;
+}

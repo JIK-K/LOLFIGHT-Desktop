@@ -2,13 +2,14 @@ import type { EventResponse } from "league-connect";
 import React, { ReactNode, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { request } from "../utils/ipcBridge";
-import { findMember } from "../../api/member.api";
+import { findMember, getGuildName } from "../../api/member.api";
 import { getGuildInfo } from "../../api/guild.api";
 import useMemberStore from "../../common/zustand/member.zustand";
 import useSocketStore from "../../common/zustand/socket.zustand";
 import useGuildStore from "../../common/zustand/guild.zustand";
 import SocketIOClient, { Socket } from "socket.io-client";
 import { recordBattle } from "../../api/battle.api";
+import useFightingRoomStore from "../../common/zustand/fightRoom.zustand";
 
 const { ipcRenderer } = window.require("electron");
 
@@ -183,6 +184,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
   const { member, setMember } = useMemberStore();
   const { guild, setGuild } = useGuildStore();
   const { socket, setSocket } = useSocketStore();
+  const { fightingRoom, setFightingRoom } = useFightingRoomStore();
 
   useEffect(() => {
     // reset state on reconnects
@@ -423,8 +425,40 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
         }
         case "/lol-end-of-game/v1/eog-stats-block": {
           console.log("yayaman", message.data);
-          recordBattle(message.data);
+
+          if (message.data) {
+            if (
+              member.memberGame.gameName.split("#")[0] ===
+              message.data.teams[0].players[0].summonerName
+            ) {
+              const updateFightingRoom = { ...fightingRoom, status: "대기중" };
+              setFightingRoom(updateFightingRoom);
+              //teamA의 첫번째플레이어 = 방장이라고 볼수있지
+              //그사람 한명만 저장한다고 요청을 보낸다
+              let teamAGuildName;
+              let teamBGuildName;
+              getGuildName(message.data.teams[0].players[0].summonerName).then(
+                (response) => {
+                  teamAGuildName = response.data.data;
+                }
+              );
+              getGuildName(message.data.teams[1].players[0].summonerName).then(
+                (response) => {
+                  teamBGuildName = response.data.data;
+                }
+              );
+              recordBattle(
+                teamAGuildName,
+                teamBGuildName,
+                fightingRoom.fightRoomName,
+                message.data
+              );
+            }
+          }
         }
+        // case "/lol-champ-select/v1/session": {
+        //   //챔피언 픽할때 이벤트
+        // }
       }
     };
 

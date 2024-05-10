@@ -10,6 +10,7 @@ import { MatchMembersDTO } from "../../../common/DTOs/room/matchMembers.dto";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import { FightingRoomDTO } from "../../../common/DTOs/room/FightingRoom.dto";
 import { request } from "../../../renderer/utils/ipcBridge";
+import useFightingRoomStore from "../../../common/zustand/fightRoom.zustand";
 
 const FightRoom = () => {
   const navigate = useNavigate();
@@ -27,12 +28,15 @@ const FightRoom = () => {
   const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>();
   const [enemyRoomData, setEnemyRoomData] = useState<WaitingRoomDTO>();
   const [prevEnemyRoomName, setPrevEnemyRoomName] = useState<string>();
-  const [fightingRoomData, setFightingRoomData] = useState<FightingRoomDTO>();
+  // const [fightingRoom, setFightingRoom] = useState<FightingRoomDTO>();
+  const { fightingRoom, setFightingRoom } = useFightingRoomStore();
 
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
 
   const [allReady, setAllReady] = useState<boolean>(false);
+
+  const [isGaming, setisGaming] = useState<boolean>(false);
 
   const tabArr = [
     { name: "전체", content: allMessage },
@@ -40,16 +44,15 @@ const FightRoom = () => {
   ];
 
   const leaveFightRoom = () => {
-    // console.log(waitingRoomData);
     const matchMember: MatchMembersDTO = {
       member: member,
       isReady: false,
     };
-    if (fightingRoomData) {
-      // console.log(fightingRoomData.fightRoomName);
+    if (fightingRoom) {
       socket.emit("searchCancel", {
-        roomName: fightingRoomData.fightRoomName,
+        roomName: fightingRoom.fightRoomName,
       });
+      setFightingRoom(null);
     }
     socket.emit("leaveRoom", {
       roomName: waitingRoomData.roomName,
@@ -60,18 +63,16 @@ const FightRoom = () => {
 
   useEffect(() => {
     socket.on("createRoom", (roomData: WaitingRoomDTO) => {
-      // console.log("createRoom", roomData);
       setWaitingRoomData(roomData);
     });
 
     socket.on("joinRoom", (roomData: WaitingRoomDTO) => {
-      // console.log("joinRoom", roomData);
       setWaitingRoomData(roomData);
     });
 
     socket.on("leaveRoom", (roomData: WaitingRoomDTO) => {
-      // console.log("leaveRoom", roomData);
       if (roomData === null) {
+        setFightingRoom(null);
         navigate("/guild");
         toast("매치리더가 방을 떠났습니다.", { icon: "💔" });
       } else {
@@ -80,25 +81,24 @@ const FightRoom = () => {
     });
 
     socket.on("searchFight", (roomData: FightingRoomDTO) => {
-      setFightingRoomData(roomData);
+      setFightingRoom(roomData);
     });
 
     socket.on("searchCancel", (data: any) => {
       setEnemyRoomData(null);
-      setFightingRoomData(null);
+      setFightingRoom(null);
     });
 
     socket.on("readyFight", (roomData: FightingRoomDTO) => {
-      setFightingRoomData(roomData);
+      setFightingRoom(roomData);
     });
 
     socket.on("cancelReady", (roomData: FightingRoomDTO) => {
-      setFightingRoomData(roomData);
+      setFightingRoom(roomData);
     });
 
     socket.on("startFight", (fightData: FightingRoomDTO) => {
-      console.log(fightData);
-      setFightingRoomData(fightData);
+      setFightingRoom(fightData);
       createCustomRame(fightData);
     });
 
@@ -125,23 +125,27 @@ const FightRoom = () => {
   }, []);
 
   useEffect(() => {
-    if (fightingRoomData) {
-      console.log(fightingRoomData);
-      if (fightingRoomData.team_B != null) {
+    if (fightingRoom) {
+      console.log(fightingRoom);
+      if (fightingRoom.status === "게임중") {
+        setisGaming(true);
+      }
+      if (fightingRoom.status === "대기중") {
+        setisGaming(false);
+      }
+      if (fightingRoom.team_B != null) {
         const enemyTeam =
-          fightingRoomData.team_A.roomName === waitingRoomData.roomName
-            ? fightingRoomData.team_B
-            : fightingRoomData.team_A;
+          fightingRoom.team_A.roomName === waitingRoomData.roomName
+            ? fightingRoom.team_B
+            : fightingRoom.team_A;
         const homeTeam =
-          fightingRoomData.team_A.roomName === waitingRoomData.roomName
-            ? fightingRoomData.team_A
-            : fightingRoomData.team_B;
+          fightingRoom.team_A.roomName === waitingRoomData.roomName
+            ? fightingRoom.team_A
+            : fightingRoom.team_B;
 
         setWaitingRoomData(homeTeam);
         setEnemyRoomData(enemyTeam);
-        console.log(fightingRoomData.readyCount);
-        if (fightingRoomData.readyCount === 2) {
-          console.log("레디완");
+        if (fightingRoom.readyCount === 2) {
           setAllReady(true);
         } else {
           setAllReady(false);
@@ -151,10 +155,10 @@ const FightRoom = () => {
         setEnemyRoomData(null);
         setPrevEnemyRoomName(null);
         initRoomData();
-        // setFightingRoomData(null);
+        // setFightingRoom(null);
       }
     }
-  }, [fightingRoomData]);
+  }, [fightingRoom]);
 
   useEffect(() => {
     if (enemyRoomData) {
@@ -252,13 +256,13 @@ const FightRoom = () => {
   const readyBattle = () => {
     if (!isReady) {
       socket.emit("readyFight", {
-        fightRoom: fightingRoomData.fightRoomName,
+        fightRoom: fightingRoom.fightRoomName,
         memberName: member.memberName,
       });
       toast.success("준비 완료");
     } else {
       socket.emit("cancelReady", {
-        fightRoom: fightingRoomData.fightRoomName,
+        fightRoom: fightingRoom.fightRoomName,
         memberName: member.memberName,
       });
       toast.success("준비 취소");
@@ -269,21 +273,19 @@ const FightRoom = () => {
   const searchBattleGuild = () => {
     if (isSearching) {
       toast.success("매칭 취소");
-      socket.emit("searchCancel", { roomName: fightingRoomData.fightRoomName });
+      socket.emit("searchCancel", { roomName: fightingRoom.fightRoomName });
       setIsSearching(!isSearching);
     } else {
       if (allReady) {
-        if (fightingRoomData.team_A.roomName.includes(member.memberName)) {
+        if (fightingRoom.team_A.roomName.includes(member.memberName)) {
           //내가 team_A의 방장이다 = 이 매치의 리더이다
-          console.log("게임 시작");
           socket.emit("startFight", {
-            fightRoom: fightingRoomData.fightRoomName,
+            fightRoom: fightingRoom.fightRoomName,
           });
         } else {
           toast.error("매치리더만이 게임을 시작할수있다.");
         }
       } else {
-        console.log("돌리기");
         socket.emit("searchFight", {
           roomName: waitingRoomData.roomName,
         });
@@ -303,7 +305,7 @@ const FightRoom = () => {
     switch (currentTab) {
       case 0:
         socket.emit("fightMessage", {
-          fightRoom: fightingRoomData.fightRoomName,
+          fightRoom: fightingRoom.fightRoomName,
           memberName: member.memberName,
           message: message,
         });
@@ -327,7 +329,7 @@ const FightRoom = () => {
       switch (currentTab) {
         case 0:
           socket.emit("fightMessage", {
-            fightRoom: fightingRoomData.fightRoomName,
+            fightRoom: fightingRoom.fightRoomName,
             memberName: member.memberName,
             message: message,
           });
@@ -360,184 +362,200 @@ const FightRoom = () => {
   //====================================================================//
 
   return (
-    <div className="fight-room">
-      <div className="room-topbar">
-        <button type="button" className="leave-button" onClick={leaveFightRoom}>
-          <img
-            src={`${process.env.SERVER_URL}/public/leave.png`}
-            alt="leave"
-            height={20}
-          />
-          <div>나가기</div>
-        </button>
-      </div>
-
-      <div className="battle-guild-container">
-        <div className="battle-guild">
-          <div className="guild-info">
-            <img
-              src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
-              width={50}
-              height={50}
-            />
-            {guild.guildName}
+    <div>
+      {!isGaming ? (
+        <div className="fight-room">
+          <div className="room-topbar">
+            <button
+              type="button"
+              className="leave-button"
+              onClick={leaveFightRoom}
+            >
+              <img
+                src={`${process.env.SERVER_URL}/public/leave.png`}
+                alt="leave"
+                height={20}
+              />
+              <div>나가기</div>
+            </button>
           </div>
-          <div className="guild-members">
-            {waitingRoomData === undefined
-              ? ""
-              : waitingRoomData.members.map((matchMember, index) => (
-                  <BattleMemberBox key={index} matchMember={matchMember} />
-                ))}
-          </div>
-        </div>
 
-        <div style={{ alignSelf: "center" }}>
-          <img
-            src={`${process.env.SERVER_URL}/public/vs.png`}
-            alt="emoticon"
-            width={50}
-            color="white"
-          />
-        </div>
-
-        <div className="battle-guild">
-          <div className="guild-info">
-            {enemyRoomData &&
-              enemyRoomData.members[0] &&
-              enemyRoomData.members[0].member.memberGuild && (
+          <div className="battle-guild-container">
+            <div className="battle-guild">
+              <div className="guild-info">
                 <img
-                  src={`${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon}`}
+                  src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
                   width={50}
                   height={50}
                 />
-              )}
-            {enemyRoomData &&
-              enemyRoomData.members[0] &&
-              enemyRoomData.members[0].member.memberGuild &&
-              enemyRoomData.members[0].member.memberGuild.guildName}
-          </div>
-          <div className="guild-members">
-            {enemyRoomData
-              ? enemyRoomData.members.map((matchMember, index) => (
-                  <BattleMemberBox key={index} matchMember={matchMember} />
-                ))
-              : ""}
-          </div>
-        </div>
-      </div>
-
-      <div className="battle-info-container">
-        <div className="info-action-buttons">
-          {enemyRoomData && (
-            <button
-              type="button"
-              className={isReady ? "ready-cancel-button" : "ready-button"}
-              onClick={readyBattle}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                src={`${process.env.SERVER_URL}/public/ready.png`}
-                alt="leave"
-                width={40}
-              />
-              <div>{isReady ? "준비 취소" : "준비 완료"}</div>
-            </button>
-          )}
-
-          {waitingRoomData &&
-            waitingRoomData.roomName.includes(member.memberName) && (
-              <button
-                type="button"
-                className={
-                  isSearching
-                    ? "search-cancel-button"
-                    : allReady
-                    ? "start-button"
-                    : "search-button"
-                }
-                onClick={searchBattleGuild}
-              >
-                <img
-                  src={`${process.env.SERVER_URL}/public/search.png`}
-                  alt="leave"
-                  width={40}
-                />
-                <div>
-                  {isSearching
-                    ? "매칭 취소"
-                    : allReady
-                    ? "게임 시작"
-                    : "상대 팀 찾기"}
-                </div>
-              </button>
-            )}
-        </div>
-
-        <div className="info-chat">
-          <div className="chat-tab">
-            {tabArr.map((el, index) => (
-              <div
-                key={index}
-                className={index === currentTab ? "subtab focused" : "subtab"}
-                onClick={() => selectTabHandler(index)}
-              >
-                {el.name}
+                {guild.guildName}
               </div>
-            ))}
-          </div>
+              <div className="guild-members">
+                {waitingRoomData === undefined
+                  ? ""
+                  : waitingRoomData.members.map((matchMember, index) => (
+                      <BattleMemberBox key={index} matchMember={matchMember} />
+                    ))}
+              </div>
+            </div>
 
-          <div className="tab-message-area">
-            {(() => {
-              switch (currentTab) {
-                case 0:
-                  return allMessage.map((message, index) => (
-                    <div key={index}>{message}</div>
-                  ));
-                case 1:
-                  return guildMessage.map((message, index) => (
-                    <div key={index}>{message}</div>
-                  ));
-                default:
-                  return null;
-              }
-            })()}
-          </div>
-
-          <div className="input-area">
-            <img
-              src={`${process.env.SERVER_URL}/public/emoticon.png`}
-              alt="emoticon"
-              height={20}
-              color="white"
-            />
-            <input
-              className="message-input"
-              type="text"
-              placeholder="메세지보내기"
-              value={message}
-              onChange={handleInputMessage}
-              onKeyDown={handleKeyPress}
-            />
-            <button type="button" className="send-button" onClick={sendMessage}>
+            <div style={{ alignSelf: "center" }}>
               <img
-                src={`${process.env.SERVER_URL}/public/send.png`}
+                src={`${process.env.SERVER_URL}/public/vs.png`}
                 alt="emoticon"
-                height={20}
+                width={50}
                 color="white"
               />
-            </button>
+            </div>
+
+            <div className="battle-guild">
+              <div className="guild-info">
+                {enemyRoomData &&
+                  enemyRoomData.members[0] &&
+                  enemyRoomData.members[0].member.memberGuild && (
+                    <img
+                      src={`${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon}`}
+                      width={50}
+                      height={50}
+                    />
+                  )}
+                {enemyRoomData &&
+                  enemyRoomData.members[0] &&
+                  enemyRoomData.members[0].member.memberGuild &&
+                  enemyRoomData.members[0].member.memberGuild.guildName}
+              </div>
+              <div className="guild-members">
+                {enemyRoomData
+                  ? enemyRoomData.members.map((matchMember, index) => (
+                      <BattleMemberBox key={index} matchMember={matchMember} />
+                    ))
+                  : ""}
+              </div>
+            </div>
+          </div>
+
+          <div className="battle-info-container">
+            <div className="info-action-buttons">
+              {enemyRoomData && (
+                <button
+                  type="button"
+                  className={isReady ? "ready-cancel-button" : "ready-button"}
+                  onClick={readyBattle}
+                  style={{ cursor: "pointer" }}
+                >
+                  <img
+                    src={`${process.env.SERVER_URL}/public/ready.png`}
+                    alt="leave"
+                    width={40}
+                  />
+                  <div>{isReady ? "준비 취소" : "준비 완료"}</div>
+                </button>
+              )}
+
+              {waitingRoomData &&
+                waitingRoomData.roomName.includes(member.memberName) && (
+                  <button
+                    type="button"
+                    className={
+                      isSearching
+                        ? "search-cancel-button"
+                        : allReady
+                        ? "start-button"
+                        : "search-button"
+                    }
+                    onClick={searchBattleGuild}
+                  >
+                    <img
+                      src={`${process.env.SERVER_URL}/public/search.png`}
+                      alt="leave"
+                      width={40}
+                    />
+                    <div>
+                      {isSearching
+                        ? "매칭 취소"
+                        : allReady
+                        ? "게임 시작"
+                        : "상대 팀 찾기"}
+                    </div>
+                  </button>
+                )}
+            </div>
+
+            <div className="info-chat">
+              <div className="chat-tab">
+                {tabArr.map((el, index) => (
+                  <div
+                    key={index}
+                    className={
+                      index === currentTab ? "subtab focused" : "subtab"
+                    }
+                    onClick={() => selectTabHandler(index)}
+                  >
+                    {el.name}
+                  </div>
+                ))}
+              </div>
+
+              <div className="tab-message-area">
+                {(() => {
+                  switch (currentTab) {
+                    case 0:
+                      return allMessage.map((message, index) => (
+                        <div key={index}>{message}</div>
+                      ));
+                    case 1:
+                      return guildMessage.map((message, index) => (
+                        <div key={index}>{message}</div>
+                      ));
+                    default:
+                      return null;
+                  }
+                })()}
+              </div>
+
+              <div className="input-area">
+                <img
+                  src={`${process.env.SERVER_URL}/public/emoticon.png`}
+                  alt="emoticon"
+                  height={20}
+                  color="white"
+                />
+                <input
+                  className="message-input"
+                  type="text"
+                  placeholder="메세지보내기"
+                  value={message}
+                  onChange={handleInputMessage}
+                  onKeyDown={handleKeyPress}
+                />
+                <button
+                  type="button"
+                  className="send-button"
+                  onClick={sendMessage}
+                >
+                  <img
+                    src={`${process.env.SERVER_URL}/public/send.png`}
+                    alt="emoticon"
+                    height={20}
+                    color="white"
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div className="info-battle-type">
+              <div className="game-type">소환사의 협곡 / 5 vs 5</div>
+              <img
+                src={`${process.env.SERVER_URL}/public/gameType/Summoner'sRift.png`}
+                alt="leave"
+                height={140}
+              />
+            </div>
           </div>
         </div>
-
-        <div className="info-battle-type">
-          <div className="game-type">소환사의 협곡 / 5 vs 5</div>
-          <img
-            src={`${process.env.SERVER_URL}/public/gameType/Summoner'sRift.png`}
-            alt="leave"
-            height={140}
-          />
-        </div>
-      </div>
+      ) : (
+        <div className="fight-room-gaming">내전 진행중</div>
+      )}
     </div>
   );
 };

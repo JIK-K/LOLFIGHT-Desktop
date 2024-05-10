@@ -15,8 +15,9 @@ const Battle: React.FC = () => {
       <div className="one">
         <div className="two">
           <img
-            src={`${process.env.SERVER_URL}/public/다리우스.png`}
+            src={`${process.env.SERVER_URL}/public/gameType/HowlingAbyss.png`}
             alt="close"
+            width={100}
           />
         </div>
         <div className="three">공식리그</div>

@@ -62,7 +62,7 @@ const Home: React.FC = () => {
 
   const syncMemberData = () => {
     const memberGame: MemberGameDTO = {
-      gameName: lcuData.me.name,
+      gameName: lcuData.me.name + "#" + lcuData.me.gameTag,
       gameTier:
         lcuData.me.lol.rankedLeagueTier +
         " " +
