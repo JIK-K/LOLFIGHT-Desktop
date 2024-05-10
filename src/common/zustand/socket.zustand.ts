@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import { MemberDTO } from "../DTOs/member/member.dto";
 import { Socket } from "socket.io-client";
 

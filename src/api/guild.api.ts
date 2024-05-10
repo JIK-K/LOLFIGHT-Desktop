@@ -2,6 +2,7 @@ import axios, { Axios, AxiosResponse } from "axios";
 import { MemberDTO } from "../common/DTOs/member/member.dto";
 import { ResponseDTO } from "../common/DTOs/response.dto";
 import { GuildDTO } from "../common/DTOs/guild/guild.dto";
+import { BattleDTO } from "../common/DTOs/battle/battle.dto";
 
 const baseUrl = `${process.env.SERVER_URL}/guild`;
 

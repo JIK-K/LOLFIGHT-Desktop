@@ -11,6 +11,8 @@ import GuildMemberBox from "./components/GuildMemberBox";
 import { useNavigate } from "react-router-dom";
 import GuildFightRoomBox from "./components/GuildFightRoomBox";
 import toast from "react-hot-toast";
+import { MatchMembersDTO } from "../../../common/DTOs/room/matchMembers.dto";
+import { WaitingRoomDTO } from "../../../common/DTOs/room/waitingRoom.dto";
 
 const Guild: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ const Guild: React.FC = () => {
   const [guildMembers, setGuildMembers] = useState<MemberDTO[]>([]);
   const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
+  const [guildRooms, setGuildRooms] = useState<WaitingRoomDTO[]>([]);
 
   useEffect(() => {
     if (!member.memberGuild) {
@@ -36,29 +39,43 @@ const Guild: React.FC = () => {
       setReceivedMessages((prevMessages) => [...prevMessages, receivedMessage]);
     });
 
+    // socket.on("createRoom", (roomData: WaitingRoomDTO) => {
+    //   console.log("createRoom", roomData);
+
+    //   navigate("/fightroom", { state: { roomData } });
+    // });
+
     socket.on("online", (onlineMembers: string[]) => {
       console.log("Online members:", onlineMembers);
       setOnlineMembers(onlineMembers);
     });
 
+    socket.on("roomList", (guildRoomList: WaitingRoomDTO[]) => {
+      console.log("RoomList", guildRoomList);
+      setGuildRooms(guildRoomList);
+    });
+
     socket.emit("online", { guildName: member.memberGuild.guildName });
+    socket.emit("roomList", { guildName: member.memberGuild.guildName });
 
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
+      socket.off("createRoom");
       socket.off("message");
       socket.off("online");
+      socket.off("roomList");
     };
   }, []);
 
   const calNextGuildRank = () => {
     // 1200브
-    // 1600실
-    // 1800골
-    // 2000플
+    // 1400실
+    // 1600골
+    // 1900플
     // 2200다
-    // 2450마
-    // 2750그마
-    // 3000++ 챌
+    // 2600마
+    // 3000그마
+    // 3500++ 챌
     console.log("히이잉 나중에해야지~");
   };
   const sendMessage = () => {
@@ -85,8 +102,12 @@ const Guild: React.FC = () => {
   };
 
   const createBattleRoom = () => {
-    socket.emit("createRoom", {
+    const matchMember: MatchMembersDTO = {
       member: member,
+      isReady: false,
+    };
+    socket.emit("createRoom", {
+      members: matchMember,
       roomName: member.memberName,
       memberCount: 1,
       status: "대기중",
@@ -144,9 +165,9 @@ const Guild: React.FC = () => {
                   <p>{guild.guildTier}</p>
                   <p>{guild.guildRecord.recordLadder}LP</p>
                 </div>
-                <progress id="progress" value={10} max="100">
+                {/* <progress id="progress" value={10} max="100">
                   승률
-                </progress>
+                </progress> */}
               </div>
             </div>
           </div>
@@ -187,10 +208,9 @@ const Guild: React.FC = () => {
         <div className="guild-fight-room">
           <div className="component-title">길드전 방 목록</div>
           <div className="fight-room-list">
-            <GuildFightRoomBox />
-            <GuildFightRoomBox />
-            <GuildFightRoomBox />
-            <GuildFightRoomBox />
+            {guildRooms.map((room, index) => (
+              <GuildFightRoomBox key={index} roomData={room} />
+            ))}
           </div>
         </div>
       </div>

@@ -62,7 +62,7 @@ const Home: React.FC = () => {
 
   const syncMemberData = () => {
     const memberGame: MemberGameDTO = {
-      gameName: lcuData.me.name,
+      gameName: lcuData.me.name + "#" + lcuData.me.gameTag,
       gameTier:
         lcuData.me.lol.rankedLeagueTier +
         " " +
@@ -83,56 +83,6 @@ const Home: React.FC = () => {
       setMember(response.data.data);
       toast.success("롤 정보 동기화 완료");
     });
-  };
-
-  const createRoom = () => {
-    navigate("/room");
-    // const requestBody = {
-    //   customGameLobby: {
-    //     configuration: {
-    //       gameMode: "CLASSIC",
-    //       // gameServerRegion: "",
-    //       mapId: 11,
-    //       // maxPlayerCount: 0,
-    //       mutators: { id: 6 },
-    //       spectatorPolicy: "AllAllowed",
-    //       teamSize: 5,
-    //     },
-    //     lobbyName: "king",
-    //     lobbyPassword: "123123",
-    //   },
-    //   isCustom: true,
-    // };
-    // request("POST", "/lol-lobby/v2/lobby", requestBody)
-    //   .then((response) => {
-    //     console.log(response);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-  };
-
-  const testGetGameData = () => {
-    // /lol-lobby/v2/lobby
-    // /lol-lobby/v1/custom-games/11
-    // const gameID = 6978951773;
-    // const yaya = {
-    //   password: null,
-    //   asSpectator: true,
-    // };
-    // request("POST", `/lol-lobby/v1/custom-games/${gameID}/join`, yaya)
-    // /lol-match-history/v1/products/lol/{summoner["puuid"]}/matches
-    // "1e9dd0ac-3dd4-57ef-98ca-864fe40ecd2b"
-    request(
-      "GET",
-      `/lol-match-history/v1/products/lol/1e9dd0ac-3dd4-57ef-98ca-864fe40ecd2b/matches`
-    )
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   return (

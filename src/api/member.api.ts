@@ -66,3 +66,19 @@ export const update = async (
 
   return await axios.patch(url, body);
 };
+
+/**
+ * member 게임명으로 길드명 찾기
+ * @param summonerName
+ * @returns
+ */
+export const getGuildName = async (
+  summonerName: string
+): Promise<AxiosResponse<ResponseDTO<string>>> => {
+  let url = `${baseUrl}/guildName`;
+
+  let queryParams = `?summonerName=${summonerName}`;
+  url += queryParams;
+
+  return await axios.get(url);
+};

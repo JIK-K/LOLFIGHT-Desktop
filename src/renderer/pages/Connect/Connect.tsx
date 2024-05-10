@@ -33,7 +33,7 @@ const Connect: React.FC = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       handleConnect();
-    }, 20000);
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, []);
