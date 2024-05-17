@@ -25,7 +25,8 @@ import "dotenv/config";
 // Electron forge entry point declared in package.json
 declare const MAIN_WEBPACK_ENTRY: string;
 
-const isDevelopment = process.env.NODE_ENV !== "production";
+// const isDevelopment = process.env.NODE_ENV !== "production";
+const isDevelopment = false;
 let mouseDiffX = 0;
 let mouseDiffY = 0;
 let mainWindow: BrowserWindow;

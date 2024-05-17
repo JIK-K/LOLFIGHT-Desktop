@@ -9,6 +9,7 @@ const { ipcRenderer } = window.require("electron");
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const backgroundURL = `${process.env.SERVER_URL}/public/banner/riven_high.gif`;
   const [memberId, setMemberId] = useState("");
   const [memberPw, setMemberPw] = useState("");
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +97,17 @@ const LoginPage = () => {
         </div>
         <div className="personal-agreement">개인 약관 설명</div>
       </div>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          backgroundImage: `url(${backgroundURL})`,
+          backgroundSize: "916px 768px",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+        }}
+      ></div>
       <button type="button" className="button-close" onClick={closeWindow}>
         <img
           src={`${process.env.SERVER_URL}/public/close.png`}
