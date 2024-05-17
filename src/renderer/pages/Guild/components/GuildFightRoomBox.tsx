@@ -18,6 +18,7 @@ const GuildFightRoomBox = (props: Props) => {
 
   useEffect(() => {
     socket.on("joinRoom", (response: any) => {
+      console.log(response);
       if (response === "full") {
         toast.error("방이 모두 찼습니다");
       } else {

@@ -77,5 +77,6 @@ function createPlayerDTO(playerData: any): BattlePlayerDTO | null {
     perk3: playerData.stats?.PERK3,
     perk4: playerData.stats?.PERK4,
     perk5: playerData.stats?.PERK5,
+    perkSub: playerData.stats?.PERK_SUB_STYLE,
   };
 }

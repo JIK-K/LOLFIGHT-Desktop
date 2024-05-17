@@ -62,11 +62,20 @@ const FightRoom = () => {
   };
 
   useEffect(() => {
+    console.log(data);
+    if (data !== null || undefined) {
+      setWaitingRoomData(data);
+    }
+  }, []);
+
+  useEffect(() => {
     socket.on("createRoom", (roomData: WaitingRoomDTO) => {
+      console.log("createRoom");
       setWaitingRoomData(roomData);
     });
 
     socket.on("joinRoom", (roomData: WaitingRoomDTO) => {
+      console.log(roomData);
       setWaitingRoomData(roomData);
     });
 
