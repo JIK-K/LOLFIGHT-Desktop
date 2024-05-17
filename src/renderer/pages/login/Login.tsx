@@ -9,6 +9,7 @@ const { ipcRenderer } = window.require("electron");
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const backgroundURL = `${process.env.SERVER_URL}/public/banner/riven_high.gif`;
   const [memberId, setMemberId] = useState("");
   const [memberPw, setMemberPw] = useState("");
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +49,14 @@ const LoginPage = () => {
     <div className="login-container">
       <div className="left-container">
         <div className="logo-container">
-          {/* <p className="logo-text">LOL.FIGHT</p> */}
+          <div className="logo-image">
+            <img
+              src={`${process.env.SERVER_URL}/public/image/icon-blue.png`}
+              alt="logo"
+              width={40}
+            />
+            LOLFIGHT
+          </div>
           <p className="logo-text">
             무자비하게 <br />
             우리와 함께하세요
@@ -70,12 +78,18 @@ const LoginPage = () => {
           </button>
           <div className="link-container">
             <span className="link-item">
-              <a href="http://localhost:4000/register" target="_blank">
+              <a
+                href={`${process.env.SERVER_URL}/public/register`}
+                target="_blank"
+              >
                 회원가입
               </a>
             </span>
             <span className="link-item">
-              <a href="http://localhost:4000/register/find" target="_blank">
+              <a
+                href={`${process.env.SERVER_URL}/public/register/find`}
+                target="_blank"
+              >
                 비밀번호 찾기
               </a>
             </span>
@@ -83,9 +97,20 @@ const LoginPage = () => {
         </div>
         <div className="personal-agreement">개인 약관 설명</div>
       </div>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          backgroundImage: `url(${backgroundURL})`,
+          backgroundSize: "916px 768px",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+        }}
+      ></div>
       <button type="button" className="button-close" onClick={closeWindow}>
         <img
-          src="http://localhost:3000/public/close.png"
+          src={`${process.env.SERVER_URL}/public/close.png`}
           alt="close"
           height={20}
         />

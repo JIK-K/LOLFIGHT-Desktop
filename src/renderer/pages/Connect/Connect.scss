@@ -1,6 +1,7 @@
 .connect-page {
   -webkit-app-region: drag;
   position: relative;
+  width: 100vw;
   height: 100vh; // overrides navbar height
   display: flex;
   justify-content: center;

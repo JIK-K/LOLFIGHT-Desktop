@@ -1,0 +1,290 @@
+.fight-room {
+  display: flex;
+  flex-direction: column;
+  width: 900px;
+  height: calc(100vh - 96px);
+  align-items: center;
+  border: 2px solid #616366;
+  border-radius: 5px;
+  background-color: #282a2e;
+  font-family: "GmarketSansMedium", sans-serif;
+
+  .room-topbar {
+    width: 100%;
+    height: 25px;
+    display: flex;
+    justify-content: flex-end;
+    background-color: #202124;
+    border-bottom: 2px solid #616366;
+
+    .leave-button {
+      display: flex;
+      background: none;
+      border: none;
+      padding: 3px;
+      font-size: 17px;
+      font-family: "GmarketSansMedium", sans-serif;
+      color: white;
+      gap: 5px;
+      :hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .battle-guild-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 5px;
+
+    .battle-guild {
+      display: flex;
+      flex-direction: column;
+      width: 410px;
+      height: 450px;
+
+      .guild-info {
+        display: flex;
+        width: 100%;
+        padding: 10px;
+        align-items: center;
+        gap: 25px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .guild-members {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+    }
+  }
+
+  .battle-info-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    .info-action-buttons {
+      display: flex;
+      flex-direction: column;
+      width: 230px;
+      padding: 5px;
+      justify-content: space-between;
+
+      .ready-button {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(to bottom, #4d94ff, #0073e6);
+        border: 1px solid #0073e6;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 10px 20px;
+        font-size: 20px;
+        color: white;
+        font-family: "GmarketSansMedium", sans-serif;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .ready-button:hover {
+        background: linear-gradient(to bottom, #0073e6, #4d94ff);
+        color: #fff;
+      }
+
+      .ready-cancel-button {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(to bottom, #78acfa, #4a8cce);
+        border: 1px solid #4a8cce;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 10px 20px;
+        font-size: 20px;
+        color: white;
+        font-family: "GmarketSansMedium", sans-serif;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .ready-cancel-button:hover {
+        background: linear-gradient(to bottom, #4a8cce, #78acfa);
+        color: #fff;
+      }
+
+      .search-button {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(to bottom, #ff4d4d, #ff1a1a);
+        border: 1px solid #ff1a1a;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 10px 20px;
+        font-size: 20px;
+        color: white;
+        font-family: "GmarketSansMedium", sans-serif;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .search-button:hover {
+        background: linear-gradient(to bottom, #ff1a1a, #ff4d4d);
+        color: #fff;
+      }
+
+      .start-button {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(to bottom, #feefad, #fdde55);
+        border: 1px solid #fdde55;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 10px 20px;
+        font-size: 20px;
+        color: white;
+        font-family: "GmarketSansMedium", sans-serif;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .start-button:hover {
+        background: linear-gradient(to bottom, #fdde55, #feefad);
+        color: #fff;
+      }
+
+      .search-cancel-button {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(to bottom, #994747, #ca4c3c);
+        border: 1px solid #ca4c3c;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 10px 20px;
+        font-size: 20px;
+        color: white;
+        font-family: "GmarketSansMedium", sans-serif;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .search-cancel-button:hover {
+        background: linear-gradient(to bottom, #ca4c3c, #994747);
+        color: #fff;
+      }
+    }
+
+    .info-chat {
+      display: flex;
+      flex-direction: column;
+      width: 450px;
+      height: 170px;
+      background-color: #282a2e;
+      border: 2px solid #616366;
+
+      .chat-tab {
+        display: flex;
+        width: 100%;
+        height: 40px;
+        gap: 5px;
+        background-color: #202124;
+        align-items: center;
+        .subtab {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100px;
+          height: 100%;
+          font-size: 15px;
+        }
+        .focused {
+          background-color: #282a2e;
+        }
+      }
+
+      .tab-message-area {
+        height: 100%;
+        padding: 10px;
+        overflow-y: auto;
+      }
+
+      .input-area {
+        display: flex;
+        background-color: #202124;
+        align-items: center;
+        height: 40px;
+        padding: 5px;
+        gap: 5px;
+
+        .message-input {
+          height: 25px;
+          width: 100%;
+          background-color: #616366;
+          border: none;
+          color: white;
+          border-radius: 5px;
+          border-top: 2px soild #616336;
+        }
+
+        .send-button {
+          background: none;
+          border: none;
+          :hover {
+            cursor: pointer;
+          }
+        }
+      }
+      input:focus {
+        outline: none;
+      }
+    }
+
+    .info-battle-type {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 180px;
+      // margin: 5px;
+
+      border: 2px solid #616366;
+      .game-type {
+        display: flex;
+        width: 100%;
+        font-size: 15px;
+        justify-content: center;
+        background-color: #202124;
+      }
+    }
+  }
+}
+.fight-room-gaming {
+  display: flex;
+  width: 900px;
+  height: calc(100vh - 96px);
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #616366;
+  border-radius: 5px;
+  background-color: #282a2e;
+  font-family: "GmarketSansMedium", sans-serif;
+  font-size: 20px;
+}

@@ -1,0 +1,41 @@
+@use "../../_theme" as *;
+
+$gap: 20px;
+$border-radius: 20px;
+
+.battle-page {
+  padding: $gap;
+  margin-top: 2rem;
+  width: 900px;
+  gap: $gap;
+  flex-direction: column;
+  align-items: center;
+
+  .one {
+    width: 100%;
+    align-items: center;
+    gap: $gap;
+    font-family: "GmarketSansMedium", sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    border: 1px solid #494949;
+    border-radius: 7px;
+  }
+
+  .two {
+    padding: $gap;
+    border-bottom: 1px solid #494949;
+  }
+
+  .three {
+    padding: $gap;
+    border-bottom: 1px solid #494949;
+    background-color: #282a2e;
+  }
+
+  .four {
+    display: flex;
+    padding: $gap;
+    justify-content: space-between;
+  }
+}

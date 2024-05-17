@@ -1,15 +1,27 @@
-//webpack.main.config.js
+const webpack = require("webpack");
+const path = require("path");
+const fs = require("fs");
+
+// Load environment variables from .env file
+const dotenv = require("dotenv").config({
+  path: path.resolve(__dirname, ".env"),
+});
+
+// Convert .env variables to DefinePlugin format
+const envKeys = dotenv.parsed
+  ? Object.keys(dotenv.parsed).reduce((prev, next) => {
+      prev[`process.env.${next}`] = JSON.stringify(dotenv.parsed[next]);
+      return prev;
+    }, {})
+  : {};
+
 module.exports = {
-  /**
-   * This is the main entry point for your application, it's the first file
-   * that runs in the main process.
-   */
   entry: "./src/main/index.ts",
-  // Put your normal webpack config below here
   module: {
     rules: require("./webpack.rules"),
   },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
   },
+  plugins: [...require("./webpack.plugins"), new webpack.DefinePlugin(envKeys)],
 };
