@@ -47,18 +47,23 @@ const FightRoom = () => {
     const matchMember: MatchMembersDTO = {
       member: member,
       isReady: false,
+      isLeader: false,
     };
-    if (fightingRoom) {
-      socket.emit("searchCancel", {
-        roomName: fightingRoom.fightRoomName,
+    if (!isSearching && waitingRoomData.status === "매칭중") {
+      if (fightingRoom) {
+        socket.emit("searchCancel", {
+          roomName: fightingRoom.fightRoomName,
+        });
+        setFightingRoom(null);
+      }
+      socket.emit("leaveRoom", {
+        roomName: waitingRoomData.roomName,
+        matchMember: matchMember,
       });
-      setFightingRoom(null);
+      navigate("/guild");
+    } else {
+      toast.error("매칭중일때는 나갈 수 없습니다.");
     }
-    socket.emit("leaveRoom", {
-      roomName: waitingRoomData.roomName,
-      matchMember: matchMember,
-    });
-    navigate("/guild");
   };
 
   useEffect(() => {
@@ -90,10 +95,15 @@ const FightRoom = () => {
     });
 
     socket.on("searchFight", (roomData: FightingRoomDTO) => {
-      setFightingRoom(roomData);
+      console.log(roomData);
+      const data = roomData;
+      // data.team_A.members[0].isLeader = true;
+      setFightingRoom(data);
     });
 
-    socket.on("searchCancel", (data: any) => {
+    socket.on("searchCancel", (data: WaitingRoomDTO) => {
+      console.log(data);
+      setWaitingRoomData(data);
       setEnemyRoomData(null);
       setFightingRoom(null);
     });
@@ -142,6 +152,7 @@ const FightRoom = () => {
       if (fightingRoom.status === "대기중") {
         setisGaming(false);
       }
+
       if (fightingRoom.team_B != null) {
         const enemyTeam =
           fightingRoom.team_A.roomName === waitingRoomData.roomName
@@ -163,8 +174,7 @@ const FightRoom = () => {
         //상대방이 떠나버렸어 그면 그냥 그 방을 아예 없에버려
         setEnemyRoomData(null);
         setPrevEnemyRoomName(null);
-        initRoomData();
-        // setFightingRoom(null);
+        initRoomData(fightingRoom.team_A.status);
       }
     }
   }, [fightingRoom]);
@@ -181,39 +191,45 @@ const FightRoom = () => {
     }
   }, [enemyRoomData]);
 
+  useEffect(() => {
+    console.log(waitingRoomData);
+  }, [waitingRoomData]);
+
   //====================================================================//
   //Riot Custom Game Func
   //====================================================================//
   const createCustomRame = (fightData: FightingRoomDTO) => {
-    const requestBody = {
-      customGameLobby: {
-        configuration: {
-          gameMode: "CLASSIC",
-          // gameServerRegion: "",
-          mapId: 11,
-          /*
+    if (fightingRoom.team_A.roomName.includes(member.memberName)) {
+      const requestBody = {
+        customGameLobby: {
+          configuration: {
+            gameMode: "CLASSIC",
+            // gameServerRegion: "",
+            mapId: 11,
+            /*
           11: Summoner's Rift
           12: HowlingAbyss
           */
-          // maxPlayerCount: 0,
-          mutators: { id: 6 },
-          spectatorPolicy: "AllAllowed",
-          teamSize: 5,
+            // maxPlayerCount: 0,
+            mutators: { id: 6 },
+            spectatorPolicy: "AllAllowed",
+            teamSize: 5,
+          },
+          lobbyName:
+            fightData.team_A.roomName + " VS " + fightData.team_B.roomName,
+          lobbyPassword: fightData.fightRoomName,
         },
-        lobbyName:
-          fightData.team_A.roomName + " VS " + fightData.team_B.roomName,
-        lobbyPassword: fightData.fightRoomName,
-      },
-      isCustom: true,
-    };
-    request("POST", "/lol-lobby/v2/lobby", requestBody)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    // request("GET", "/lol-end-of-game/v1/eog-stats-block");
+        isCustom: true,
+      };
+      request("POST", "/lol-lobby/v2/lobby", requestBody)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // request("GET", "/lol-end-of-game/v1/eog-stats-block");
+    }
   };
 
   // /lol-lobby/v2/lobby
@@ -242,7 +258,7 @@ const FightRoom = () => {
   //====================================================================//
   //Waiting Room Func
   //====================================================================//
-  const initRoomData = () => {
+  const initRoomData = (status: string) => {
     if (waitingRoomData) {
       const updatedMembers = waitingRoomData.members.map((member) => ({
         ...member,
@@ -251,13 +267,10 @@ const FightRoom = () => {
       setWaitingRoomData((prevRoomData) => ({
         ...prevRoomData,
         members: updatedMembers,
+        status: status,
       }));
     }
   };
-
-  useEffect(() => {
-    console.log(waitingRoomData);
-  }, [waitingRoomData]);
 
   //====================================================================//
   //Button Func
@@ -295,10 +308,14 @@ const FightRoom = () => {
           toast.error("매치리더만이 게임을 시작할수있다.");
         }
       } else {
-        socket.emit("searchFight", {
-          roomName: waitingRoomData.roomName,
-        });
-        setIsSearching(!isSearching);
+        if (waitingRoomData.members.length === 5) {
+          socket.emit("searchFight", {
+            roomName: waitingRoomData.roomName,
+          });
+          setIsSearching(!isSearching);
+        } else {
+          toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
+        }
       }
     }
   };

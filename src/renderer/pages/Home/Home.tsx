@@ -78,11 +78,16 @@ const Home: React.FC = () => {
       member.memberName,
       member.memberGuild,
       memberGame
-    ).then((response) => {
-      console.log(response);
-      setMember(response.data.data);
-      toast.success("롤 정보 동기화 완료");
-    });
+    )
+      .then((response) => {
+        console.log(response);
+        setMember(response.data.data);
+        toast.success("롤 정보 동기화 완료");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.success("이미 등록되어있는 소환사 계정입니다");
+      });
   };
 
   return (

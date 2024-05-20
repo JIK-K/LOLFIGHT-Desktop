@@ -201,18 +201,22 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
     findMember(sessionStorage.getItem("memberId")).then((response) => {
       setMember(response.data.data);
 
-      getGuildInfo(response.data.data.memberGuild.guildName).then(
-        (response) => {
-          console.log(response);
-          setGuild(response.data.data);
-        }
-      );
+      if (response.data.data.memberGuild !== null) {
+        getGuildInfo(response.data.data.memberGuild.guildName).then(
+          (response) => {
+            console.log(response);
+            setGuild(response.data.data);
+          }
+        );
+      }
 
       setSocket(
         SocketIOClient(`${process.env.SOCKET_URL}`, {
           query: {
             memberName: response.data.data.memberName,
-            guildName: response.data.data.memberGuild.guildName,
+            guildName: response.data.data.memberGuild
+              ? response.data.data.memberGuild.guildName
+              : undefined,
           },
         })
       );
@@ -424,7 +428,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           break;
         }
         case "/lol-end-of-game/v1/eog-stats-block": {
-          console.log("yayaman", message.data);
+          console.log(message.data);
 
           if (message.data) {
             if (

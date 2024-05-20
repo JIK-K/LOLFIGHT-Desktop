@@ -12,7 +12,6 @@ const NavItem: React.FC<NavItemProps> = ({ title, href }) => {
   const location = useLocation();
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (location.pathname === "/fightroom") {
-      console.log("여긴클릭되면안된다니까?");
       event.preventDefault();
     }
   };
