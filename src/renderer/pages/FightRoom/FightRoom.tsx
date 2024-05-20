@@ -49,7 +49,8 @@ const FightRoom = () => {
       isReady: false,
       isLeader: false,
     };
-    if (!isSearching && waitingRoomData.status === "매칭중") {
+
+    if (!isSearching && waitingRoomData.status !== "매칭중") {
       if (fightingRoom) {
         socket.emit("searchCancel", {
           roomName: fightingRoom.fightRoomName,
@@ -199,7 +200,7 @@ const FightRoom = () => {
   //Riot Custom Game Func
   //====================================================================//
   const createCustomRame = (fightData: FightingRoomDTO) => {
-    if (fightingRoom.team_A.roomName.includes(member.memberName)) {
+    if (fightData.team_A.roomName.includes(member.memberName)) {
       const requestBody = {
         customGameLobby: {
           configuration: {
