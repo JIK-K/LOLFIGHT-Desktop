@@ -441,22 +441,34 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
               //그사람 한명만 저장한다고 요청을 보낸다
               let teamAGuildName;
               let teamBGuildName;
-              getGuildName(message.data.teams[0].players[0].summonerName).then(
-                (response) => {
-                  teamAGuildName = response.data.data;
+              const handleRecordBattle = async () => {
+                try {
+                  const responseA = await getGuildName(
+                    message.data.teams[0].players[0].summonerName
+                  );
+                  teamAGuildName = responseA.data.data;
+
+                  // teamBGuildName을 사용하려면 다음 줄의 주석을 해제하세요.
+                  const responseB = await getGuildName(
+                    message.data.teams[1].players[0].summonerName
+                  );
+                  const teamBGuildName = responseB.data.data;
+
+                  await recordBattle(
+                    teamAGuildName,
+                    teamBGuildName, // 필요에 따라 teamBGuildName으로 교체할 수 있습니다.
+                    fightingRoom.fightRoomName,
+                    message.data
+                  );
+                } catch (error) {
+                  console.error(
+                    "길드 이름을 가져오거나 전투를 기록하는 중 오류 발생:",
+                    error
+                  );
                 }
-              );
-              getGuildName(message.data.teams[1].players[0].summonerName).then(
-                (response) => {
-                  teamBGuildName = response.data.data;
-                }
-              );
-              recordBattle(
-                teamAGuildName,
-                teamBGuildName,
-                fightingRoom.fightRoomName,
-                message.data
-              );
+              };
+
+              handleRecordBattle();
             }
           }
         }

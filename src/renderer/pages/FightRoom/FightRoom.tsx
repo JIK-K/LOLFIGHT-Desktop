@@ -98,7 +98,7 @@ const FightRoom = () => {
     socket.on("searchFight", (roomData: FightingRoomDTO) => {
       console.log(roomData);
       const data = roomData;
-      // data.team_A.members[0].isLeader = true;
+      data.team_A.members[0].isLeader = true;
       setFightingRoom(data);
     });
 
