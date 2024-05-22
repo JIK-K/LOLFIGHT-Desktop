@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./FightRoom.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import BattleMemberBox from "./components/BattleMemberBox";
@@ -28,7 +28,6 @@ const FightRoom = () => {
   const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>();
   const [enemyRoomData, setEnemyRoomData] = useState<WaitingRoomDTO>();
   const [prevEnemyRoomName, setPrevEnemyRoomName] = useState<string>();
-  // const [fightingRoom, setFightingRoom] = useState<FightingRoomDTO>();
   const { fightingRoom, setFightingRoom } = useFightingRoomStore();
 
   const [isSearching, setIsSearching] = useState<boolean>(false);
@@ -37,6 +36,9 @@ const FightRoom = () => {
   const [allReady, setAllReady] = useState<boolean>(false);
 
   const [isGaming, setisGaming] = useState<boolean>(false);
+
+  const guildMessageAreaRef = useRef(null);
+  const allMessageAreaRef = useRef(null);
 
   const tabArr = [
     { name: "전체", content: allMessage },
@@ -68,20 +70,34 @@ const FightRoom = () => {
   };
 
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
     if (data !== null || undefined) {
       setWaitingRoomData(data);
     }
   }, []);
 
   useEffect(() => {
+    if (allMessageAreaRef.current) {
+      allMessageAreaRef.current.scrollTop =
+        allMessageAreaRef.current.scrollHeight;
+    }
+  }, [allMessage]);
+
+  useEffect(() => {
+    if (guildMessageAreaRef.current) {
+      guildMessageAreaRef.current.scrollTop =
+        guildMessageAreaRef.current.scrollHeight;
+    }
+  }, [guildMessage]);
+
+  useEffect(() => {
     socket.on("createRoom", (roomData: WaitingRoomDTO) => {
-      console.log("createRoom");
+      // console.log("createRoom");
       setWaitingRoomData(roomData);
     });
 
     socket.on("joinRoom", (roomData: WaitingRoomDTO) => {
-      console.log(roomData);
+      // console.log(roomData);
       setWaitingRoomData(roomData);
     });
 
@@ -96,14 +112,14 @@ const FightRoom = () => {
     });
 
     socket.on("searchFight", (roomData: FightingRoomDTO) => {
-      console.log(roomData);
-      const data = roomData;
-      data.team_A.members[0].isLeader = true;
-      setFightingRoom(data);
+      console.log("SearchFight", roomData);
+      // const data = roomData;
+      // data.team_A.members[0].isLeader = true;
+      setFightingRoom(roomData);
     });
 
     socket.on("searchCancel", (data: WaitingRoomDTO) => {
-      console.log(data);
+      // console.log(data);
       setWaitingRoomData(data);
       setEnemyRoomData(null);
       setFightingRoom(null);
@@ -120,6 +136,12 @@ const FightRoom = () => {
     socket.on("startFight", (fightData: FightingRoomDTO) => {
       setFightingRoom(fightData);
       createCustomRame(fightData);
+    });
+
+    socket.on("changeTeam", (fightdata: FightingRoomDTO) => {
+      // console.log(fightdata);
+      setFightingRoom(fightdata);
+      toast.success("레드팀 - 블루팀 진영이 변경되었습니다.");
     });
 
     socket.on("message", (receivedMessage: string) => {
@@ -139,6 +161,7 @@ const FightRoom = () => {
       socket.off("readyFight");
       socket.off("cancelReady");
       socket.off("startFight");
+      socket.off("changeTeam");
       socket.off("message");
       socket.off("fightMessage");
     };
@@ -146,7 +169,7 @@ const FightRoom = () => {
 
   useEffect(() => {
     if (fightingRoom) {
-      console.log(fightingRoom);
+      // console.log(fightingRoom);
       if (fightingRoom.status === "게임중") {
         setisGaming(true);
       }
@@ -224,10 +247,10 @@ const FightRoom = () => {
       };
       request("POST", "/lol-lobby/v2/lobby", requestBody)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
       // request("GET", "/lol-end-of-game/v1/eog-stats-block");
     }
@@ -264,6 +287,7 @@ const FightRoom = () => {
       const updatedMembers = waitingRoomData.members.map((member) => ({
         ...member,
         isReady: false,
+        isLeader: false,
       }));
       setWaitingRoomData((prevRoomData) => ({
         ...prevRoomData,
@@ -309,18 +333,27 @@ const FightRoom = () => {
           toast.error("매치리더만이 게임을 시작할수있다.");
         }
       } else {
-        if (waitingRoomData.members.length === 5) {
-          socket.emit("searchFight", {
-            roomName: waitingRoomData.roomName,
-          });
-          setIsSearching(!isSearching);
-        } else {
-          toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
-        }
+        // if (waitingRoomData.members.length === 5) {
+        socket.emit("searchFight", {
+          roomName: waitingRoomData.roomName,
+        });
+        setIsSearching(!isSearching);
+        // } else {
+        //   toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
+        // }
       }
     }
   };
   //====================================================================//
+
+  const changeTeam = () => {
+    const leaderName = fightingRoom.team_A.members[0].member.memberName;
+    if (member.memberName === leaderName) {
+      socket.emit("changeTeam", {
+        fightRoomName: fightingRoom.fightRoomName,
+      });
+    }
+  };
 
   //====================================================================//
   //Message Func
@@ -433,6 +466,7 @@ const FightRoom = () => {
                 width={50}
                 color="white"
               />
+              <button onClick={changeTeam}>왼쪽눈따가움</button>
             </div>
 
             <div className="battle-guild">
@@ -523,7 +557,10 @@ const FightRoom = () => {
                 ))}
               </div>
 
-              <div className="tab-message-area">
+              <div
+                className="tab-message-area"
+                ref={currentTab === 0 ? allMessageAreaRef : guildMessageAreaRef}
+              >
                 {(() => {
                   switch (currentTab) {
                     case 0:

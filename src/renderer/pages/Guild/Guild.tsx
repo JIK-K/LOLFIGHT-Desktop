@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Guild.scss";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import useSocketStore from "../../../common/zustand/socket.zustand";
@@ -24,6 +24,7 @@ const Guild: React.FC = () => {
   const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
   const [guildRooms, setGuildRooms] = useState<WaitingRoomDTO[]>([]);
+  const messageAreaRef = useRef(null);
 
   useEffect(() => {
     if (!member.memberGuild) {
@@ -39,12 +40,6 @@ const Guild: React.FC = () => {
     socket.on("message", (receivedMessage: string) => {
       setReceivedMessages((prevMessages) => [...prevMessages, receivedMessage]);
     });
-
-    // socket.on("createRoom", (roomData: WaitingRoomDTO) => {
-    //   console.log("createRoom", roomData);
-
-    //   navigate("/fightroom", { state: { roomData } });
-    // });
 
     socket.on("online", (onlineMembers: string[]) => {
       console.log("Online members:", onlineMembers);
@@ -67,6 +62,12 @@ const Guild: React.FC = () => {
       socket.off("roomList");
     };
   }, []);
+
+  useEffect(() => {
+    if (messageAreaRef.current) {
+      messageAreaRef.current.scrollTop = messageAreaRef.current.scrollHeight;
+    }
+  }, [receivedMessages]);
 
   const sendMessage = () => {
     socket.emit("message", {
@@ -117,7 +118,7 @@ const Guild: React.FC = () => {
           <div className="guild-top">
             <div className="guild-talk">
               <div className="component-title">길드톡방</div>
-              <div className="message-area">
+              <div className="message-area" ref={messageAreaRef}>
                 {receivedMessages.map((receivedMessage, index) => (
                   <div key={index}>{receivedMessage}</div>
                 ))}
