@@ -1,4 +1,4 @@
-@use '../../_theme' as *;
+@use "../../_theme" as *;
 
 $padding: 5px;
 $borderRadius: 6px;
@@ -11,23 +11,27 @@ $borderRadius: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: color('secondary');
+  background-color: color("surface");
   box-sizing: border-box;
-  @include font('body');
+  @include font("body");
   user-select: none;
   border-radius: $borderRadius;
+  font-family: "GmarketSansMedium", sans-serif;
+  border: 1px solid #616366;
 }
 
 .content {
-  background-color: darken(color('surface'), 10);
+  font-family: "GmarketSansMedium", sans-serif;
+  background-color: darken(color("surface"), 10);
   border-radius: $borderRadius;
 }
 
 .item {
+  font-family: "GmarketSansMedium", sans-serif;
   box-sizing: border-box;
   width: var(--radix-select-trigger-width);
   padding: $padding;
-  @include font('body');
+  @include font("body");
   border-radius: $borderRadius;
   display: flex;
   justify-content: space-between;
@@ -36,6 +40,6 @@ $borderRadius: 6px;
   user-select: none;
 
   &[data-highlighted] {
-    background-color: darken(color('surface'), 20);
+    background-color: darken(color("surface"), 20);
   }
 }

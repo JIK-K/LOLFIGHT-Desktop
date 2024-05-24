@@ -21,6 +21,10 @@ const LoginPage = () => {
   };
 
   const handleLoginClick = () => {
+    if (!memberId || !memberPw) {
+      toast.error("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
     login(memberId, memberPw)
       .then((response: any) => {
         if (response.data.isSuccess === "T") {
@@ -39,6 +43,11 @@ const LoginPage = () => {
         // CustomAlert("warning", "로그인", "아이디 비밀번호를 확인해주세요.");
         toast.success("error");
       });
+  };
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLoginClick();
+    }
   };
 
   const closeWindow = () => {
@@ -71,6 +80,7 @@ const LoginPage = () => {
               type="password"
               placeholder="비밀번호"
               onChange={handlePwChange}
+              onKeyDown={handleKeyPress}
             />
           </div>
           <button className="login-btn" onClick={handleLoginClick}>

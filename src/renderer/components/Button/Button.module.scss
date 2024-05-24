@@ -1,14 +1,15 @@
-@use '../../theme' as *;
+@use "../../theme" as *;
 
 .button {
   width: fit-content;
   min-width: 7rem;
   border-radius: 5px;
-  @include font('body');
+  @include font("body");
   text-align: center;
-  padding: 9px;
+  padding: 8px;
   cursor: pointer;
   user-select: none; // disable text selection
+  font-family: "GmarketSansMedium", sans-serif;
 
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px;
@@ -17,7 +18,7 @@
 
 .primary {
   @extend .button;
-  background: linear-gradient(72deg, color('primary'), color('secondary'));
+  background: linear-gradient(72deg, #313131, #202124);
 }
 
 .secondary {
