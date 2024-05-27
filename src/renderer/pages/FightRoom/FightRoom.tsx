@@ -466,7 +466,22 @@ const FightRoom = () => {
                 width={50}
                 color="white"
               />
-              <button onClick={changeTeam}>왼쪽눈따가움</button>
+              {enemyRoomData ? (
+                <button
+                  type="button"
+                  onClick={changeTeam}
+                  style={{ cursor: "pointer", backgroundColor: "transparent" }}
+                >
+                  <img
+                    src={`${process.env.SERVER_URL}/public/swap.png`}
+                    alt="swap"
+                    width={30}
+                    color="white"
+                  />
+                </button>
+              ) : (
+                ""
+              )}
             </div>
 
             <div className="battle-guild">

@@ -152,8 +152,8 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
-        background: linear-gradient(to bottom, #feefad, #fdde55);
-        border: 1px solid #fdde55;
+        background: linear-gradient(to bottom, #7fbf5a, #6da34d);
+        border: 1px solid #6da34d;
         border-radius: 5px;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         padding: 10px 20px;
@@ -164,7 +164,7 @@
         transition: background-color 0.3s, color 0.3s;
       }
       .start-button:hover {
-        background: linear-gradient(to bottom, #fdde55, #feefad);
+        background: linear-gradient(to bottom, #6da34d, #7fbf5a);
         color: #fff;
       }
 
