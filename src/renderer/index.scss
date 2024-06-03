@@ -1,4 +1,7 @@
 @use "./_theme" as *;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 $navbar-height: 96px;
 $navbar-background: #282a2e;
@@ -26,8 +29,8 @@ body,
 
 #content {
   display: flex;
-  // height: calc(100vh - $navbar-height);
-  // background-color: #212326;
+  /* height: calc(100vh - $navbar-height);
+   background-color: #212326; */
   -ms-overflow-style: none;
   justify-content: center;
 }
@@ -49,7 +52,7 @@ body,
   .nav {
     display: flex;
     gap: $navbar-gap;
-    // margin-left: $navbar-gap;
+    /* margin-left: $navbar-gap;*/
     margin-left: 250px;
 
     .nav-item {

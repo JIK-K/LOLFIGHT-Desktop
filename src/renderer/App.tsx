@@ -17,6 +17,9 @@ import {
 } from "./pages";
 import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/login/Login";
+import "./tailwind.css";
+import ReactDOM from "react-dom";
+
 const App: React.FC = () => {
   return (
     <HashRouter>

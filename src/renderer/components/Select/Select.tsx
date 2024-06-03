@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import * as RadixSelect from '@radix-ui/react-select';
-import { AiOutlineCheck, AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
-import styles from './Select.module.scss';
+import React, { useState } from "react";
+import * as RadixSelect from "@radix-ui/react-select";
+import { AiOutlineCheck, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import styles from "./Select.module.scss";
 
 type Item = {
   name: string;
@@ -19,7 +19,7 @@ const Select: React.FC<Props> = ({
   initialItem,
   items,
   onValueChange,
-  placeholder = 'Select...',
+  placeholder = "Select...",
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -34,7 +34,7 @@ const Select: React.FC<Props> = ({
         {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
       </RadixSelect.Trigger>
       <RadixSelect.Portal>
-        <RadixSelect.Content className={styles.content} position='popper'>
+        <RadixSelect.Content className={styles.content} position="popper">
           <RadixSelect.Viewport>
             {items.map((item) => (
               <RadixSelect.Item

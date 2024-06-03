@@ -39,11 +39,11 @@ const Badge = React.forwardRef<
       <div
         ref={ref}
         style={{ ...customStyle, ...style }}
-        className={styles.root}
+        // className={styles.root}
         {...props}
       >
-        {icon && <div className={styles.icon}>{icon}</div>}
-        {text && <span className={styles.text}>{text}</span>}
+        {/* {icon && <div className={styles.icon}>{icon}</div>} */}
+        {/* {text && <span className={styles.text}>{text}</span>} */}
       </div>
     );
   }

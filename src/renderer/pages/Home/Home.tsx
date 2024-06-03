@@ -101,6 +101,7 @@ const Home: React.FC = () => {
         <div className="summoner-name" onClick={syncMemberData}>
           {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span>
         </div>
+        <div className="bg-blue-600">여기쥐렁</div>
       </div>
       <div className="rank-info">
         <div className="rank-game">

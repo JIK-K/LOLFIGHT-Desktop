@@ -1,7 +1,7 @@
 @use "../../_theme" as *;
 
 .textbox {
-  all: unset; // unset default styling
+  all: unset; /* unset default styling*/
   width: 300px;
   background-color: color("surface");
   @include font("body");
