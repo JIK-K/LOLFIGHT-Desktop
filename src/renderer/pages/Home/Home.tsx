@@ -67,6 +67,7 @@ const Home: React.FC = () => {
         lcuData.me.lol.rankedLeagueTier +
         " " +
         lcuData.me.lol.rankedLeagueDivision,
+      summonerId: lcuData.me.summonerId,
     };
     if (lcuData.me.lol.rankedLeagueTier === undefined) {
       memberGame.gameTier = "UNRANKED";

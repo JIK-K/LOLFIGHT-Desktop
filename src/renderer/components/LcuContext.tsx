@@ -95,6 +95,7 @@ type MeState = {
   name: string;
   statusMessage: string;
   gameTag: string;
+  summonerId: number;
   lol: {
     level: number;
     rankedLeagueQueue: Queue;
@@ -137,6 +138,7 @@ const DEFAULT_STATE: State = {
     name: "Loading...",
     statusMessage: "Loading...",
     gameTag: "0000",
+    summonerId: 0,
     lol: {
       level: 0,
       rankedLeagueQueue: "RANKED_SOLO_5x5",
@@ -234,6 +236,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           name: response.name,
           statusMessage: response.statusMessage,
           gameTag: response.gameTag,
+          summonerId: response.summonerId,
           lol: {
             level: response.lol.level,
             rankedLeagueQueue:
@@ -376,6 +379,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
               name: message.data.name,
               statusMessage: message.data.statusMessage,
               gameTag: message.data.gameTag,
+              summonerId: message.data.summonerId,
               lol: {
                 level: message.data.lol.level,
                 rankedLeagueQueue: message.data.lol.rankedLeagueQueue,
@@ -430,7 +434,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
         case "/lol-end-of-game/v1/eog-stats-block": {
           console.log(message.data);
 
-          if (message.data) {
+          if (message.data && message.data.gameType === "CUSTOM_GAME") {
             if (
               member.memberGame.gameName.split("#")[0] ===
               message.data.teams[0].players[0].summonerName
@@ -448,7 +452,6 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
                   );
                   teamAGuildName = responseA.data.data;
 
-                  // teamBGuildName을 사용하려면 다음 줄의 주석을 해제하세요.
                   const responseB = await getGuildName(
                     message.data.teams[1].players[0].summonerName
                   );
@@ -456,7 +459,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
 
                   await recordBattle(
                     teamAGuildName,
-                    teamBGuildName, // 필요에 따라 teamBGuildName으로 교체할 수 있습니다.
+                    teamBGuildName,
                     fightingRoom.fightRoomName,
                     message.data
                   );

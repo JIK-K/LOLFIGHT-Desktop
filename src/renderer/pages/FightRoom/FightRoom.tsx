@@ -135,7 +135,7 @@ const FightRoom = () => {
 
     socket.on("startFight", (fightData: FightingRoomDTO) => {
       setFightingRoom(fightData);
-      createCustomRame(fightData);
+      createCustomGame(fightData);
     });
 
     socket.on("changeTeam", (fightdata: FightingRoomDTO) => {
@@ -189,6 +189,8 @@ const FightRoom = () => {
 
         setWaitingRoomData(homeTeam);
         setEnemyRoomData(enemyTeam);
+        //@todo 주석해제
+        // if (fightingRoom.readyCount === 5) {
         if (fightingRoom.readyCount === 2) {
           setAllReady(true);
         } else {
@@ -222,7 +224,36 @@ const FightRoom = () => {
   //====================================================================//
   //Riot Custom Game Func
   //====================================================================//
-  const createCustomRame = (fightData: FightingRoomDTO) => {
+  const inviteCustomGame = () => {
+    const invitationData: any = [];
+
+    const addInvitation = (team: WaitingRoomDTO) => {
+      team.members.map((data) => {
+        const { gameName, summonerId } = data.member.memberGame;
+        invitationData.push({
+          invitationType: "lobby",
+          state: "Requested",
+          toSummonerId: summonerId,
+          toSummonerName: gameName,
+        });
+      });
+    };
+
+    addInvitation(fightingRoom.team_A);
+    addInvitation(fightingRoom.team_B);
+
+    console.log(invitationData);
+
+    request("POST", "/lol-lobby/v2/lobby/invitations", invitationData)
+      .then((response: any) => {
+        console.log(response);
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+  };
+
+  const createCustomGame = (fightData: FightingRoomDTO) => {
     if (fightData.team_A.roomName.includes(member.memberName)) {
       const requestBody = {
         customGameLobby: {
@@ -247,7 +278,10 @@ const FightRoom = () => {
       };
       request("POST", "/lol-lobby/v2/lobby", requestBody)
         .then((response) => {
-          // console.log(response);
+          console.log(response);
+          setTimeout(() => {
+            inviteCustomGame();
+          }, 5000);
         })
         .catch((error) => {
           // console.log(error);
@@ -255,27 +289,6 @@ const FightRoom = () => {
       // request("GET", "/lol-end-of-game/v1/eog-stats-block");
     }
   };
-
-  // /lol-lobby/v2/lobby
-  // /lol-lobby/v1/custom-games/11
-  // const gameID = 6978951773;
-  // const yaya = {
-  //   password: null,
-  //   asSpectator: true,
-  // };
-  // request("POST", `/lol-lobby/v1/custom-games/${gameID}/join`, yaya)
-  // /lol-match-history/v1/products/lol/{summoner["puuid"]}/matches
-  // "1e9dd0ac-3dd4-57ef-98ca-864fe40ecd2b"
-  // request(
-  //   "GET",
-  //   `/lol-match-history/v1/products/lol/1e9dd0ac-3dd4-57ef-98ca-864fe40ecd2b/matches`
-  // )
-  //   .then((response) => {
-  //     console.log(response);
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
 
   //====================================================================//
 
@@ -333,6 +346,7 @@ const FightRoom = () => {
           toast.error("매치리더만이 게임을 시작할수있다.");
         }
       } else {
+        // @todo 주석해제
         // if (waitingRoomData.members.length === 5) {
         socket.emit("searchFight", {
           roomName: waitingRoomData.roomName,
