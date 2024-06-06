@@ -24,7 +24,9 @@ const NavItem: React.FC<NavItemProps> = ({ title, href }) => {
       }
       onClick={handleClick}
     >
-      <span>{title}</span>
+      <span className="font-light text-base text-gray-400 hover:underline underline-offset-4 hover:text-gray-200">
+        {title}
+      </span>
     </NavLink>
   );
 };
@@ -99,63 +101,16 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <div id="navbar">
-      <div
-        className="title-bar"
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
-      >
-        <div>
-          <p style={{ color: "white" }}>LOLFIGHT</p>
-        </div>
-        <div className="profile">
-          <SummonerIcon
-            size={35}
-            iconId={lcuData.me.icon}
-            availability={lcuData.me.availability}
-          />
-          {/* {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span> */}
-          {lcuData.me.lol.rankedLeagueTier === undefined ? (
-            <Badge
-              text={"UNRANKED"}
-              icon={<img src={`${RANK_CREST_URL}unranked.svg`} alt="Rank" />}
-              backgroundColor={COLORS.get("UNRANKED")}
-            />
-          ) : (
-            <Badge
-              text={getRankText()}
-              icon={
-                <img
-                  src={`${RANK_CREST_URL}${lcuData.me.lol.rankedLeagueTier.toLowerCase()}.svg`}
-                  alt="Rank"
-                />
-              }
-              backgroundColor={COLORS.get(lcuData.me.lol.rankedLeagueTier)}
-            />
-          )}
-        </div>
-        <div className="custom-button">
-          <button
-            type="button"
-            className="button-option"
-            onClick={minimizeWindow}
-          >
-            <img
-              src={`${process.env.SERVER_URL}/public/minimize.png`}
-              width={30}
-            />
-          </button>
-          <button type="button" className="button-option" onClick={closeWindow}>
-            <img
-              src={`${process.env.SERVER_URL}/public/close.png`}
-              alt="close"
-              height={15}
-            />
-          </button>
-        </div>
+    <div
+      className="sticky bg-gray-900 flex top-0 z-10 md:px-6 h-16 font-bold text-xl items-center border-b border-gray-800"
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseMove={onMouseMove}
+    >
+      <div className="flex items-center gap-2">
+        <p className="text-white h-6">LOLFIGHT</p>
       </div>
-      <div className="nav">
+      <div className="ml-32 mr-auto flex gap-4 sm:gap-6">
         <NavItem title="홈" href="/home" />
         {/* <NavItem title="Icon" href="/icons" /> */}
         {/* <NavItem title="Background" href="/backgrounds" /> */}
@@ -165,6 +120,47 @@ const NavBar: React.FC = () => {
         {/* <NavItem title="Challenges" href="/challenges" /> */}
         {/* <NavItem title="Chat Rank" href="/rank" /> */}
         <NavItem title="설정" href="/settings" />
+      </div>
+      <div className="profile">
+        <SummonerIcon
+          size={35}
+          iconId={lcuData.me.icon}
+          availability={lcuData.me.availability}
+        />
+        {/* {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span> */}
+        {lcuData.me.lol.rankedLeagueTier === undefined ? (
+          <Badge
+            text={"UNRANKED"}
+            icon={<img src={`${RANK_CREST_URL}unranked.svg`} alt="Rank" />}
+            backgroundColor={COLORS.get("UNRANKED")}
+          />
+        ) : (
+          <Badge
+            text={getRankText()}
+            icon={
+              <img
+                src={`${RANK_CREST_URL}${lcuData.me.lol.rankedLeagueTier.toLowerCase()}.svg`}
+                alt="Rank"
+              />
+            }
+            backgroundColor={COLORS.get(lcuData.me.lol.rankedLeagueTier)}
+          />
+        )}
+      </div>
+      <div className="bg-red-500 flex h-4">
+        <button type="button" className="w-6 h-6" onClick={minimizeWindow}>
+          <img
+            className="text-white bg-white"
+            src={`${process.env.SERVER_URL}/public/minimize.png`}
+          />
+        </button>
+        <button type="button" className="w-4 h-4" onClick={closeWindow}>
+          <img
+            className="bg-white"
+            src={`${process.env.SERVER_URL}/public/close.png`}
+            alt="close"
+          />
+        </button>
       </div>
     </div>
   );

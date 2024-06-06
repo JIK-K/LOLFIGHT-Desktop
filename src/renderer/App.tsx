@@ -25,7 +25,10 @@ const App: React.FC = () => {
     <HashRouter>
       <LcuContext>
         <NavBar />
-        <div id="content">
+        <div
+          id="content"
+          className="flex-1 px-4 md:px-6 py-8 md:py-12 justify-center"
+        >
           <Routes>
             {/* <Route path="/" element={<Navigate to="/connect" />} /> */}
             <Route path="/" element={<LoginPage />} />

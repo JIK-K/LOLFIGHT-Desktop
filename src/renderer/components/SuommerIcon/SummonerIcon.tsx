@@ -24,6 +24,7 @@ const SummonerIcon = React.forwardRef<
       style={{ width: size, height: size }}
       data-selected={selected}
       data-favorite={favorite}
+      className="m-auto"
     >
       <img
         loading="lazy"
@@ -31,8 +32,10 @@ const SummonerIcon = React.forwardRef<
         alt={`Summoner Icon ${iconId}`}
       />
       {availability !== undefined && (
-        // <div className={styles.availability} data-availability={availability} />
-        <div>여기지롱</div>
+        <div
+          className="{styles.availability}"
+          data-availability={availability}
+        />
       )}
     </div>
   );

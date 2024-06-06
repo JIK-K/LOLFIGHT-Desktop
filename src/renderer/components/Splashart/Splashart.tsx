@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './Splashart.module.scss';
+import React from "react";
+import styles from "./Splashart.module.scss";
 
 export interface SplashartProps {
   skinId: number;
@@ -8,7 +8,7 @@ export interface SplashartProps {
 }
 
 const SPLASHART_URL =
-  'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes';
+  "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes";
 
 const Splashart = React.forwardRef<
   HTMLDivElement,
@@ -20,12 +20,12 @@ const Splashart = React.forwardRef<
     <div
       {...props}
       ref={ref}
-      className={styles.splashart}
+      className="{styles.splashart}"
       data-selected={selected}
       data-favorite={favorite}
     >
       <img
-        loading='lazy'
+        loading="lazy"
         src={`${SPLASHART_URL}/${championId}/${skinId}.jpg`}
         alt={`Splashart ${championId}/${skinId}`}
       />

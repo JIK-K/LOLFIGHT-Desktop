@@ -29,17 +29,17 @@ const Select: React.FC<Props> = ({
       onOpenChange={setOpen}
       onValueChange={onValueChange}
     >
-      <RadixSelect.Trigger className={styles.trigger}>
+      <RadixSelect.Trigger className="">
         <RadixSelect.Value placeholder={placeholder} />
         {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
       </RadixSelect.Trigger>
       <RadixSelect.Portal>
-        <RadixSelect.Content className={styles.content} position="popper">
+        <RadixSelect.Content className="" position="popper">
           <RadixSelect.Viewport>
             {items.map((item) => (
               <RadixSelect.Item
                 key={item.value}
-                className={styles.item}
+                // className="{styles.item}"
                 value={item.value}
               >
                 <RadixSelect.ItemText>{item.name}</RadixSelect.ItemText>

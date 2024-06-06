@@ -5,6 +5,7 @@ import { login } from "../../../api/member.api";
 import CustomAlert from "../../../common/components/alert/CustomAlert";
 import { toast } from "react-hot-toast";
 import "./Login.scss";
+
 const { ipcRenderer } = window.require("electron");
 
 const LoginPage = () => {
@@ -72,11 +73,17 @@ const LoginPage = () => {
           </p>
         </div>
         <div className="form-wrapper">
-          <div className="input-field">
-            <input type="text" placeholder="이메일" onChange={handleIdChange} />
-          </div>
-          <div className="input-field">
+          <div className="border border-black rounded-md my-2 text-black">
             <input
+              className="w-full h-40px rounded-md px-2 bg-gray-100"
+              type="text"
+              placeholder="이메일"
+              onChange={handleIdChange}
+            />
+          </div>
+          <div className="border border-black rounded-md my-2 text-black">
+            <input
+              className="w-full h-40px rounded-md px-2 bg-gray-100"
               type="password"
               placeholder="비밀번호"
               onChange={handlePwChange}

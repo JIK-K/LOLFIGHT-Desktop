@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './Skeleton.module.scss';
+import React from "react";
+import styles from "./Skeleton.module.scss";
 
 interface Props {
   width: number;
@@ -15,7 +15,7 @@ const Skeleton: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   return (
     <div
-      className={styles.skeleton}
+      className="{styles.skeleton}"
       style={{ width: width, height: height, borderRadius: borderRadius }}
     >
       {children}
