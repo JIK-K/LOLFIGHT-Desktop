@@ -6,7 +6,7 @@ import {
   request,
 } from "../../utils/ipcBridge";
 import { useLcuData } from "../../components/LcuContext";
-import { Button, Textbox, SummonerIcon, Select } from "../../components";
+import { Button, Textbox, SummonerIcon, Select, Blur } from "../../components";
 import { toast } from "react-hot-toast";
 import "./Status.scss";
 
@@ -219,77 +219,87 @@ const Status: React.FC = () => {
     });
   };
   return (
-    <div className="status-page">
-      <div className="wrapper">
-        <div className="component-title">상태 변경</div>
-        <div className="section">
-          <SummonerIcon
-            iconId={lcuData.me.icon}
-            availability={lcuData.me.availability}
-            size={50}
-          />
-          <Textbox
-            ref={statusBox}
-            placeholder={
-              lcuData.me.statusMessage === ""
-                ? "Empty status"
-                : lcuData.me.statusMessage
-            }
-          />
-          <Select
-            items={ITEMS}
-            initialItem={ITEMS.find(({ value }) => value === availability)}
-            onValueChange={(value: Availability) => setAvailabilty(value)}
-          />
-          <Button title="적용" onClick={apply} />
-          <Button title="초기화" onClick={clear} />
+    <div className="max-w-3xl mx-auto grid gap-8">
+      <div className="grid gap-2">
+        <div className="flex flex-col items-center rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
+          <div className="flex w-full space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
+            상태 변경
+          </div>
+          <div className="flex items-center gap-2 p-4">
+            <SummonerIcon
+              iconId={lcuData.me.icon}
+              availability={lcuData.me.availability}
+              size={50}
+            />
+            <Textbox
+              ref={statusBox}
+              placeholder={
+                lcuData.me.statusMessage === ""
+                  ? "Empty status"
+                  : lcuData.me.statusMessage
+              }
+            />
+            <Select
+              items={ITEMS}
+              initialItem={ITEMS.find(({ value }) => value === availability)}
+              onValueChange={(value: Availability) => setAvailabilty(value)}
+            />
+            <Button title="적용" onClick={apply} />
+            <Button title="초기화" onClick={clear} />
+          </div>
         </div>
-      </div>
 
-      <div className="wrapper">
-        <div className="component-title">랭크 티어 변경</div>
-        <div className="section">
-          <Select
-            items={QUEUES}
-            initialItem={QUEUES.find(({ value }) => value === queue)}
-            onValueChange={(value: Queue) => setQueue(value)}
-          />
-          <Select
-            items={TIERS}
-            initialItem={TIERS.find(({ value }) => value === rankedTier)}
-            onValueChange={(value: Tier) => setRankedTier(value)}
-          />
-          <Select
-            items={DIVISIONS}
-            initialItem={DIVISIONS.find(({ value }) => divisison === value)}
-            onValueChange={(value: Division) => setDivision(value)}
-          />
-          <Button
-            title="적용"
-            onClick={() => {
-              updateRank(queue, rankedTier, divisison);
-            }}
-          />
+        <div className="flex flex-col items-center rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
+          <div className="flex w-full space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
+            랭크 티어 변경
+          </div>
+          <div className="relative w-full justify-center flex items-center gap-2 p-4">
+            <Select
+              items={QUEUES}
+              initialItem={QUEUES.find(({ value }) => value === queue)}
+              onValueChange={(value: Queue) => setQueue(value)}
+            />
+            <Select
+              items={TIERS}
+              initialItem={TIERS.find(({ value }) => value === rankedTier)}
+              onValueChange={(value: Tier) => setRankedTier(value)}
+            />
+            <Select
+              items={DIVISIONS}
+              initialItem={DIVISIONS.find(({ value }) => divisison === value)}
+              onValueChange={(value: Division) => setDivision(value)}
+            />
+            <Button
+              title="적용"
+              onClick={() => {
+                updateRank(queue, rankedTier, divisison);
+              }}
+            />
+            <Blur />
+          </div>
         </div>
-      </div>
-      <div className="wrapper">
-        <div className="component-title">챌린지 변경</div>
-        <div className="section">
-          <Select
-            items={TIERS}
-            initialItem={TIERS.find(({ value }) => value === challengesTier)}
-            onValueChange={(value: Tier) => setChallengesTier(value)}
-          />
-          <Textbox
-            defaultValue={lcuData.me.lol.challengePoints.toString()}
-            ref={points}
-          />
-          <Button
-            title="적용"
-            onClick={() =>
-              updateChallengesRank(challengesTier, points.current.value)
-            }
-          />
+        <div className="flex flex-col items-center rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
+          <div className="flex w-full space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
+            챌린지 변경
+          </div>
+          <div className="relative w-full justify-center flex items-center gap-2 p-4">
+            <Select
+              items={TIERS}
+              initialItem={TIERS.find(({ value }) => value === challengesTier)}
+              onValueChange={(value: Tier) => setChallengesTier(value)}
+            />
+            <Textbox
+              defaultValue={lcuData.me.lol.challengePoints.toString()}
+              ref={points}
+            />
+            <Button
+              title="적용"
+              onClick={() =>
+                updateChallengesRank(challengesTier, points.current.value)
+              }
+            />
+            <Blur />
+          </div>
         </div>
       </div>
     </div>

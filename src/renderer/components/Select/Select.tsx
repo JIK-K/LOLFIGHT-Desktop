@@ -39,7 +39,7 @@ const Select: React.FC<Props> = ({
             {items.map((item) => (
               <RadixSelect.Item
                 key={item.value}
-                // className="{styles.item}"
+                className="flex w-4 items-center outline-none select-none box-border"
                 value={item.value}
               >
                 <RadixSelect.ItemText>{item.name}</RadixSelect.ItemText>

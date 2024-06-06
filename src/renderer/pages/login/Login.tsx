@@ -10,7 +10,7 @@ const { ipcRenderer } = window.require("electron");
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const backgroundURL = `${process.env.SERVER_URL}/public/banner/riven_high.gif`;
+  const backgroundURL = `${process.env.SERVER_URL}/public/banner/ashe.gif`;
   const [memberId, setMemberId] = useState("");
   const [memberPw, setMemberPw] = useState("");
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +67,7 @@ const LoginPage = () => {
             />
             LOLFIGHT
           </div>
-          <p className="logo-text">
+          <p className="font-bold text-white text-3xl">
             무자비하게 <br />
             우리와 함께하세요
           </p>
@@ -124,7 +124,9 @@ const LoginPage = () => {
           backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
         }}
-      ></div>
+      >
+        <img src={backgroundURL} />
+      </div>
       <button type="button" className="button-close" onClick={closeWindow}>
         <img
           src={`${process.env.SERVER_URL}/public/close.png`}
