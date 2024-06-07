@@ -64,8 +64,6 @@ const createWindow = (): BrowserWindow => {
 };
 
 app.on("ready", () => {
-  if (isDevelopment) installExtension(REACT_DEVELOPER_TOOLS);
-
   const browserWindow = createWindow();
   const leagueClient = new LCU(browserWindow.id);
 
@@ -103,6 +101,8 @@ app.on("ready", () => {
     mouseDiffX = startMouseX - bounds.x;
     mouseDiffY = startMouseY - bounds.y;
   });
+
+  if (isDevelopment) installExtension(REACT_DEVELOPER_TOOLS);
 
   // ipcMain.on("store-get-favorites", (event) => {
   //   event.reply("store-favorites", getFavorites());
@@ -142,6 +142,10 @@ app.on("ready", () => {
   //     event.reply("store-import-response", true);
   //   }
   // });
+
+  session.defaultSession.clearCache().then(() => {
+    console.log("Cache cleared");
+  });
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
