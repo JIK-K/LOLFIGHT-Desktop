@@ -435,38 +435,19 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           console.log(message.data);
 
           if (message.data && message.data.gameType === "CUSTOM_GAME") {
+            console.log(member);
+            console.log(fightingRoom);
             if (
-              member.memberGame.gameName.split("#")[0] ===
-              message.data.teams[0].players[0].summonerName
+              // member.memberGame.gameName.split("#")[0] ===
+              // message.data.teams[0].players[0].summonerName
+              fightingRoom.team_A.members[0].member.memberGame.gameName.split(
+                "#"
+              )[0] === message.data.teams[0].players[0].summonerName
             ) {
-              // const updatedTeamA = fightingRoom.team_A.members.map(
-              //   (member) => ({
-              //     ...member,
-              //     isReady: false,
-              //   })
-              // );
-              // const updatedTeamB = fightingRoom.team_B.members.map(
-              //   (member) => ({
-              //     ...member,
-              //     isReady: false,
-              //   })
-              // );
-              const updatedFightingRoom = {
-                ...fightingRoom,
-                team_A: {
-                  ...fightingRoom.team_A,
-                  status: "매칭중",
-                },
-                team_B: {
-                  ...fightingRoom.team_B,
-                  status: "매칭중",
-                },
-                status: "매칭중",
-              };
-              console.log(updatedFightingRoom);
+              console.log("보낸다");
 
               const updateFightingRoom = { ...fightingRoom, status: "매칭중" };
-              setFightingRoom(updatedFightingRoom);
+              setFightingRoom(updateFightingRoom);
 
               let teamAGuildName;
               let teamBGuildName;
@@ -511,7 +492,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
     return () => {
       ipcRenderer.off("lcu-event", listener);
     };
-  }, []);
+  });
 
   return <context.Provider value={state}>{children}</context.Provider>;
 };
