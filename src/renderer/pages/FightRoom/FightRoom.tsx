@@ -112,7 +112,7 @@ const FightRoom = () => {
     });
 
     socket.on("searchFight", (roomData: FightingRoomDTO) => {
-      console.log("SearchFight", roomData);
+      // console.log("SearchFight", roomData);
       // const data = roomData;
       // data.team_A.members[0].isLeader = true;
       setFightingRoom(roomData);
@@ -169,11 +169,11 @@ const FightRoom = () => {
 
   useEffect(() => {
     if (fightingRoom) {
-      // console.log(fightingRoom);
+      console.log(fightingRoom);
       if (fightingRoom.status === "게임중") {
         setisGaming(true);
       }
-      if (fightingRoom.status === "대기중") {
+      if (fightingRoom.status === "매칭중") {
         setisGaming(false);
       }
 
@@ -224,7 +224,7 @@ const FightRoom = () => {
   //====================================================================//
   //Riot Custom Game Func
   //====================================================================//
-  const inviteCustomGame = () => {
+  const inviteCustomGame = (fightData: FightingRoomDTO) => {
     const invitationData: any = [];
 
     const addInvitation = (team: WaitingRoomDTO) => {
@@ -239,8 +239,8 @@ const FightRoom = () => {
       });
     };
 
-    addInvitation(fightingRoom.team_A);
-    addInvitation(fightingRoom.team_B);
+    addInvitation(fightData.team_A);
+    addInvitation(fightData.team_B);
 
     console.log(invitationData);
 
@@ -280,7 +280,7 @@ const FightRoom = () => {
         .then((response) => {
           console.log(response);
           setTimeout(() => {
-            inviteCustomGame();
+            inviteCustomGame(fightData);
           }, 5000);
         })
         .catch((error) => {
@@ -465,7 +465,8 @@ const FightRoom = () => {
                 {guild.guildName}
               </div>
               <div className="guild-members">
-                {waitingRoomData === undefined
+                {waitingRoomData === undefined ||
+                waitingRoomData.members === undefined
                   ? ""
                   : waitingRoomData.members.map((matchMember, index) => (
                       <BattleMemberBox key={index} matchMember={matchMember} />
@@ -543,6 +544,7 @@ const FightRoom = () => {
               )}
 
               {waitingRoomData &&
+                waitingRoomData.roomName &&
                 waitingRoomData.roomName.includes(member.memberName) && (
                   <button
                     type="button"

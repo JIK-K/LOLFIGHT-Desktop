@@ -439,10 +439,35 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
               member.memberGame.gameName.split("#")[0] ===
               message.data.teams[0].players[0].summonerName
             ) {
-              const updateFightingRoom = { ...fightingRoom, status: "대기중" };
-              setFightingRoom(updateFightingRoom);
-              //teamA의 첫번째플레이어 = 방장이라고 볼수있지
-              //그사람 한명만 저장한다고 요청을 보낸다
+              // const updatedTeamA = fightingRoom.team_A.members.map(
+              //   (member) => ({
+              //     ...member,
+              //     isReady: false,
+              //   })
+              // );
+              // const updatedTeamB = fightingRoom.team_B.members.map(
+              //   (member) => ({
+              //     ...member,
+              //     isReady: false,
+              //   })
+              // );
+              const updatedFightingRoom = {
+                ...fightingRoom,
+                team_A: {
+                  ...fightingRoom.team_A,
+                  status: "매칭중",
+                },
+                team_B: {
+                  ...fightingRoom.team_B,
+                  status: "매칭중",
+                },
+                status: "매칭중",
+              };
+              console.log(updatedFightingRoom);
+
+              const updateFightingRoom = { ...fightingRoom, status: "매칭중" };
+              setFightingRoom(updatedFightingRoom);
+
               let teamAGuildName;
               let teamBGuildName;
               const handleRecordBattle = async () => {
@@ -486,7 +511,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
     return () => {
       ipcRenderer.off("lcu-event", listener);
     };
-  });
+  }, []);
 
   return <context.Provider value={state}>{children}</context.Provider>;
 };
