@@ -233,7 +233,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           puuid: response.puuid,
           icon: response.icon,
           availability: response.availability,
-          name: response.name,
+          name: response.gameName,
           statusMessage: response.statusMessage,
           gameTag: response.gameTag,
           summonerId: response.summonerId,
