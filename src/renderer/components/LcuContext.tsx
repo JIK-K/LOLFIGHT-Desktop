@@ -446,8 +446,11 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
             ) {
               console.log("보낸다");
 
-              const updateFightingRoom = { ...fightingRoom, status: "매칭중" };
-              setFightingRoom(updateFightingRoom);
+              socket.emit("endOfGame", {
+                fightRoomName: fightingRoom.fightRoomName,
+              });
+              // const updateFightingRoom = { ...fightingRoom, status: "매칭중" };
+              // setFightingRoom(updateFightingRoom);
 
               let teamAGuildName;
               let teamBGuildName;

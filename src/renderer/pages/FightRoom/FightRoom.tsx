@@ -151,6 +151,13 @@ const FightRoom = () => {
     socket.on("fightMessage", (receivedMessage: string) => {
       setAllMessage((prevMessages) => [...prevMessages, receivedMessage]);
     });
+
+    socket.on("endOfGame", (roomData: FightingRoomDTO) => {
+      console.log(roomData);
+      setAllReady(false);
+      setIsReady(false);
+      setFightingRoom(roomData);
+    });
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       socket.off("createRoom");
@@ -170,10 +177,29 @@ const FightRoom = () => {
   useEffect(() => {
     if (fightingRoom) {
       console.log(fightingRoom);
+      //@todo 주석해제
+      // if (fightingRoom.readyCount === 5) {
+      if (fightingRoom.readyCount === 2) {
+        setAllReady(true);
+      } else {
+        setAllReady(false);
+      }
+
       if (fightingRoom.status === "게임중") {
         setisGaming(true);
       }
       if (fightingRoom.status === "매칭중") {
+        console.log("매칭중으로 바뀜", fightingRoom);
+        console.log(
+          "ready :",
+          isReady,
+          "allReady : ",
+          allReady,
+          "isGaming :",
+          isGaming,
+          "isSearching : ",
+          isSearching
+        );
         setisGaming(false);
       }
 
@@ -189,18 +215,11 @@ const FightRoom = () => {
 
         setWaitingRoomData(homeTeam);
         setEnemyRoomData(enemyTeam);
-        //@todo 주석해제
-        // if (fightingRoom.readyCount === 5) {
-        if (fightingRoom.readyCount === 2) {
-          setAllReady(true);
-        } else {
-          setAllReady(false);
-        }
       } else {
         //상대방이 떠나버렸어 그면 그냥 그 방을 아예 없에버려
         setEnemyRoomData(null);
         setPrevEnemyRoomName(null);
-        initRoomData(fightingRoom.team_A.status);
+        initRoomData("대기중");
       }
     }
   }, [fightingRoom]);
