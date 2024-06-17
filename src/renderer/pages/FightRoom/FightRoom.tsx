@@ -178,7 +178,7 @@ const FightRoom = () => {
     if (fightingRoom) {
       console.log(fightingRoom);
       //@todo 주석해제
-      if (fightingRoom.readyCount === 5) {
+      if (fightingRoom.readyCount === 10) {
         // if (fightingRoom.readyCount === 2) {
         setAllReady(true);
       } else {
