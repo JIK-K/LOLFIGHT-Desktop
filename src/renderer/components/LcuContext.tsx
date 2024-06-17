@@ -95,6 +95,7 @@ type MeState = {
   name: string;
   statusMessage: string;
   gameTag: string;
+  summonerId: number;
   lol: {
     level: number;
     rankedLeagueQueue: Queue;
@@ -137,6 +138,7 @@ const DEFAULT_STATE: State = {
     name: "Loading...",
     statusMessage: "Loading...",
     gameTag: "0000",
+    summonerId: 0,
     lol: {
       level: 0,
       rankedLeagueQueue: "RANKED_SOLO_5x5",
@@ -201,18 +203,22 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
     findMember(sessionStorage.getItem("memberId")).then((response) => {
       setMember(response.data.data);
 
-      getGuildInfo(response.data.data.memberGuild.guildName).then(
-        (response) => {
-          console.log(response);
-          setGuild(response.data.data);
-        }
-      );
+      if (response.data.data.memberGuild !== null) {
+        getGuildInfo(response.data.data.memberGuild.guildName).then(
+          (response) => {
+            console.log(response);
+            setGuild(response.data.data);
+          }
+        );
+      }
 
       setSocket(
         SocketIOClient(`${process.env.SOCKET_URL}`, {
           query: {
             memberName: response.data.data.memberName,
-            guildName: response.data.data.memberGuild.guildName,
+            guildName: response.data.data.memberGuild
+              ? response.data.data.memberGuild.guildName
+              : undefined,
           },
         })
       );
@@ -227,9 +233,10 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           puuid: response.puuid,
           icon: response.icon,
           availability: response.availability,
-          name: response.name,
+          name: response.gameName,
           statusMessage: response.statusMessage,
           gameTag: response.gameTag,
+          summonerId: response.summonerId,
           lol: {
             level: response.lol.level,
             rankedLeagueQueue:
@@ -372,6 +379,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
               name: message.data.name,
               statusMessage: message.data.statusMessage,
               gameTag: message.data.gameTag,
+              summonerId: message.data.summonerId,
               lol: {
                 level: message.data.lol.level,
                 rankedLeagueQueue: message.data.lol.rankedLeagueQueue,
@@ -424,35 +432,55 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           break;
         }
         case "/lol-end-of-game/v1/eog-stats-block": {
-          console.log("yayaman", message.data);
+          console.log(message.data);
 
-          if (message.data) {
+          if (message.data && message.data.gameType === "CUSTOM_GAME") {
+            console.log(member);
+            console.log(fightingRoom);
             if (
-              member.memberGame.gameName.split("#")[0] ===
-              message.data.teams[0].players[0].summonerName
+              // member.memberGame.gameName.split("#")[0] ===
+              // message.data.teams[0].players[0].summonerName
+              fightingRoom.team_A.members[0].member.memberGame.gameName.split(
+                "#"
+              )[0] === message.data.teams[0].players[0].summonerName
             ) {
-              const updateFightingRoom = { ...fightingRoom, status: "대기중" };
-              setFightingRoom(updateFightingRoom);
-              //teamA의 첫번째플레이어 = 방장이라고 볼수있지
-              //그사람 한명만 저장한다고 요청을 보낸다
+              console.log("보낸다");
+
+              socket.emit("endOfGame", {
+                fightRoomName: fightingRoom.fightRoomName,
+              });
+              // const updateFightingRoom = { ...fightingRoom, status: "매칭중" };
+              // setFightingRoom(updateFightingRoom);
+
               let teamAGuildName;
               let teamBGuildName;
-              getGuildName(message.data.teams[0].players[0].summonerName).then(
-                (response) => {
-                  teamAGuildName = response.data.data;
+              const handleRecordBattle = async () => {
+                try {
+                  const responseA = await getGuildName(
+                    message.data.teams[0].players[0].summonerName
+                  );
+                  teamAGuildName = responseA.data.data;
+
+                  const responseB = await getGuildName(
+                    message.data.teams[1].players[0].summonerName
+                  );
+                  const teamBGuildName = responseB.data.data;
+
+                  await recordBattle(
+                    teamAGuildName,
+                    teamBGuildName,
+                    fightingRoom.fightRoomName,
+                    message.data
+                  );
+                } catch (error) {
+                  console.error(
+                    "길드 이름을 가져오거나 전투를 기록하는 중 오류 발생:",
+                    error
+                  );
                 }
-              );
-              getGuildName(message.data.teams[1].players[0].summonerName).then(
-                (response) => {
-                  teamBGuildName = response.data.data;
-                }
-              );
-              recordBattle(
-                teamAGuildName,
-                teamBGuildName,
-                fightingRoom.fightRoomName,
-                message.data
-              );
+              };
+
+              handleRecordBattle();
             }
           }
         }

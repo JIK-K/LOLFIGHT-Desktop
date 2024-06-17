@@ -12,7 +12,6 @@ const NavItem: React.FC<NavItemProps> = ({ title, href }) => {
   const location = useLocation();
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (location.pathname === "/fightroom") {
-      console.log("여긴클릭되면안된다니까?");
       event.preventDefault();
     }
   };
@@ -158,15 +157,14 @@ const NavBar: React.FC = () => {
       </div>
       <div className="nav">
         <NavItem title="홈" href="/home" />
-        {/* <NavItem title="Icon" href="/icons" />
-        <NavItem title="Background" href="/backgrounds" /> */}
+        {/* <NavItem title="Icon" href="/icons" /> */}
+        {/* <NavItem title="Background" href="/backgrounds" /> */}
         <NavItem title="길드" href="/guild" />
         <NavItem title="배틀" href="/battle" />
         <NavItem title="상태" href="/status" />
         {/* <NavItem title="Challenges" href="/challenges" /> */}
-        {/* <NavItem title='Chat Rank' href='/rank' /> */}
+        {/* <NavItem title="Chat Rank" href="/rank" /> */}
         <NavItem title="설정" href="/settings" />
-        {/* <NavItem title="말썽꾸러기" href="/fightroom" /> */}
       </div>
     </div>
   );

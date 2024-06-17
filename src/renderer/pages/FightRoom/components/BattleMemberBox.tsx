@@ -10,6 +10,19 @@ const BattleMemberBox = (props: Props) => {
   return (
     <div className="battle-member-container">
       <div className="member-guild-icon">
+        {props.matchMember.isLeader ? (
+          <img
+            src={`${process.env.SERVER_URL}/public/matchleader.png`}
+            alt="matchLeader"
+            width={25}
+            style={{
+              position: "absolute",
+              transform: "translateY(-80%) translateX(-50%)",
+            }}
+          />
+        ) : (
+          ""
+        )}
         <img
           src={`${process.env.SERVER_URL}/${props.matchMember.member.memberGuild.guildIcon}`}
           width={50}

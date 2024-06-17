@@ -1,7 +1,7 @@
 {
   "name": "lolfight-desktop",
   "description": "A simple application with many useful functions which work with the LCU api of Riot Games ",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "author": "LOLFIGHT",
   "license": "MIT",
   "private": true,
@@ -15,13 +15,14 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icons": "assets/icon_blue_scO_icon.ico"
+        "icons": "assets/icon-blue.png"
       },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "lolfight-desktop"
+            "name": "lolfight-desktop",
+            "icons": "assets/icon-blue.png"
           }
         },
         {

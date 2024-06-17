@@ -4,4 +4,5 @@ export interface MemberGameDTO extends BaseDTO {
   id?: string;
   gameName: string;
   gameTier: string;
+  summonerId: number;
 }

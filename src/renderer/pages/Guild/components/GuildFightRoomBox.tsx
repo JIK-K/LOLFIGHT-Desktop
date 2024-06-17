@@ -18,6 +18,7 @@ const GuildFightRoomBox = (props: Props) => {
 
   useEffect(() => {
     socket.on("joinRoom", (response: any) => {
+      console.log(response);
       if (response === "full") {
         toast.error("방이 모두 찼습니다");
       } else {
@@ -35,11 +36,17 @@ const GuildFightRoomBox = (props: Props) => {
     const matchMember: MatchMembersDTO = {
       member: member,
       isReady: false,
+      isLeader: false,
     };
-    socket.emit("joinRoom", {
-      roomName: props.roomData.roomName,
-      matchMember: matchMember,
-    });
+    if (matchMember.member.memberGame !== null || undefined) {
+      socket.emit("joinRoom", {
+        roomName: props.roomData.roomName,
+        matchMember: matchMember,
+      });
+    } else {
+      toast.error("롤 계정이 등록되어있는 유저만 입장 가능합니다.");
+    }
+
     // navigate("/fightroom", { state: props.roomData });
   };
 
@@ -48,6 +55,8 @@ const GuildFightRoomBox = (props: Props) => {
       return "red";
     } else if (status === "대기중") {
       return "green";
+    } else if (status === "매칭중") {
+      return "blue";
     } else {
       return "black";
     }

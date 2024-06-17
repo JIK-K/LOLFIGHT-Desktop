@@ -24,7 +24,8 @@ const Connect: React.FC = () => {
         });
       },
       () => {
-        toast.error("Connection failed!");
+        toast.error("❌ 롤 클라이언트에 로그인후 시도해주세요.");
+        navigate(-1);
         setStatus("Try again");
       }
     );
