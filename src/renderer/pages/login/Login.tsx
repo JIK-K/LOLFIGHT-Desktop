@@ -9,7 +9,7 @@ const { ipcRenderer } = window.require("electron");
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const backgroundURL = `${process.env.SERVER_URL}/public/banner/riven_high.gif`;
+  const backgroundURL = `${process.env.SERVER_URL}/public/banner/israel_old.gif`;
   const [memberId, setMemberId] = useState("");
   const [memberPw, setMemberPw] = useState("");
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
