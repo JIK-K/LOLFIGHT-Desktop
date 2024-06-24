@@ -216,6 +216,7 @@ const FightRoom = () => {
       if (!prevEnemyRoomName || prevEnemyRoomName !== enemyRoomData.roomName) {
         setIsSearching(false);
         setIsReady(false);
+
         matchingSuccessSound();
         toast.success("매칭 완료");
       }
@@ -252,10 +253,10 @@ const FightRoom = () => {
 
     request("POST", "/lol-lobby/v2/lobby/invitations", invitationData)
       .then((response: any) => {
-        console.log(response);
+        console.log("success ", response);
       })
       .catch((error: any) => {
-        console.log(error);
+        console.log("error ", error);
       });
   };
 
@@ -384,7 +385,7 @@ const FightRoom = () => {
   const sendMessage = () => {
     switch (currentTab) {
       case 0:
-        if (fightingRoom) {
+        if (fightingRoom && fightingRoom.team_B !== null) {
           socket.emit("fightMessage", {
             fightRoom: fightingRoom.fightRoomName,
             memberName: member.memberName,
@@ -416,7 +417,7 @@ const FightRoom = () => {
     if (e.key === "Enter") {
       switch (currentTab) {
         case 0:
-          if (fightingRoom) {
+          if (fightingRoom && fightingRoom.team_B !== null) {
             socket.emit("fightMessage", {
               fightRoom: fightingRoom.fightRoomName,
               memberName: member.memberName,
