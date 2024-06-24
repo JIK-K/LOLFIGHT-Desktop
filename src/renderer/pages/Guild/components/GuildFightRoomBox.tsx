@@ -35,7 +35,6 @@ const GuildFightRoomBox = (props: Props) => {
   const handleJoinRoom = () => {
     const matchMember: MatchMembersDTO = {
       member: member,
-      isReady: false,
       isLeader: false,
     };
     if (matchMember.member.memberGame !== null || undefined) {

@@ -95,7 +95,6 @@ const Guild: React.FC = () => {
   const createBattleRoom = () => {
     const matchMember: MatchMembersDTO = {
       member: member,
-      isReady: false,
       isLeader: false,
     };
     if (matchMember.member.memberGame !== null || undefined) {
@@ -103,6 +102,7 @@ const Guild: React.FC = () => {
         members: matchMember,
         roomName: member.memberName,
         memberCount: 1,
+        isReady: false,
         status: "대기중",
       });
       navigate("/fightroom");

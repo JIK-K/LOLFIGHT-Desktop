@@ -48,7 +48,6 @@ const FightRoom = () => {
   const leaveFightRoom = () => {
     const matchMember: MatchMembersDTO = {
       member: member,
-      isReady: false,
       isLeader: false,
     };
 
@@ -102,6 +101,7 @@ const FightRoom = () => {
     });
 
     socket.on("leaveRoom", (roomData: WaitingRoomDTO) => {
+      console.log("leaveRoom", roomData);
       if (roomData === null) {
         setFightingRoom(null);
         navigate("/guild");
@@ -112,24 +112,24 @@ const FightRoom = () => {
     });
 
     socket.on("searchFight", (roomData: FightingRoomDTO) => {
-      // console.log("SearchFight", roomData);
-      // const data = roomData;
-      // data.team_A.members[0].isLeader = true;
+      console.log("SearchFight", roomData);
       setFightingRoom(roomData);
     });
 
     socket.on("searchCancel", (data: WaitingRoomDTO) => {
-      // console.log(data);
+      console.log("searchCancel", data);
       setWaitingRoomData(data);
       setEnemyRoomData(null);
       setFightingRoom(null);
     });
 
     socket.on("readyFight", (roomData: FightingRoomDTO) => {
+      console.log("readyFight", roomData);
       setFightingRoom(roomData);
     });
 
     socket.on("cancelReady", (roomData: FightingRoomDTO) => {
+      console.log("cancelReady", roomData);
       setFightingRoom(roomData);
     });
 
@@ -177,9 +177,7 @@ const FightRoom = () => {
   useEffect(() => {
     if (fightingRoom) {
       console.log(fightingRoom);
-      //@todo 주석해제
-      if (fightingRoom.readyCount === 10) {
-        // if (fightingRoom.readyCount === 2) {
+      if (fightingRoom.readyCount === 2) {
         setAllReady(true);
       } else {
         setAllReady(false);
@@ -189,17 +187,6 @@ const FightRoom = () => {
         setisGaming(true);
       }
       if (fightingRoom.status === "매칭중") {
-        console.log("매칭중으로 바뀜", fightingRoom);
-        console.log(
-          "ready :",
-          isReady,
-          "allReady : ",
-          allReady,
-          "isGaming :",
-          isGaming,
-          "isSearching : ",
-          isSearching
-        );
         setisGaming(false);
       }
 
@@ -318,13 +305,13 @@ const FightRoom = () => {
     if (waitingRoomData) {
       const updatedMembers = waitingRoomData.members.map((member) => ({
         ...member,
-        isReady: false,
         isLeader: false,
       }));
       setWaitingRoomData((prevRoomData) => ({
         ...prevRoomData,
         members: updatedMembers,
         status: status,
+        isReady: false,
       }));
     }
   };
@@ -366,14 +353,14 @@ const FightRoom = () => {
         }
       } else {
         // @todo 주석해제
-        if (waitingRoomData.members.length === 5) {
-          socket.emit("searchFight", {
-            roomName: waitingRoomData.roomName,
-          });
-          setIsSearching(!isSearching);
-        } else {
-          toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
-        }
+        // if (waitingRoomData.members.length === 5) {
+        socket.emit("searchFight", {
+          roomName: waitingRoomData.roomName,
+        });
+        setIsSearching(!isSearching);
+        // } else {
+        //   toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
+        // }
       }
     }
   };
@@ -482,6 +469,22 @@ const FightRoom = () => {
                   height={50}
                 />
                 {guild.guildName}
+
+                <div style={{ position: "relative" }}>
+                  {waitingRoomData && waitingRoomData.isReady ? (
+                    <img
+                      src={`${process.env.SERVER_URL}/public/ok_ready.png`}
+                      alt="ok_ready"
+                      width={25}
+                      style={{
+                        position: "absolute",
+                        transform: "translateY(-60%)",
+                      }}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
               <div className="guild-members">
                 {waitingRoomData === undefined ||
@@ -533,6 +536,23 @@ const FightRoom = () => {
                   enemyRoomData.members[0] &&
                   enemyRoomData.members[0].member.memberGuild &&
                   enemyRoomData.members[0].member.memberGuild.guildName}
+                <div style={{ position: "relative" }}>
+                  {enemyRoomData && enemyRoomData.isReady ? (
+                    <img
+                      src={`${process.env.SERVER_URL}/public/ok_ready.png`}
+                      alt="ok_ready"
+                      width={25}
+                      style={{
+                        position: "absolute",
+                        right: "5px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
               <div className="guild-members">
                 {enemyRoomData
@@ -546,21 +566,23 @@ const FightRoom = () => {
 
           <div className="battle-info-container">
             <div className="info-action-buttons">
-              {enemyRoomData && (
-                <button
-                  type="button"
-                  className={isReady ? "ready-cancel-button" : "ready-button"}
-                  onClick={readyBattle}
-                  style={{ cursor: "pointer" }}
-                >
-                  <img
-                    src={`${process.env.SERVER_URL}/public/ready.png`}
-                    alt="leave"
-                    width={40}
-                  />
-                  <div>{isReady ? "준비 취소" : "준비 완료"}</div>
-                </button>
-              )}
+              {enemyRoomData &&
+                waitingRoomData.roomName &&
+                waitingRoomData.roomName.includes(member.memberName) && (
+                  <button
+                    type="button"
+                    className={isReady ? "ready-cancel-button" : "ready-button"}
+                    onClick={readyBattle}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <img
+                      src={`${process.env.SERVER_URL}/public/ready.png`}
+                      alt="leave"
+                      width={40}
+                    />
+                    <div>{isReady ? "준비 취소" : "준비 완료"}</div>
+                  </button>
+                )}
 
               {waitingRoomData &&
                 waitingRoomData.roomName &&
