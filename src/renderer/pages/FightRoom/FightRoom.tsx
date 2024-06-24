@@ -384,11 +384,19 @@ const FightRoom = () => {
   const sendMessage = () => {
     switch (currentTab) {
       case 0:
-        socket.emit("fightMessage", {
-          fightRoom: fightingRoom.fightRoomName,
-          memberName: member.memberName,
-          message: message,
-        });
+        if (fightingRoom) {
+          socket.emit("fightMessage", {
+            fightRoom: fightingRoom.fightRoomName,
+            memberName: member.memberName,
+            message: message,
+          });
+        } else {
+          socket.emit("fightMessage", {
+            fightRoom: waitingRoomData.roomName,
+            memberName: member.memberName,
+            message: message,
+          });
+        }
         // setAllMessage((prevMessages) => [...prevMessages, message]);
         break;
       case 1:
@@ -408,11 +416,20 @@ const FightRoom = () => {
     if (e.key === "Enter") {
       switch (currentTab) {
         case 0:
-          socket.emit("fightMessage", {
-            fightRoom: fightingRoom.fightRoomName,
-            memberName: member.memberName,
-            message: message,
-          });
+          if (fightingRoom) {
+            socket.emit("fightMessage", {
+              fightRoom: fightingRoom.fightRoomName,
+              memberName: member.memberName,
+              message: message,
+            });
+          } else {
+            socket.emit("fightMessage", {
+              fightRoom: waitingRoomData.roomName,
+              memberName: member.memberName,
+              message: message,
+            });
+          }
+
           // setAllMessage((prevMessages) => [...prevMessages, message]);
           break;
         case 1:
