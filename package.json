@@ -1,7 +1,7 @@
 {
   "name": "lolfight-desktop",
   "description": "A simple application with many useful functions which work with the LCU api of Riot Games ",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "author": "LOLFIGHT",
   "license": "MIT",
   "private": true,
@@ -10,26 +10,33 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "lint": "biome lint ./src"
+    "lint": "biome lint ./src",
+    "publish": "electron-forge publish"
   },
   "config": {
     "forge": {
       "packagerConfig": {
-        "icons": "assets/icon-blue.png"
+        "icon": "assets/icon"
       },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "lolfight-desktop",
-            "icons": "assets/icon-blue.png"
+            "name": "LOLFIGHT",
+            "setupIcon": "assets/icon.ico",
+            "loadingGif": "install.gif"
           }
         },
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [
             "darwin"
-          ]
+          ],
+          "config": {
+            "name": "LOLFIGHT",
+            "icons": "assets/icon.ico",
+            "loadingGif": "install.gif"
+          }
         },
         {
           "name": "@electron-forge/maker-deb",
@@ -58,8 +65,25 @@
             "port": 5000
           }
         }
+      ],
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "JIK-K",
+              "name": "LOLFIGHT-Desktop"
+            },
+            "prerelease": false,
+            "draft": false
+          }
+        }
       ]
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JIK-K/LOLFIGHT-Desktop.git"
   },
   "build": {},
   "devDependencies": {
@@ -70,6 +94,7 @@
     "@electron-forge/maker-squirrel": "^7.2.0",
     "@electron-forge/maker-zip": "^7.2.0",
     "@electron-forge/plugin-webpack": "^7.2.0",
+    "@electron-forge/publisher-github": "^7.4.0",
     "@types/node": "^20.11.16",
     "@types/react": "^18.2.52",
     "@types/react-dom": "^18.2.18",
@@ -98,6 +123,7 @@
     "antd": "^5.15.2",
     "autoprefixer": "^10.4.18",
     "dotenv": "^16.4.5",
+    "electron-log": "^5.1.5",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "file-loader": "^6.2.0",
@@ -110,6 +136,7 @@
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.10.5",
+    "update-electron-app": "^3.0.0",
     "uuid": "^9.0.1",
     "webpack": "^5.90.1",
     "ws": "^8.16.0",

@@ -65,6 +65,9 @@ const createWindow = (): BrowserWindow => {
 };
 
 app.on("ready", () => {
+  const { updateElectronApp } = require("update-electron-app");
+  updateElectronApp();
+
   if (isDevelopment) installExtension(REACT_DEVELOPER_TOOLS);
 
   const browserWindow = createWindow();

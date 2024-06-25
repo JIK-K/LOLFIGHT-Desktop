@@ -437,12 +437,14 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           if (message.data && message.data.gameType === "CUSTOM_GAME") {
             console.log(member);
             console.log(fightingRoom);
+            console.log(
+              "leader: ",
+              fightingRoom.team_A.members[0].member.memberName
+            );
+            console.log("my name: ", member.memberName);
             if (
-              // member.memberGame.gameName.split("#")[0] ===
-              // message.data.teams[0].players[0].summonerName
-              fightingRoom.team_A.members[0].member.memberGame.gameName.split(
-                "#"
-              )[0] === message.data.teams[0].players[0].summonerName
+              fightingRoom.team_A.members[0].member.memberName ===
+              member.memberName
             ) {
               console.log("보낸다");
 

@@ -40,23 +40,6 @@ const BattleMemberBox = (props: Props) => {
         />
         {props.matchMember.member.memberGame.gameName}
       </div>
-      <div style={{ position: "relative" }}>
-        {props.matchMember.isReady ? (
-          <img
-            src={`${process.env.SERVER_URL}/public/ok_ready.png`}
-            alt="ok_ready"
-            width={25}
-            style={{
-              position: "absolute",
-              right: "5px",
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}
-          />
-        ) : (
-          ""
-        )}
-      </div>
     </div>
   );
 };

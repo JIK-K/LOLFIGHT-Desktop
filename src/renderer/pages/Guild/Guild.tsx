@@ -20,6 +20,7 @@ const Guild: React.FC = () => {
   const { guild, setGuild } = useGuildStore();
   const { socket } = useSocketStore();
   const [message, setMessage] = useState<string>("");
+  const [isComposing, setIsComposing] = useState(false);
   const [guildMembers, setGuildMembers] = useState<MemberDTO[]>([]);
   const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
@@ -78,11 +79,19 @@ const Guild: React.FC = () => {
     setMessage("");
   };
 
+  const handleComposition = (e: React.CompositionEvent<HTMLInputElement>) => {
+    if (e.type === "compositionstart") {
+      setIsComposing(true);
+    }
+    if (e.type === "compositionend") {
+      setIsComposing(false);
+    }
+  };
   const handleInputMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !isComposing) {
       socket.emit("message", {
         memberName: member.memberName,
         guildName: member.memberGuild.guildName,
@@ -95,7 +104,6 @@ const Guild: React.FC = () => {
   const createBattleRoom = () => {
     const matchMember: MatchMembersDTO = {
       member: member,
-      isReady: false,
       isLeader: false,
     };
     if (matchMember.member.memberGame !== null || undefined) {
@@ -103,6 +111,7 @@ const Guild: React.FC = () => {
         members: matchMember,
         roomName: member.memberName,
         memberCount: 1,
+        isReady: false,
         status: "대기중",
       });
       navigate("/fightroom");
@@ -137,6 +146,9 @@ const Guild: React.FC = () => {
                   value={message}
                   onChange={handleInputMessage}
                   onKeyDown={handleKeyPress}
+                  onCompositionStart={handleComposition}
+                  onCompositionUpdate={handleComposition}
+                  onCompositionEnd={handleComposition}
                 />
                 <button
                   type="button"
