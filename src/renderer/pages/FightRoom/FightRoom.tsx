@@ -424,7 +424,7 @@ const FightRoom = () => {
     setMessage(e.target.value);
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !isComposing) {
       switch (currentTab) {
         case 0:
           if (fightingRoom && fightingRoom.team_B !== null) {
@@ -604,7 +604,8 @@ const FightRoom = () => {
 
               {waitingRoomData &&
                 waitingRoomData.roomName &&
-                waitingRoomData.roomName.includes(member.memberName) && (
+                waitingRoomData.roomName.split("-")[1] ===
+                  member.memberName && (
                   <button
                     type="button"
                     className={
