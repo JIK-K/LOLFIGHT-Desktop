@@ -24,6 +24,7 @@ const FightRoom = () => {
   const [allMessage, setAllMessage] = useState<string[]>([]);
   const [guildMessage, setGuildMessage] = useState<string[]>([]);
   const [message, setMessage] = useState<string>("");
+  const [isComposing, setIsComposing] = useState(false);
 
   const [waitingRoomData, setWaitingRoomData] = useState<WaitingRoomDTO>();
   const [enemyRoomData, setEnemyRoomData] = useState<WaitingRoomDTO>();
@@ -379,6 +380,15 @@ const FightRoom = () => {
   //====================================================================//
   //Message Func
   //====================================================================//
+  const handleComposition = (e: React.CompositionEvent<HTMLInputElement>) => {
+    if (e.type === "compositionstart") {
+      setIsComposing(true);
+    }
+    if (e.type === "compositionend") {
+      setIsComposing(false);
+    }
+  };
+
   const selectTabHandler = (index: number) => {
     setCurrentTab(index);
   };
@@ -671,6 +681,9 @@ const FightRoom = () => {
                   value={message}
                   onChange={handleInputMessage}
                   onKeyDown={handleKeyPress}
+                  onCompositionStart={handleComposition}
+                  onCompositionUpdate={handleComposition}
+                  onCompositionEnd={handleComposition}
                 />
                 <button
                   type="button"
