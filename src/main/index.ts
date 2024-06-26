@@ -151,7 +151,10 @@ app.on("ready", () => {
     callback({
       responseHeaders: {
         ...details.responseHeaders,
-        "Content-Security-Policy": ["*"], // TODO: is this the best solution?
+        "Content-Security-Policy": [
+          // "default-src 'self'; script-src: 'self' 'unsafe-eval'; 'unsafe-inline'; connect-src 'self' http://kddnswlr.codns.com:3000",
+          "*",
+        ],
       },
     });
   });

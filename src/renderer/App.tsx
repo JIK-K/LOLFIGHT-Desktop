@@ -19,9 +19,11 @@ import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/login/Login";
 import "./tailwind.css";
 import ReactDOM from "react-dom";
+import ErrorBoundary from "../common/constant/ErrorBoundary";
 
 const App: React.FC = () => {
   return (
+    // <ErrorBoundary>
     <HashRouter>
       <LcuContext>
         <NavBar />
@@ -60,6 +62,7 @@ const App: React.FC = () => {
         </div>
       </LcuContext>
     </HashRouter>
+    // </ErrorBoundary>
   );
 };
 

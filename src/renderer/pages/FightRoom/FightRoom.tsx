@@ -70,7 +70,12 @@ const FightRoom = () => {
   };
 
   useEffect(() => {
+    console.log("guild : " + guild);
+  });
+
+  useEffect(() => {
     // console.log(data);
+    // console.log("guild : " + guild);
     if (data !== null || undefined) {
       setWaitingRoomData(data);
     }
@@ -422,27 +427,18 @@ const FightRoom = () => {
   //====================================================================//
 
   return (
-    <div>
+    <div className="max-w-3xl mx-auto grid gap-8">
       {!isGaming ? (
-        <div className="fight-room">
-          <div className="room-topbar">
-            <button
-              type="button"
-              className="leave-button"
-              onClick={leaveFightRoom}
-            >
-              <img
-                src={`${process.env.SERVER_URL}/public/leave.png`}
-                alt="leave"
-                height={20}
-              />
+        <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1">
+          <div className="flex w-full justify-end">
+            <button type="button" className="m-1 mx-2" onClick={leaveFightRoom}>
               <div>나가기</div>
             </button>
           </div>
 
-          <div className="battle-guild-container">
-            <div className="battle-guild">
-              <div className="guild-info">
+          <div className="flex w-full justify-between p-1">
+            <div className=" min-w-64 flex flex-col h-96">
+              <div className="flex w-full p-2 items-center gap-6 text-base">
                 <img
                   src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
                   width={50}
@@ -450,7 +446,7 @@ const FightRoom = () => {
                 />
                 {guild.guildName}
               </div>
-              <div className="guild-members">
+              <div className="flex flex-col gap-1">
                 {waitingRoomData === undefined
                   ? ""
                   : waitingRoomData.members.map((matchMember, index) => (
@@ -484,8 +480,8 @@ const FightRoom = () => {
               )}
             </div>
 
-            <div className="battle-guild">
-              <div className="guild-info">
+            <div className="min-w-64 flex flex-col h-96">
+              <div className="flex w-full p-2 items-center gap-6 text-base">
                 {enemyRoomData &&
                   enemyRoomData.members[0] &&
                   enemyRoomData.members[0].member.memberGuild && (
@@ -510,8 +506,8 @@ const FightRoom = () => {
             </div>
           </div>
 
-          <div className="battle-info-container">
-            <div className="info-action-buttons">
+          <div className="flex w-full justify-between mt-2">
+            <div className="flex flex-col p-1 justify-between">
               {enemyRoomData && (
                 <button
                   type="button"
@@ -534,10 +530,10 @@ const FightRoom = () => {
                     type="button"
                     className={
                       isSearching
-                        ? "search-cancel-button"
+                        ? "search-cancel-button bg-blue-500"
                         : allReady
                         ? "start-button"
-                        : "search-button"
+                        : "search-button bg-green-500"
                     }
                     onClick={searchBattleGuild}
                   >
@@ -546,7 +542,7 @@ const FightRoom = () => {
                       alt="leave"
                       width={40}
                     />
-                    <div>
+                    <div className="bg-red-500">
                       {isSearching
                         ? "매칭 취소"
                         : allReady
@@ -557,8 +553,8 @@ const FightRoom = () => {
                 )}
             </div>
 
-            <div className="info-chat">
-              <div className="chat-tab">
+            <div className="flex flex-col h-28 bg-green-500">
+              <div className="flex w-full h-10 gap-1 bg-green-900 items-center">
                 {tabArr.map((el, index) => (
                   <div
                     key={index}
@@ -573,7 +569,7 @@ const FightRoom = () => {
               </div>
 
               <div
-                className="tab-message-area"
+                className="h-full p-2 overflow-y-auto"
                 ref={currentTab === 0 ? allMessageAreaRef : guildMessageAreaRef}
               >
                 {(() => {
@@ -592,15 +588,9 @@ const FightRoom = () => {
                 })()}
               </div>
 
-              <div className="input-area">
-                <img
-                  src={`${process.env.SERVER_URL}/public/emoticon.png`}
-                  alt="emoticon"
-                  height={20}
-                  color="white"
-                />
+              <div className="flex bg-pink-500 items-center h-10 p-1 gap-1">
                 <input
-                  className="message-input"
+                  className=" bg-pink-800"
                   type="text"
                   placeholder="메세지보내기"
                   value={message}
@@ -609,21 +599,16 @@ const FightRoom = () => {
                 />
                 <button
                   type="button"
-                  className="send-button"
+                  className=" bg-purple-500"
                   onClick={sendMessage}
-                >
-                  <img
-                    src={`${process.env.SERVER_URL}/public/send.png`}
-                    alt="emoticon"
-                    height={20}
-                    color="white"
-                  />
-                </button>
+                ></button>
               </div>
             </div>
 
-            <div className="info-battle-type">
-              <div className="game-type">소환사의 협곡 / 5 vs 5</div>
+            <div className="flex flex-col justify-center items-center w-44">
+              <div className="flex w-full justify-center">
+                소환사의 협곡 / 5 vs 5
+              </div>
               <img
                 src={`${process.env.SERVER_URL}/public/gameType/Summoner'sRift.png`}
                 alt="leave"
@@ -633,6 +618,8 @@ const FightRoom = () => {
           </div>
         </div>
       ) : (
+        // 나중에 게임중일때 띄울 화면
+        // 현재 진행중인 게임에 대한 정보를 보여줄 수 있도록
         <div className="fight-room-gaming">내전 진행중</div>
       )}
     </div>

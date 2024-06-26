@@ -1,6 +1,6 @@
 import React from "react";
 import { useLcuData } from "../../../components/LcuContext";
-import "./SummonerRank.scss";
+// import "./SummonerRank.scss";
 
 interface Props {
   rankText: string;

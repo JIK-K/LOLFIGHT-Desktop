@@ -8,29 +8,27 @@ interface Props {
 }
 const BattleMemberBox = (props: Props) => {
   return (
-    <div className="battle-member-container">
-      <div className="member-guild-icon">
-        {props.matchMember.isLeader ? (
-          <img
-            src={`${process.env.SERVER_URL}/public/matchleader.png`}
-            alt="matchLeader"
-            width={25}
-            style={{
-              position: "absolute",
-              transform: "translateY(-80%) translateX(-50%)",
-            }}
-          />
-        ) : (
-          ""
-        )}
+    <div className="flex w-full h-16 p-1 items-center justify-between bg-blue-500 gap-1">
+      {props.matchMember.isLeader ? (
         <img
+          src={`${process.env.SERVER_URL}/public/matchleader.png`}
+          alt="matchLeader"
+          width={25}
+          style={{
+            position: "absolute",
+            transform: "translateY(-80%) translateX(-50%)",
+          }}
+        />
+      ) : (
+        ""
+      )}
+      {/* <img
           src={`${process.env.SERVER_URL}/${props.matchMember.member.memberGuild.guildIcon}`}
           width={50}
           height={50}
-        />
-      </div>
-      <div className="member-name">{props.matchMember.member.memberName}</div>
-      <div className="member-lol-info">
+        /> */}
+      <div className="">{props.matchMember.member.memberName}</div>
+      <div className="flex items-center gap-1">
         <img
           src={`${process.env.SERVER_URL}/public/rank/${
             props.matchMember.member.memberGame.gameTier.split(" ")[0]
