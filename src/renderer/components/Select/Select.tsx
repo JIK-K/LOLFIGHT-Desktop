@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import * as RadixSelect from '@radix-ui/react-select';
-import { AiOutlineCheck, AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
-import styles from './Select.module.scss';
+import React, { useState } from "react";
+import * as RadixSelect from "@radix-ui/react-select";
+import { AiOutlineCheck, AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import styles from "./Select.module.scss";
 
 type Item = {
   name: string;
@@ -19,7 +19,7 @@ const Select: React.FC<Props> = ({
   initialItem,
   items,
   onValueChange,
-  placeholder = 'Select...',
+  placeholder = "Select...",
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -29,17 +29,17 @@ const Select: React.FC<Props> = ({
       onOpenChange={setOpen}
       onValueChange={onValueChange}
     >
-      <RadixSelect.Trigger className={styles.trigger}>
+      <RadixSelect.Trigger className="">
         <RadixSelect.Value placeholder={placeholder} />
         {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
       </RadixSelect.Trigger>
       <RadixSelect.Portal>
-        <RadixSelect.Content className={styles.content} position='popper'>
+        <RadixSelect.Content className="" position="popper">
           <RadixSelect.Viewport>
             {items.map((item) => (
               <RadixSelect.Item
                 key={item.value}
-                className={styles.item}
+                className="flex w-4 items-center outline-none select-none box-border"
                 value={item.value}
               >
                 <RadixSelect.ItemText>{item.name}</RadixSelect.ItemText>

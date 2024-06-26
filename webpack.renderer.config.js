@@ -13,10 +13,13 @@ const envKeys = dotenv.parsed
     }, {})
   : {};
 
-rules.push({
-  test: /\.(sa|sc|c)ss$/,
-  use: ["style-loader", "css-loader", "sass-loader"],
-});
+// rules.push([
+//   {
+//     test: /.css?$/,
+//     exclude: [],
+//     use: ["style-loader", "css-loader", "postcss-loader"],
+//   },
+// ]);
 
 module.exports = {
   module: {

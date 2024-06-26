@@ -108,6 +108,8 @@ app.on("ready", () => {
     mouseDiffY = startMouseY - bounds.y;
   });
 
+  if (isDevelopment) installExtension(REACT_DEVELOPER_TOOLS);
+
   // ipcMain.on("store-get-favorites", (event) => {
   //   event.reply("store-favorites", getFavorites());
   // });
@@ -147,11 +149,18 @@ app.on("ready", () => {
   //   }
   // });
 
+  session.defaultSession.clearCache().then(() => {
+    console.log("Cache cleared");
+  });
+
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
         ...details.responseHeaders,
-        "Content-Security-Policy": ["*"], // TODO: is this the best solution?
+        "Content-Security-Policy": [
+          // "default-src 'self'; script-src: 'self' 'unsafe-eval'; 'unsafe-inline'; connect-src 'self' http://kddnswlr.codns.com:3000",
+          "*",
+        ],
       },
     });
   });

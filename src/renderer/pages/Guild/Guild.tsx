@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./Guild.scss";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import useSocketStore from "../../../common/zustand/socket.zustand";
 import useGuildStore from "../../../common/zustand/guild.zustand";
@@ -121,26 +120,32 @@ const Guild: React.FC = () => {
   };
 
   return (
-    <div>
-      {member.memberGuild !== null ? (
-        <div className="guild-page">
-          <div className="guild-top">
-            <div className="guild-talk">
-              <div className="component-title">길드톡방</div>
-              <div className="message-area" ref={messageAreaRef}>
-                {receivedMessages.map((receivedMessage, index) => (
-                  <div key={index}>{receivedMessage}</div>
-                ))}
+    <>
+      {member.memberGuild ? (
+        <div className="max-w-3xl mx-auto grid gap-8">
+          <div className="flex gap-8">
+            <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1">
+              <div className="flex items-center justify-between mb-4 border-b border-gray-700">
+                <h2 className="text-lg font-bold text-gray-200 p-6">
+                  길드톡방
+                </h2>
               </div>
-              <div className="input-area">
-                <img
-                  src={`${process.env.SERVER_URL}/public/emoticon.png`}
-                  alt="emoticon"
-                  height={20}
-                  color="white"
-                />
+
+              <div className="h-[500px] overflow-y-auto">
+                <div className="" ref={messageAreaRef}>
+                  {receivedMessages.map((receivedMessage, index) => (
+                    <div key={index}>{receivedMessage}</div>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-4 p-6">
+                {/* <img
+                    src={`${process.env.SERVER_URL}/public/emoticon.png`}
+                    alt="emoticon"
+                    color="white"
+                  /> */}
                 <input
-                  className="message-input"
+                  className="rounded-lg bg-gray-900 p-2"
                   type="text"
                   placeholder="메세지보내기"
                   value={message}
@@ -155,49 +160,30 @@ const Guild: React.FC = () => {
                   className="send-button"
                   onClick={sendMessage}
                 >
-                  <img
-                    src={`${process.env.SERVER_URL}/public/send.png`}
-                    alt="emoticon"
-                    height={20}
-                    color="white"
-                  />
+                  {/* <img
+                      src={`${process.env.SERVER_URL}/public/send.png`}
+                      alt="emoticon"
+                      color="white"
+                    /> */}
                 </button>
               </div>
             </div>
 
-            <div className="guild-info">
-              <div className="guild-banner">
-                <div style={{ fontSize: "18px" }}>길드 랭크</div>
-                <div className="guild-data">
-                  <img
-                    src={`${process.env.SERVER_URL}/public/rank/${guild.guildTier}.png`}
-                    width={70}
-                    height={70}
-                  />
-                  <div className="guild-score">
-                    <div className="guild-tier">
-                      <p>{guild.guildTier}</p>
-                      <p>{guild.guildRecord.recordLadder}LP</p>
-                    </div>
-                    {/* <progress id="progress" value={10} max="100">
-                  승률
-                </progress> */}
-                  </div>
-                </div>
+            <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1">
+              <div className="flex items-center justify-between mb-4 border-b border-gray-700">
+                <h2 className="text-lg font-bold text-gray-200 p-6">길드원</h2>
               </div>
-              <div className="guild-member">
-                <div className="component-title">길드원</div>
-                <div className="member-list">
-                  {guildMembers.map((member) => (
-                    <GuildMemberBox
-                      key={member.id}
-                      member={member}
-                      online={onlineMembers}
-                    />
-                  ))}
-                </div>
+              <div className="flex flex-col p-3 overflow-y-auto gap-5 text-normal">
+                {guildMembers.map((member) => (
+                  <GuildMemberBox
+                    key={member.id}
+                    member={member}
+                    online={onlineMembers}
+                  />
+                ))}
               </div>
             </div>
+
             <div className="guild-desc">
               <img
                 src={`${process.env.SERVER_URL}/${member.memberGuild.guildIcon}`}
@@ -212,15 +198,35 @@ const Guild: React.FC = () => {
                 길드 설립일 :{" "}
                 {member.memberGuild.createdAt.toString().split("T")[0]}
               </div>
+              <div className="border border-gray-700 rounded-lg flex-1 m-4">
+                {/* <div style={{ fontSize: "18px" }}>길드 랭크</div> */}
+                <div className="flex flex-col items-center justify-between py-2 mb-4">
+                  <img
+                    src={`${process.env.SERVER_URL}/public/rank/${guild.guildTier}.png`}
+                    width={70}
+                    height={70}
+                  />
+                  <div className="">
+                    <div className="">
+                      <p>{guild.guildTier}</p>
+                    </div>
+                    {/* <progress id="progress" value={10} max="100">
+                  승률
+                </progress> */}
+                  </div>
+                  <div>
+                    <p>{guild.guildRecord.recordLadder}LP</p>
+                  </div>
+                </div>
+              </div>
               <button
-                className="create-battle-button"
+                className="border bg-blue-950 border-gray-700 rounded-lg flex-1 p-6 m-4 hover:bg-blue-900"
                 onClick={createBattleRoom}
               >
                 길드전 내전방 생성하기
               </button>
             </div>
           </div>
-
           <div className="guild-bottom">
             <div className="guild-fight-room">
               <div className="component-title">길드전 방 목록</div>
@@ -233,9 +239,9 @@ const Guild: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div> </div>
+        <div>길갑해라</div>
       )}
-    </div>
+    </>
   );
 };
 
