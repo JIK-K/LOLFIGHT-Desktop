@@ -48,7 +48,7 @@ const Connect: React.FC = () => {
       <div className="content">
         <img
           src={`${process.env.SERVER_URL}/public/image/icon.png`}
-          className="h-300px"
+          className="h-[100px]"
         />
         <div className="loader"></div>
       </div>
