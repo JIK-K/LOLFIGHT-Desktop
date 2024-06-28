@@ -48,16 +48,30 @@ const Connect: React.FC = () => {
       <div className="content">
         <img
           src={`${process.env.SERVER_URL}/public/image/icon.png`}
-          height={200}
+          className="h-300px"
         />
         <div className="loader"></div>
       </div>
       <button type="button" className="button-option" onClick={closeWindow}>
-        <img
+        {/* <img
           src={`${process.env.SERVER_URL}/public/close.png`}
           alt="close"
           height={20}
-        />
+        /> */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
       </button>
       <span className="version">v.1.0.0</span>
     </div>

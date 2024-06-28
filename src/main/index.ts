@@ -26,6 +26,7 @@ import "dotenv/config";
 declare const MAIN_WEBPACK_ENTRY: string;
 
 // const isDevelopment = process.env.NODE_ENV !== "production";
+//@todo dev모드 false 까먹지않기
 const isDevelopment = true;
 // const isDevelopment = false;
 let mouseDiffX = 0;
