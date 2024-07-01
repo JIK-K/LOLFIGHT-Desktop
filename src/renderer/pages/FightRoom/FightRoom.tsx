@@ -477,46 +477,67 @@ const FightRoom = () => {
   return (
     <div className="max-w-3xl mx-auto grid gap-8">
       {!isGaming ? (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1">
-          <div className="flex w-full justify-end">
+        <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1 bg-gradient-to-l from-gray-800 via-gray-950 to-gray-800">
+          <div className="flex w-full justify-between items-center">
+            <div className="m-1 mx-2">소환사의 협곡 5vs5</div>
             <button type="button" className="m-1 mx-2" onClick={leaveFightRoom}>
               <div>나가기</div>
             </button>
           </div>
 
-          <div className="flex w-full justify-between p-1">
-            <div className=" min-w-64 flex flex-col h-96">
-              <div className="flex w-full p-2 items-center gap-6 text-base">
-                <img
-                  src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
-                  width={50}
-                  height={50}
-                />
-                {guild.guildName}
+          <div className="flex w-full p-1">
+            {/* Left */}
+            <div className="relative min-w-[350px] flex flex-col h-[450px]">
+              <div
+                className="absolute inset-0 bg-no-repeat bg-contain bg-center"
+                style={{
+                  backgroundImage: `url(${process.env.SERVER_URL}/${guild.guildIcon})`,
+                  filter: "blur(10px)",
+                }}
+              ></div>
+              <div className="relative z-10">
+                <div className="flex w-full h-[100px] p-2 justify-end items-center gap-6 text-base">
+                  <div className="flex flex-col gap-4 items-center">
+                    <p className=" text-[28px] font-bold">{guild.guildName}</p>
+                    {/* <p className=" text-[15px] font-light text-gray-300">
+                      Ladder : {guild.guildRecord.recordLadder}
+                    </p> */}
+                  </div>
+                  <img
+                    src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
+                    width={100}
+                    className="rounded-lg border-2 border-gray-700"
+                    alt="GuildIcon"
+                  />
 
-                <div style={{ position: "relative" }}>
-                  {waitingRoomData && waitingRoomData.isReady ? (
-                    <img
-                      src={`${process.env.SERVER_URL}/public/ok_ready.png`}
-                      alt="ok_ready"
-                      width={25}
-                    />
-                  ) : (
-                    ""
-                  )}
+                  <div style={{ position: "relative" }}>
+                    {waitingRoomData && waitingRoomData.isReady ? (
+                      <img
+                        src={`${process.env.SERVER_URL}/public/ok_ready.png`}
+                        alt="ok_ready"
+                        width={25}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-1">
-                {waitingRoomData === undefined ||
-                waitingRoomData.members === undefined
-                  ? ""
-                  : waitingRoomData.members.map((matchMember, index) => (
-                      <BattleMemberBox key={index} matchMember={matchMember} />
-                    ))}
+                <div className="flex flex-col gap-1">
+                  {waitingRoomData === undefined ||
+                  waitingRoomData.members === undefined
+                    ? ""
+                    : waitingRoomData.members.map((matchMember, index) => (
+                        <BattleMemberBox
+                          key={index}
+                          matchMember={matchMember}
+                        />
+                      ))}
+                </div>
               </div>
             </div>
 
-            <div style={{ alignSelf: "center" }}>
+            {/* Center */}
+            <div className="flex flex-col items-center justify-center h-[450px]">
               <img
                 src={`${process.env.SERVER_URL}/public/vs.png`}
                 alt="emoticon"
@@ -541,44 +562,73 @@ const FightRoom = () => {
               )}
             </div>
 
-            <div className="min-w-64 flex flex-col h-96">
-              <div className="flex w-full p-2 items-center gap-6 text-base">
+            {/* Right */}
+            <div className="relative min-w-[350px] flex flex-col h-[450px]">
+              {enemyRoomData &&
+                enemyRoomData.members[0] &&
+                enemyRoomData.members[0].member.memberGuild && (
+                  <div
+                    className="absolute inset-0 bg-no-repeat bg-contain bg-center"
+                    style={{
+                      backgroundImage: `url(${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon})`,
+                      filter: "blur(10px)",
+                    }}
+                  ></div>
+                )}
+              <div className="relative z-10">
                 {enemyRoomData &&
                   enemyRoomData.members[0] &&
                   enemyRoomData.members[0].member.memberGuild && (
-                    <img
-                      src={`${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon}`}
-                      width={50}
-                      height={50}
-                    />
+                    <div className="flex w-full h-[100px] p-2 justify-start items-center gap-6 text-base">
+                      <div style={{ position: "relative" }}>
+                        {enemyRoomData && enemyRoomData.isReady ? (
+                          <img
+                            src={`${process.env.SERVER_URL}/public/ok_ready.png`}
+                            alt="ok_ready"
+                            width={25}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <img
+                        src={`${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon}`}
+                        width={100}
+                        className="rounded-lg border-2 border-gray-700"
+                        alt="GuildIcon"
+                      />
+                      <div className="flex flex-col gap-4 items-center">
+                        <p className=" text-[28px] font-bold">
+                          {
+                            enemyRoomData.members[0].member.memberGuild
+                              .guildName
+                          }
+                        </p>
+                        {/* <p className=" text-[15px] font-light text-gray-300">
+                            Ladder :{" "}
+                            {
+                              enemyRoomData.members[0].member.memberGuild
+                                .guildRecord.recordLadder
+                            }
+                          </p> */}
+                      </div>
+                    </div>
                   )}
-                {enemyRoomData &&
-                  enemyRoomData.members[0] &&
-                  enemyRoomData.members[0].member.memberGuild &&
-                  enemyRoomData.members[0].member.memberGuild.guildName}
-                <div style={{ position: "relative" }}>
-                  {enemyRoomData && enemyRoomData.isReady ? (
-                    <img
-                      src={`${process.env.SERVER_URL}/public/ok_ready.png`}
-                      alt="ok_ready"
-                      width={25}
-                    />
-                  ) : (
-                    ""
-                  )}
+                <div className="guild-members">
+                  {enemyRoomData
+                    ? enemyRoomData.members.map((matchMember, index) => (
+                        <BattleMemberBox
+                          key={index}
+                          matchMember={matchMember}
+                        />
+                      ))
+                    : ""}
                 </div>
-              </div>
-              <div className="guild-members">
-                {enemyRoomData
-                  ? enemyRoomData.members.map((matchMember, index) => (
-                      <BattleMemberBox key={index} matchMember={matchMember} />
-                    ))
-                  : ""}
               </div>
             </div>
           </div>
 
-          <div className="flex w-full justify-between mt-2">
+          <div className="flex w-full h-28 justify-between mt-2">
             <div className="flex flex-col p-1 justify-between">
               {enemyRoomData &&
                 waitingRoomData.roomName &&
@@ -684,16 +734,15 @@ const FightRoom = () => {
               </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center w-44">
+            {/* <div className="flex flex-col justify-center items-center w-44 h-28">
               <div className="flex w-full justify-center">
                 소환사의 협곡 / 5 vs 5
               </div>
               <img
                 src={`${process.env.SERVER_URL}/public/gameType/Summoner'sRift.png`}
                 alt="leave"
-                height={140}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       ) : (

@@ -1,6 +1,5 @@
 import React from "react";
 import "./BattleMemberBox.scss";
-import { MemberDTO } from "../../../../common/DTOs/member/member.dto";
 import { MatchMembersDTO } from "../../../../common/DTOs/room/matchMembers.dto";
 
 interface Props {
@@ -8,7 +7,7 @@ interface Props {
 }
 const BattleMemberBox = (props: Props) => {
   return (
-    <div className="flex w-full h-16 p-1 items-center justify-between bg-blue-500 gap-1">
+    <div className="relative flex w-full h-16 p-1 flex items-center justify-between gap-1 rounded-3xl p-px bg-gradient-to-b from-gray-950 to-transparent">
       {props.matchMember.isLeader ? (
         <img
           src={`${process.env.SERVER_URL}/public/matchleader.png`}
@@ -22,21 +21,29 @@ const BattleMemberBox = (props: Props) => {
       ) : (
         ""
       )}
-      {/* <img
-          src={`${process.env.SERVER_URL}/${props.matchMember.member.memberGuild.guildIcon}`}
-          width={50}
-          height={50}
-        /> */}
-      <div className="">{props.matchMember.member.memberName}</div>
-      <div className="flex items-center gap-1">
-        <img
-          src={`${process.env.SERVER_URL}/public/rank/${
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `url(${process.env.SERVER_URL}/public/rank/${
             props.matchMember.member.memberGame.gameTier.split(" ")[0]
-          }.png`}
-          width={40}
-          height={40}
-        />
-        {props.matchMember.member.memberGame.gameName}
+          }.png)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      ></div>
+
+      <div className="z-10 flex items-center justify-between w-full text-white">
+        <div className="">{props.matchMember.member.memberName}</div>
+        <div className="flex items-center gap-1">
+          <img
+            src={`${process.env.SERVER_URL}/public/rank/${
+              props.matchMember.member.memberGame.gameTier.split(" ")[0]
+            }.png`}
+            width={40}
+            height={40}
+          />
+          {props.matchMember.member.memberGame.gameName}
+        </div>
       </div>
     </div>
   );
