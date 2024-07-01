@@ -162,7 +162,7 @@ const Home: React.FC = () => {
             <div className="flex-1 bg-gray-800 rounded-full h-2.5 dark:bg-gray-700">
               <div
                 className="bg-green-500 h-2.5 rounded-full"
-                style={{ width: lcuData.gameData.victory * 100 }}
+                style={{ width: `${lcuData.gameData.victory * 100}%` }}
               ></div>
             </div>
             <div className="text-gray-400">
