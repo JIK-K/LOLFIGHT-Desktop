@@ -32,7 +32,7 @@ const BattleMemberBox = (props: Props) => {
         }}
       ></div>
 
-      <div className="z-10 flex items-center justify-between w-full text-white">
+      <div className="z-10 flex items-center justify-between w-full text-white px-1">
         <div className="">{props.matchMember.member.memberName}</div>
         <div className="flex items-center gap-1">
           <img

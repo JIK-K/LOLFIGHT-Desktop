@@ -70,10 +70,6 @@ const FightRoom = () => {
   };
 
   useEffect(() => {
-    console.log("guild : " + guild);
-  });
-
-  useEffect(() => {
     // console.log(data);
     // console.log("guild : " + guild);
     if (data !== null || undefined) {
@@ -429,7 +425,7 @@ const FightRoom = () => {
     setMessage(e.target.value);
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !isComposing) {
+    if (e.key === "Enter" && !isComposing && message.length > 0) {
       switch (currentTab) {
         case 0:
           if (fightingRoom && fightingRoom.team_B !== null) {
@@ -628,23 +624,24 @@ const FightRoom = () => {
             </div>
           </div>
 
-          <div className="flex w-full h-28 justify-between mt-2">
-            <div className="flex flex-col p-1 justify-between">
+          <div className="flex w-full h-[150px] justify-between p-1">
+            {/* Button */}
+            <div className="flex flex-col justify-between p-1 gap-1">
               {enemyRoomData &&
                 waitingRoomData.roomName &&
                 waitingRoomData.roomName.includes(member.memberName) && (
                   <button
                     type="button"
-                    className={isReady ? "ready-cancel-button" : "ready-button"}
+                    className="flex w-[230px] h-[65px] justify-center items-center gap-5 text-xl font-bold border border-slate-400 rounded"
                     onClick={readyBattle}
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      background: isReady
+                        ? "radial-gradient(circle at center 100%, #F59E0B 0%, #92400E 100%)"
+                        : "radial-gradient(circle at center 70%, #FCD34D 0%, #D97706 100%)",
+                    }}
                   >
-                    <img
-                      src={`${process.env.SERVER_URL}/public/ready.png`}
-                      alt="leave"
-                      width={40}
-                    />
-                    <div>{isReady ? "준비 취소" : "준비 완료"}</div>
+                    <div>{isReady ? "취소" : "준비 완료"}</div>
                   </button>
                 )}
 
@@ -654,21 +651,18 @@ const FightRoom = () => {
                   member.memberName && (
                   <button
                     type="button"
-                    className={
-                      isSearching
-                        ? "search-cancel-button bg-blue-500"
-                        : allReady
-                        ? "start-button"
-                        : "search-button bg-green-500"
-                    }
+                    className="flex w-[230px] h-[65px] justify-center items-center gap-5 text-xl font-bold border border-slate-400 rounded"
                     onClick={searchBattleGuild}
+                    style={{
+                      cursor: "pointer",
+                      background: isSearching
+                        ? "radial-gradient(circle at center 70%, #B91C1C 0%, #991b1b 100%)"
+                        : allReady
+                        ? "radial-gradient(circle at center 70%, #86EFAC 0%, #16A34A 100%)"
+                        : "radial-gradient(circle at center 70%, #F87171 0%, #B91C1C 100%)",
+                    }}
                   >
-                    <img
-                      src={`${process.env.SERVER_URL}/public/search.png`}
-                      alt="leave"
-                      width={40}
-                    />
-                    <div className="bg-red-500">
+                    <div>
                       {isSearching
                         ? "매칭 취소"
                         : allReady
@@ -679,15 +673,18 @@ const FightRoom = () => {
                 )}
             </div>
 
-            <div className="flex flex-col h-28 bg-green-500">
-              <div className="flex w-full h-10 gap-1 bg-green-900 items-center">
+            {/* Chat */}
+            <div className="flex flex-col w-full h-full p-1">
+              <div className="flex w-full h-10 gap-1 text-sm items-center">
                 {tabArr.map((el, index) => (
                   <div
                     key={index}
-                    className={
-                      index === currentTab ? "subtab focused" : "subtab"
-                    }
                     onClick={() => selectTabHandler(index)}
+                    className={` w-[150px] relative tracking-[.5em] ${
+                      index === currentTab
+                        ? "border-b-2 border-white"
+                        : "border-b border-gray-300"
+                    }`}
                   >
                     {el.name}
                   </div>
@@ -695,8 +692,12 @@ const FightRoom = () => {
               </div>
 
               <div
-                className="h-full p-2 overflow-y-auto"
+                className="h-full p-2 overflow-auto text-sm bg-gray-800"
                 ref={currentTab === 0 ? allMessageAreaRef : guildMessageAreaRef}
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#4A5568 #2D3748",
+                }}
               >
                 {(() => {
                   switch (currentTab) {
@@ -714,9 +715,9 @@ const FightRoom = () => {
                 })()}
               </div>
 
-              <div className="flex bg-pink-500 items-center h-10 p-1 gap-1">
+              <div className="flex items-center h-10 text-sm">
                 <input
-                  className=" bg-pink-800"
+                  className="w-full bg-gray-800"
                   type="text"
                   placeholder="메세지보내기"
                   value={message}
@@ -726,23 +727,8 @@ const FightRoom = () => {
                   onCompositionUpdate={handleComposition}
                   onCompositionEnd={handleComposition}
                 />
-                <button
-                  type="button"
-                  className=" bg-purple-500"
-                  onClick={sendMessage}
-                ></button>
               </div>
             </div>
-
-            {/* <div className="flex flex-col justify-center items-center w-44 h-28">
-              <div className="flex w-full justify-center">
-                소환사의 협곡 / 5 vs 5
-              </div>
-              <img
-                src={`${process.env.SERVER_URL}/public/gameType/Summoner'sRift.png`}
-                alt="leave"
-              />
-            </div> */}
           </div>
         </div>
       ) : (
