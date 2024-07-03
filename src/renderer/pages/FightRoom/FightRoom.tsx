@@ -269,6 +269,9 @@ const FightRoom = () => {
           configuration: {
             gameMode: "CLASSIC",
             // gameServerRegion: "",
+            gameTypeConfig: {
+              allowTrades: true,
+            },
             mapId: 11,
             /*
           11: Summoner's Rift
@@ -282,6 +285,7 @@ const FightRoom = () => {
           lobbyName:
             fightData.team_A.roomName + " VS " + fightData.team_B.roomName,
           // lobbyPassword: fightData.fightRoomName,
+          // spectators: [{ autoFillEligible: true }],
         },
         isCustom: true,
       };
@@ -475,15 +479,7 @@ const FightRoom = () => {
       {!isGaming ? (
         <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1 bg-gradient-to-l from-gray-800 via-gray-950 to-gray-800">
           <div className="flex w-full justify-between items-center">
-            <div className="m-1 mx-2">
-              {enemyRoomData &&
-              enemyRoomData.members[0] &&
-              enemyRoomData.members[0].member.memberGuild
-                ? fightingRoom.team_A.roomName +
-                  " VS " +
-                  fightingRoom.team_B.roomName
-                : ""}
-            </div>
+            <div className="m-1 mx-2">소환사의 협곡 5 vs 5</div>
             <button type="button" className="m-1 mx-2" onClick={leaveFightRoom}>
               <div>나가기</div>
             </button>
@@ -742,7 +738,18 @@ const FightRoom = () => {
       ) : (
         // 나중에 게임중일때 띄울 화면
         // 현재 진행중인 게임에 대한 정보를 보여줄 수 있도록
-        <div className="fight-room-gaming">내전 진행중</div>
+        <div className="fight-room-gaming">
+          내전 진행중{" "}
+          <div className="m-1 mx-2">
+            {enemyRoomData &&
+            enemyRoomData.members[0] &&
+            enemyRoomData.members[0].member.memberGuild
+              ? fightingRoom.team_A.roomName +
+                " VS " +
+                fightingRoom.team_B.roomName
+              : ""}
+          </div>
+        </div>
       )}
     </div>
   );

@@ -278,6 +278,7 @@
 }
 .fight-room-gaming {
   display: flex;
+  flex-direction: column;
   // width: 900px;
   height: calc(100vh - 96px);
   align-items: center;
