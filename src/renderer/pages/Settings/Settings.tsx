@@ -25,13 +25,6 @@ const Settings: React.FC = () => {
           <Button title="Export" onClick={handleExport} />
         </div>
       </div>
-      <div
-        className="h-[50px] w-[150px] p-2 overflow-y-scroll text-sm bg-gray-800"
-        style={{ maxHeight: "200px" }}
-      >
-        {/* 스크롤이 필요한 내용 */}
-        아아아아아앙아아아아아앙아아아아아앙아아아아아앙아아아아아앙아아아아아앙아아아아아앙...
-      </div>
     </div>
   );
 };

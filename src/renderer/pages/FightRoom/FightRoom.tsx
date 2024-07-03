@@ -281,7 +281,7 @@ const FightRoom = () => {
           },
           lobbyName:
             fightData.team_A.roomName + " VS " + fightData.team_B.roomName,
-          lobbyPassword: fightData.fightRoomName,
+          // lobbyPassword: fightData.fightRoomName,
         },
         isCustom: true,
       };
@@ -475,7 +475,15 @@ const FightRoom = () => {
       {!isGaming ? (
         <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1 bg-gradient-to-l from-gray-800 via-gray-950 to-gray-800">
           <div className="flex w-full justify-between items-center">
-            <div className="m-1 mx-2">소환사의 협곡 5vs5</div>
+            <div className="m-1 mx-2">
+              {enemyRoomData &&
+              enemyRoomData.members[0] &&
+              enemyRoomData.members[0].member.memberGuild
+                ? fightingRoom.team_A.roomName +
+                  " VS " +
+                  fightingRoom.team_B.roomName
+                : ""}
+            </div>
             <button type="button" className="m-1 mx-2" onClick={leaveFightRoom}>
               <div>나가기</div>
             </button>
