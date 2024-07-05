@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "./GuildFightRoomBox.scss";
 import { WaitingRoomDTO } from "../../../../common/DTOs/room/waitingRoom.dto";
 import { useNavigate } from "react-router-dom";
 import useSocketStore from "../../../../common/zustand/socket.zustand";
@@ -62,7 +61,7 @@ const GuildFightRoomBox = (props: Props) => {
   };
 
   return (
-    <div className="fight-box" onClick={handleJoinRoom}>
+    <div className="h-10 flex items-center justify-between p-2 border-b border-gray-700 cursor-pointer" onClick={handleJoinRoom}>
       <div className="match-leader">{props.roomData.roomName} 의방</div>
       <div className="players-count">{props.roomData.memberCount}/5</div>
       <div className="match-status" style={{ color: getStatusColor() }}>

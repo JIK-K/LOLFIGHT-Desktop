@@ -68,9 +68,8 @@ const Home: React.FC = () => {
     const rank = lcuData.me.lol.rankedLeagueTier;
     const division = lcuData.me.lol.rankedLeagueDivision;
 
-    return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${
-      division === "NA" ? "" : division
-    }`;
+    return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${division === "NA" ? "" : division
+      }`;
   };
 
   useEffect(() => {
@@ -171,6 +170,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* player stat */}
       <div className="grid gap-6">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <SummonerStatsBox
