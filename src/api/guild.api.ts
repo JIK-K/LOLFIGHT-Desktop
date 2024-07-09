@@ -37,3 +37,15 @@ export const getGuildInfo = async (
 
   return await axios.get(url);
 };
+
+/**
+ * Guild List
+ * @returns
+ */
+export const getGuildList = async (): Promise<
+  AxiosResponse<ResponseDTO<GuildDTO[]>>
+> => {
+  let url = `${baseUrl}/list`;
+
+  return await axios.get(url);
+};

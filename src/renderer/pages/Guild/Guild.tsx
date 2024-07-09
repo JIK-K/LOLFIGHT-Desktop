@@ -5,18 +5,20 @@ import useGuildStore from "../../../common/zustand/guild.zustand";
 import { findMember } from "../../../api/member.api";
 import { MemberDTO } from "../../../common/DTOs/member/member.dto";
 import { GuildDTO } from "../../../common/DTOs/guild/guild.dto";
-import { getGuildMemberList } from "../../../api/guild.api";
+import { getGuildList, getGuildMemberList } from "../../../api/guild.api";
 import GuildMemberBox from "./components/GuildMemberBox";
 import { useNavigate } from "react-router-dom";
 import GuildFightRoomBox from "./components/GuildFightRoomBox";
 import toast from "react-hot-toast";
 import { MatchMembersDTO } from "../../../common/DTOs/room/matchMembers.dto";
 import { WaitingRoomDTO } from "../../../common/DTOs/room/waitingRoom.dto";
+import GuildListBox from "./components/GuildListBox";
 
 const Guild: React.FC = () => {
   const navigate = useNavigate();
   const { member, setMember } = useMemberStore();
   const { guild, setGuild } = useGuildStore();
+  const [guildList, setGuildList] = useState<GuildDTO[]>();
   const { socket } = useSocketStore();
   const [message, setMessage] = useState<string>("");
   const [isComposing, setIsComposing] = useState(false);
@@ -28,39 +30,49 @@ const Guild: React.FC = () => {
 
   useEffect(() => {
     if (!member.memberGuild) {
-      toast.error("속한 길드가 없습니다.");
-      navigate("/home");
-      return;
+      getGuildList()
+        .then((response) => {
+          console.log(response);
+          setGuildList(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
 
-    getGuildMemberList(member.memberGuild.guildName).then((response) => {
-      setGuildMembers(response.data.data);
-    });
+    if (member.memberGuild) {
+      getGuildMemberList(member.memberGuild.guildName).then((response) => {
+        setGuildMembers(response.data.data);
+      });
 
-    socket.on("message", (receivedMessage: string) => {
-      setReceivedMessages((prevMessages) => [...prevMessages, receivedMessage]);
-    });
+      socket.on("message", (receivedMessage: string) => {
+        setReceivedMessages((prevMessages) => [
+          ...prevMessages,
+          receivedMessage,
+        ]);
+      });
 
-    socket.on("online", (onlineMembers: string[]) => {
-      console.log("Online members:", onlineMembers);
-      setOnlineMembers(onlineMembers);
-    });
+      socket.on("online", (onlineMembers: string[]) => {
+        console.log("Online members:", onlineMembers);
+        setOnlineMembers(onlineMembers);
+      });
 
-    socket.on("roomList", (guildRoomList: WaitingRoomDTO[]) => {
-      console.log("RoomList", guildRoomList);
-      setGuildRooms(guildRoomList);
-    });
+      socket.on("roomList", (guildRoomList: WaitingRoomDTO[]) => {
+        console.log("RoomList", guildRoomList);
+        setGuildRooms(guildRoomList);
+      });
 
-    socket.emit("online", { guildName: member.memberGuild.guildName });
-    socket.emit("roomList", { guildName: member.memberGuild.guildName });
+      socket.emit("online", { guildName: member.memberGuild.guildName });
+      socket.emit("roomList", { guildName: member.memberGuild.guildName });
 
-    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
-    return () => {
-      socket.off("createRoom");
-      socket.off("message");
-      socket.off("online");
-      socket.off("roomList");
-    };
+      // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+      return () => {
+        socket.off("createRoom");
+        socket.off("message");
+        socket.off("online");
+        socket.off("roomList");
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -155,9 +167,7 @@ const Guild: React.FC = () => {
                       />
                       <div className="items-center m-auto">
                         <span>{guild.guildTier}</span>
-                        <span>
-                          &nbsp;{guild.guildRecord.recordLadder}LP
-                        </span>
+                        <span>&nbsp;{guild.guildRecord.recordLadder}LP</span>
                       </div>
                     </div>
                   </div>
@@ -187,15 +197,15 @@ const Guild: React.FC = () => {
             </div>
             <div className="bg-gray-800 border border-gray-700 rounded-r-lg flex-1">
               <div className="flex items-center justify-between mb-4 border-b border-gray-700">
-                <h2 className="text-gray-200 p-2">
-                  길드 채팅방
-                </h2>
+                <h2 className="text-gray-200 p-2">길드 채팅방</h2>
               </div>
 
               <div className="h-[300px] overflow-y-auto">
                 <div className="" ref={messageAreaRef}>
                   {receivedMessages.map((receivedMessage, index) => (
-                    <div className="ml-2" key={index}>{receivedMessage}</div>
+                    <div className="ml-2" key={index}>
+                      {receivedMessage}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -251,7 +261,20 @@ const Guild: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div>길갑해라</div>
+        <div className="max-w-3xl mx-auto gap-8">
+          <div className="flex flex-col rounded-lg border bg-gray-800 border-gray-700">
+            <div className="flex w-full space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
+              길드 리스트
+            </div>
+            <div className="flex w-full h-full bg-gray-700 items-center px-4 gap-1">
+              <div className="w-[200px] text-center">길드명</div>
+              <div className="w-[130px] text-center">래더</div>
+              <div className="w-[70px] text-center">길드원</div>
+              <div className="w-[100px] text-center">길드장</div>
+            </div>
+            <GuildListBox guild={guildList} />
+          </div>
+        </div>
       )}
     </>
   );
