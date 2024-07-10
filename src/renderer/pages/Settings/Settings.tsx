@@ -17,7 +17,7 @@ const Settings: React.FC = () => {
     else toast.error("Failed to export");
   }
   return (
-    <div className="settings-page">
+    <div className="settings-page px-4 md:px-6 py-8 md:py-12">
       <div className="wrapper">
         <p>Favorites:</p>
         <div className="section">

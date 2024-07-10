@@ -475,7 +475,7 @@ const FightRoom = () => {
   //====================================================================//
 
   return (
-    <div className="max-w-3xl mx-auto grid gap-8">
+    <div className="max-w-3xl mx-auto grid gap-8 px-4 md:px-6 py-6 md:py-6">
       {!isGaming ? (
         <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1 bg-gradient-to-l from-gray-800 via-gray-950 to-gray-800">
           <div className="flex w-full justify-between items-center">

@@ -219,7 +219,7 @@ const Status: React.FC = () => {
     });
   };
   return (
-    <div className="max-w-3xl mx-auto grid gap-8">
+    <div className="max-w-3xl mx-auto grid gap-8 px-4 md:px-6 py-8 md:py-12">
       <div className="grid gap-2">
         <div className="flex flex-col items-center rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
           <div className="flex w-full space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">

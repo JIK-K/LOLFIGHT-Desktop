@@ -5,14 +5,20 @@ import useGuildStore from "../../../common/zustand/guild.zustand";
 import { findMember } from "../../../api/member.api";
 import { MemberDTO } from "../../../common/DTOs/member/member.dto";
 import { GuildDTO } from "../../../common/DTOs/guild/guild.dto";
-import { getGuildList, getGuildMemberList } from "../../../api/guild.api";
+import {
+  getGuildList,
+  getGuildMemberList,
+  getInviteGuildList,
+} from "../../../api/guild.api";
 import GuildMemberBox from "./components/GuildMemberBox";
 import { useNavigate } from "react-router-dom";
 import GuildFightRoomBox from "./components/GuildFightRoomBox";
 import toast from "react-hot-toast";
 import { MatchMembersDTO } from "../../../common/DTOs/room/matchMembers.dto";
 import { WaitingRoomDTO } from "../../../common/DTOs/room/waitingRoom.dto";
+import { GuildInviteDTO } from "../../../common/DTOs/guild/guild_invite.dto";
 import GuildListBox from "./components/GuildListBox";
+import GuildApplicant from "./components/GuildApplicant";
 
 const Guild: React.FC = () => {
   const navigate = useNavigate();
@@ -27,6 +33,8 @@ const Guild: React.FC = () => {
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
   const [guildRooms, setGuildRooms] = useState<WaitingRoomDTO[]>([]);
   const messageAreaRef = useRef(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [inviteMembers, setInviteMembers] = useState<GuildInviteDTO[]>([]);
 
   useEffect(() => {
     if (!member.memberGuild) {
@@ -44,6 +52,17 @@ const Guild: React.FC = () => {
       getGuildMemberList(member.memberGuild.guildName).then((response) => {
         setGuildMembers(response.data.data);
       });
+
+      if (member.memberName === member.memberGuild.guildMaster) {
+        getInviteGuildList(member.memberGuild.guildName)
+          .then((response) => {
+            console.log(response);
+            setInviteMembers(response.data.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
 
       socket.on("message", (receivedMessage: string) => {
         setReceivedMessages((prevMessages) => [
@@ -131,10 +150,14 @@ const Guild: React.FC = () => {
     }
   };
 
+  const viewInviteGuild = () => {
+    setInviteOpen(!inviteOpen);
+  };
+
   return (
     <>
       {member.memberGuild ? (
-        <div className="max-w-3xl mx-auto grid gap-8">
+        <div className="max-w-3xl mx-auto grid gap-8 px-4 md:px-6 py-8 md:py-12">
           <div className="grid md:grid-cols-[150px_1fr] gap-6">
             <img
               src={`${process.env.SERVER_URL}/${member.memberGuild.guildIcon}`}
@@ -154,6 +177,17 @@ const Guild: React.FC = () => {
                     길드 설립일 :
                     {member.memberGuild.createdAt.toString().split("T")[0]}
                   </div>
+                  {member.memberGuild.guildMaster === member.memberName && (
+                    <div className="relative w-[65px]">
+                      <button onClick={viewInviteGuild}>가입신청자</button>
+                      {inviteMembers.length > 0 && (
+                        <div className="w-[8px] h-[8px] bg-red-500 absolute top-0 right-0 rounded-full transform translate-x-1/2 -translate-y-1/2" />
+                      )}
+                      {inviteOpen && (
+                        <GuildApplicant inviteMembers={inviteMembers} />
+                      )}
+                    </div>
+                  )}
                 </div>
                 {/* guild rank */}
                 <div className="w-1/2 flex items-center gap-2 text-sm text-gray-400">

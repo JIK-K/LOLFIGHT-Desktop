@@ -68,8 +68,9 @@ const Home: React.FC = () => {
     const rank = lcuData.me.lol.rankedLeagueTier;
     const division = lcuData.me.lol.rankedLeagueDivision;
 
-    return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${division === "NA" ? "" : division
-      }`;
+    return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${
+      division === "NA" ? "" : division
+    }`;
   };
 
   useEffect(() => {
@@ -112,7 +113,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto grid gap-8">
+    <div className="max-w-3xl mx-auto grid px-4 md:px-6 py-8 md:py-12 gap-8">
       <div className="grid md:grid-cols-[150px_1fr] gap-6">
         <SummonerIcon
           size={128}
