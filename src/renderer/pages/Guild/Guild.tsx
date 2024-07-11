@@ -121,7 +121,7 @@ const Guild: React.FC = () => {
     setMessage(e.target.value);
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !isComposing) {
+    if (e.key === "Enter" && !isComposing && message.length > 0) {
       socket.emit("message", {
         memberName: member.memberName,
         guildName: member.memberGuild.guildName,
@@ -237,7 +237,7 @@ const Guild: React.FC = () => {
               <div className="h-[300px] overflow-y-auto">
                 <div className="" ref={messageAreaRef}>
                   {receivedMessages.map((receivedMessage, index) => (
-                    <div className="ml-2" key={index}>
+                    <div className="ml-2 font-light" key={index}>
                       {receivedMessage}
                     </div>
                   ))}

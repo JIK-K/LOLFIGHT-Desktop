@@ -29,7 +29,7 @@ const Select: React.FC<Props> = ({
       onOpenChange={setOpen}
       onValueChange={onValueChange}
     >
-      <RadixSelect.Trigger className="">
+      <RadixSelect.Trigger className="flex w-[80px] items-center gap-2">
         <RadixSelect.Value placeholder={placeholder} />
         {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
       </RadixSelect.Trigger>
@@ -39,7 +39,7 @@ const Select: React.FC<Props> = ({
             {items.map((item) => (
               <RadixSelect.Item
                 key={item.value}
-                className="flex w-4 items-center outline-none select-none box-border"
+                className="flex w-full items-center outline-none select-none box-border"
                 value={item.value}
               >
                 <RadixSelect.ItemText>{item.name}</RadixSelect.ItemText>

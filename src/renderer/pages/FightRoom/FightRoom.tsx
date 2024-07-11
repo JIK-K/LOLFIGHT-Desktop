@@ -707,11 +707,15 @@ const FightRoom = () => {
                   switch (currentTab) {
                     case 0:
                       return allMessage.map((message, index) => (
-                        <div key={index}>{message}</div>
+                        <div className="font-light" key={index}>
+                          {message}
+                        </div>
                       ));
                     case 1:
                       return guildMessage.map((message, index) => (
-                        <div key={index}>{message}</div>
+                        <div className="font-light" key={index}>
+                          {message}
+                        </div>
                       ));
                     default:
                       return null;

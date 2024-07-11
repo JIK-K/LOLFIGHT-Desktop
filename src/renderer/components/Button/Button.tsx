@@ -11,7 +11,7 @@ const Button = React.forwardRef<
   ButtonProps & React.HTMLAttributes<HTMLDivElement>
 >(({ title, variant = "primary", ...props }, ref) => {
   return (
-    <div {...props} ref={ref} className="{styles[variant]}">
+    <div {...props} ref={ref} className="cursor-pointer {styles[variant]}">
       <span>{title}</span>
     </div>
   );
