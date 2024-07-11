@@ -137,7 +137,7 @@ const Home: React.FC = () => {
               #{lcuData.me.gameTag}
             </span>
 
-            <div className="group ml-2 relative">
+            <div className="flex group ml-2 relative">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -154,7 +154,7 @@ const Home: React.FC = () => {
                 />
               </svg>
 
-              <div className="w-[50px] absolute bg-gray-800 text-white text-xs p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="w-[50px] absolute bottom-8 bg-gray-800 text-white text-xs p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 새로고침
               </div>
             </div>
