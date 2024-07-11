@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import useMemberStore from "../../../common/zustand/member.zustand";
 import useSocketStore from "../../../common/zustand/socket.zustand";
 import useGuildStore from "../../../common/zustand/guild.zustand";
-import { findMember } from "../../../api/member.api";
+import { findMember, leaveMember } from "../../../api/member.api";
 import { MemberDTO } from "../../../common/DTOs/member/member.dto";
 import { GuildDTO } from "../../../common/DTOs/guild/guild.dto";
 import {
@@ -19,6 +19,7 @@ import { WaitingRoomDTO } from "../../../common/DTOs/room/waitingRoom.dto";
 import { GuildInviteDTO } from "../../../common/DTOs/guild/guild_invite.dto";
 import GuildListBox from "./components/GuildListBox";
 import GuildApplicant from "./components/GuildApplicant";
+import ButtonAlert from "../../../common/components/alert/ButtonAlert";
 
 const Guild: React.FC = () => {
   const navigate = useNavigate();
@@ -154,6 +155,23 @@ const Guild: React.FC = () => {
     setInviteOpen(!inviteOpen);
   };
 
+  const leaveGuild = () => {
+    const onConfirmLeave = () => {
+      leaveMember(member.memberId).then((response) => {
+        console.log(response);
+        toast.success("길드 탈퇴를 완료 하였습니다.");
+        navigate("/home");
+        window.location.reload();
+      });
+    };
+    ButtonAlert(
+      "길드 탈퇴",
+      "길드를 탈퇴 하시겠습니까?",
+      "탈퇴",
+      onConfirmLeave
+    );
+  };
+
   return (
     <>
       {member.memberGuild ? (
@@ -186,6 +204,13 @@ const Guild: React.FC = () => {
                       {inviteOpen && (
                         <GuildApplicant inviteMembers={inviteMembers} />
                       )}
+                    </div>
+                  )}
+                  {member.memberGuild.guildMaster !== member.memberName && (
+                    <div className="flex w-[65px] justify-center rounded shadow-lg shadow-gray-800 shadow-inner">
+                      <button className="w-full py-1 px-2" onClick={leaveGuild}>
+                        길드탈퇴
+                      </button>
                     </div>
                   )}
                 </div>
@@ -295,7 +320,7 @@ const Guild: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="max-w-3xl mx-auto gap-8">
+        <div className="max-w-3xl mx-auto gap-8 px-4 py-8 md:py-12">
           <div className="flex flex-col rounded-lg border bg-gray-800 border-gray-700">
             <div className="flex w-full space-y-1.5 p-6 bg-gray-900 border-b border-gray-700 px-6 py-4 rounded-t-lg">
               길드 리스트

@@ -112,6 +112,10 @@ const Home: React.FC = () => {
       });
   };
 
+  const refreshScreen = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="max-w-3xl mx-auto grid px-4 md:px-6 py-8 md:py-12 gap-8">
       <div className="grid md:grid-cols-[150px_1fr] gap-6">
@@ -121,7 +125,7 @@ const Home: React.FC = () => {
           availability={lcuData.me.availability}
         />
         <div className="grid">
-          <div className="text-2xl font-bold text-gray-200">
+          <div className="flex text-2xl font-bold text-gray-200">
             <span
               className=" hover:text-blue-400 hover:cursor-pointer"
               onClick={syncMemberData}
@@ -132,6 +136,28 @@ const Home: React.FC = () => {
             <span className="text-gray-400 font-medium text-xl">
               #{lcuData.me.gameTag}
             </span>
+
+            <div className="group ml-2 relative">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                className="justify-self-center self-center size-6 cursor-pointer transition-colors duration-300 ease-in-out group-hover:text-blue-400"
+                onClick={refreshScreen}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                />
+              </svg>
+
+              <div className="w-[50px] absolute bg-gray-800 text-white text-xs p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                새로고침
+              </div>
+            </div>
           </div>
           <div className="flex gap-2 justify-between">
             <div className="w-1/2 flex items-center gap-2 text-sm text-gray-400">

@@ -82,3 +82,20 @@ export const getGuildName = async (
 
   return await axios.get(url);
 };
+
+/**
+ * member 길드 탈퇴
+ * @param id
+ * @returns
+ */
+export const leaveMember = async (
+  id: string
+): Promise<AxiosResponse<ResponseDTO<MemberDTO>>> => {
+  let url = `${baseUrl}/leave`;
+
+  const queryParams = `?id=${id}`;
+
+  url += queryParams;
+
+  return axios.patch(url);
+};
