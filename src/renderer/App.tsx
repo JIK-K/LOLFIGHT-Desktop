@@ -17,12 +17,17 @@ import {
 } from "./pages";
 import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/login/Login";
+import "./tailwind.css";
+import ReactDOM from "react-dom";
+import ErrorBoundary from "../common/constant/ErrorBoundary";
+
 const App: React.FC = () => {
   return (
+    // <ErrorBoundary>
     <HashRouter>
       <LcuContext>
         <NavBar />
-        <div id="content">
+        <div id="content" className="flex-1 justify-center">
           <Routes>
             {/* <Route path="/" element={<Navigate to="/connect" />} /> */}
             <Route path="/" element={<LoginPage />} />
@@ -54,6 +59,7 @@ const App: React.FC = () => {
         </div>
       </LcuContext>
     </HashRouter>
+    // </ErrorBoundary>
   );
 };
 

@@ -1,16 +1,16 @@
-import React from 'react';
-import styles from './SummonerIcon.module.scss';
+import React from "react";
+import styles from "./SummonerIcon.module.scss";
 
 export interface SummonerIconProps {
   iconId: number;
-  availability?: 'chat' | 'away' | 'dnd' | 'mobile' | 'offline';
+  availability?: "chat" | "away" | "dnd" | "mobile" | "offline";
   favorite?: boolean;
   selected?: boolean;
   size?: number;
 }
 
 const ICONS_URL =
-  'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons';
+  "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons";
 
 const SummonerIcon = React.forwardRef<
   HTMLDivElement,
@@ -20,18 +20,22 @@ const SummonerIcon = React.forwardRef<
     <div
       {...props}
       ref={ref}
-      className={styles.profileIcon}
+      // className={styles.profileIcon}
       style={{ width: size, height: size }}
       data-selected={selected}
       data-favorite={favorite}
+      className="m-auto"
     >
       <img
-        loading='lazy'
+        loading="lazy"
         src={`${ICONS_URL}/${iconId}.jpg`}
         alt={`Summoner Icon ${iconId}`}
       />
       {availability !== undefined && (
-        <div className={styles.availability} data-availability={availability} />
+        <div
+          className="{styles.availability}"
+          data-availability={availability}
+        />
       )}
     </div>
   );

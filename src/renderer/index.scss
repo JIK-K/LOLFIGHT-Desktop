@@ -1,14 +1,10 @@
 @use "./_theme" as *;
-
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 $navbar-height: 96px;
 $navbar-background: #282a2e;
 $navbar-gap: 2rem;
-
-html {
-  user-select: none;
-  box-sizing: border-box;
-  @include font("body");
-}
 
 *,
 *::before,
@@ -16,40 +12,41 @@ html {
   box-sizing: inherit;
 }
 
+@font-face {
+  font-family: "Pretandard";
+  src: url("../../public/fonts/PretendardVariable.ttf") format("truetype");
+}
+
 html,
 body,
 #main {
   height: 100%;
   margin: 0;
-  background-color: #212326;
+  background-color: #030712; // bg-gray-950
+  font-family: "Pretandard", sans-serif;
 }
 
 #content {
-  display: flex;
-  // height: calc(100vh - $navbar-height);
-  // background-color: #212326;
+  // display: flex;
+  /* height: calc(100vh - $navbar-height);
+   background-color: #212326; */
   -ms-overflow-style: none;
-  justify-content: center;
+  // justify-content: center;
 }
 ::-webkit-scrollbar {
   display: none;
 }
 
 #navbar {
-  color: #616366;
-  font-weight: bold;
-  font-size: medium;
-  height: $navbar-height;
   background-color: $navbar-background;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-family: "GmarketSansMedium", sans-serif;
 
   .nav {
     display: flex;
     gap: $navbar-gap;
-    // margin-left: $navbar-gap;
+    /* margin-left: $navbar-gap;*/
     margin-left: 250px;
 
     .nav-item {
@@ -87,19 +84,19 @@ body,
       margin-left: auto;
     }
 
-    .custom-button {
-      padding-top: 5px;
-      padding-right: 5px;
-      .button-option {
-        justify-content: center;
-        background: none;
-        border: none;
-        filter: invert(39%) sepia(6%) saturate(236%) hue-rotate(177deg)
-          brightness(94%) contrast(92%);
-        :hover {
-          cursor: pointer;
-        }
-      }
-    }
+    // .custom-button {
+    //   padding-top: 5px;
+    //   padding-right: 5px;
+    //   .button-option {
+    //     justify-content: center;
+    //     background: none;
+    //     border: none;
+    //     filter: invert(39%) sepia(6%) saturate(236%) hue-rotate(177deg)
+    //       brightness(94%) contrast(92%);
+    //     :hover {
+    //       cursor: pointer;
+    //     }
+    //   }
+    // }
   }
 }

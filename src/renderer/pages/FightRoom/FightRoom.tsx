@@ -71,6 +71,7 @@ const FightRoom = () => {
 
   useEffect(() => {
     // console.log(data);
+    // console.log("guild : " + guild);
     if (data !== null || undefined) {
       setWaitingRoomData(data);
     }
@@ -268,6 +269,9 @@ const FightRoom = () => {
           configuration: {
             gameMode: "CLASSIC",
             // gameServerRegion: "",
+            gameTypeConfig: {
+              allowTrades: true,
+            },
             mapId: 11,
             /*
           11: Summoner's Rift
@@ -280,7 +284,8 @@ const FightRoom = () => {
           },
           lobbyName:
             fightData.team_A.roomName + " VS " + fightData.team_B.roomName,
-          lobbyPassword: fightData.fightRoomName,
+          // lobbyPassword: fightData.fightRoomName,
+          // spectators: [{ autoFillEligible: true }],
         },
         isCustom: true,
       };
@@ -424,7 +429,7 @@ const FightRoom = () => {
     setMessage(e.target.value);
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !isComposing) {
+    if (e.key === "Enter" && !isComposing && message.length > 0) {
       switch (currentTab) {
         case 0:
           if (fightingRoom && fightingRoom.team_B !== null) {
@@ -470,57 +475,69 @@ const FightRoom = () => {
   //====================================================================//
 
   return (
-    <div>
+    <div className="max-w-3xl mx-auto grid gap-8 px-4 md:px-6 py-6 md:py-6">
       {!isGaming ? (
-        <div className="fight-room">
-          <div className="room-topbar">
-            <button
-              type="button"
-              className="leave-button"
-              onClick={leaveFightRoom}
-            >
-              <img
-                src={`${process.env.SERVER_URL}/public/leave.png`}
-                alt="leave"
-                height={20}
-              />
+        <div className="bg-gray-800 border border-gray-700 rounded-lg flex-1 bg-gradient-to-l from-gray-800 via-gray-950 to-gray-800">
+          <div className="flex w-full justify-between items-center">
+            <div className="m-1 mx-2">소환사의 협곡 5 vs 5</div>
+            <button type="button" className="m-1 mx-2" onClick={leaveFightRoom}>
               <div>나가기</div>
             </button>
           </div>
 
-          <div className="battle-guild-container">
-            <div className="battle-guild">
-              <div className="guild-info">
-                <img
-                  src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
-                  width={50}
-                  height={50}
-                />
-                {guild.guildName}
+          <div className="flex w-full p-1">
+            {/* Left */}
+            <div className="relative min-w-[350px] flex flex-col h-[450px]">
+              <div
+                className="absolute inset-0 bg-no-repeat bg-contain bg-center"
+                style={{
+                  backgroundImage: `url(${process.env.SERVER_URL}/${guild.guildIcon})`,
+                  filter: "blur(10px)",
+                }}
+              ></div>
+              <div className="relative z-10">
+                <div className="flex w-full h-[100px] p-2 justify-end items-center gap-6 text-base">
+                  <div className="flex flex-col gap-4 items-center">
+                    <p className=" text-[28px] font-bold">{guild.guildName}</p>
+                    {/* <p className=" text-[15px] font-light text-gray-300">
+                      Ladder : {guild.guildRecord.recordLadder}
+                    </p> */}
+                  </div>
+                  <img
+                    src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
+                    width={100}
+                    className="rounded-lg border-2 border-gray-700"
+                    alt="GuildIcon"
+                  />
 
-                <div style={{ position: "relative" }}>
-                  {waitingRoomData && waitingRoomData.isReady ? (
-                    <img
-                      src={`${process.env.SERVER_URL}/public/ok_ready.png`}
-                      alt="ok_ready"
-                      width={25}
-                    />
-                  ) : (
-                    ""
-                  )}
+                  <div style={{ position: "relative" }}>
+                    {waitingRoomData && waitingRoomData.isReady ? (
+                      <img
+                        src={`${process.env.SERVER_URL}/public/ok_ready.png`}
+                        alt="ok_ready"
+                        width={25}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="guild-members">
-                {waitingRoomData === undefined ||
-                waitingRoomData.members === undefined
-                  ? ""
-                  : waitingRoomData.members.map((matchMember, index) => (
-                      <BattleMemberBox key={index} matchMember={matchMember} />
-                    ))}
+                <div className="flex flex-col gap-1">
+                  {waitingRoomData === undefined ||
+                  waitingRoomData.members === undefined
+                    ? ""
+                    : waitingRoomData.members.map((matchMember, index) => (
+                        <BattleMemberBox
+                          key={index}
+                          matchMember={matchMember}
+                        />
+                      ))}
+                </div>
               </div>
             </div>
 
-            <div style={{ alignSelf: "center" }}>
+            {/* Center */}
+            <div className="flex flex-col items-center justify-center h-[450px]">
               <img
                 src={`${process.env.SERVER_URL}/public/vs.png`}
                 alt="emoticon"
@@ -545,60 +562,90 @@ const FightRoom = () => {
               )}
             </div>
 
-            <div className="battle-guild">
-              <div className="guild-info">
+            {/* Right */}
+            <div className="relative min-w-[350px] flex flex-col h-[450px]">
+              {enemyRoomData &&
+                enemyRoomData.members[0] &&
+                enemyRoomData.members[0].member.memberGuild && (
+                  <div
+                    className="absolute inset-0 bg-no-repeat bg-contain bg-center"
+                    style={{
+                      backgroundImage: `url(${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon})`,
+                      filter: "blur(10px)",
+                    }}
+                  ></div>
+                )}
+              <div className="relative z-10">
                 {enemyRoomData &&
                   enemyRoomData.members[0] &&
                   enemyRoomData.members[0].member.memberGuild && (
-                    <img
-                      src={`${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon}`}
-                      width={50}
-                      height={50}
-                    />
+                    <div className="flex w-full h-[100px] p-2 justify-start items-center gap-6 text-base">
+                      <div style={{ position: "relative" }}>
+                        {enemyRoomData && enemyRoomData.isReady ? (
+                          <img
+                            src={`${process.env.SERVER_URL}/public/ok_ready.png`}
+                            alt="ok_ready"
+                            width={25}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <img
+                        src={`${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon}`}
+                        width={100}
+                        className="rounded-lg border-2 border-gray-700"
+                        alt="GuildIcon"
+                      />
+                      <div className="flex flex-col gap-4 items-center">
+                        <p className=" text-[28px] font-bold">
+                          {
+                            enemyRoomData.members[0].member.memberGuild
+                              .guildName
+                          }
+                        </p>
+                        {/* <p className=" text-[15px] font-light text-gray-300">
+                            Ladder :{" "}
+                            {
+                              enemyRoomData.members[0].member.memberGuild
+                                .guildRecord.recordLadder
+                            }
+                          </p> */}
+                      </div>
+                    </div>
                   )}
-                {enemyRoomData &&
-                  enemyRoomData.members[0] &&
-                  enemyRoomData.members[0].member.memberGuild &&
-                  enemyRoomData.members[0].member.memberGuild.guildName}
-                <div style={{ position: "relative" }}>
-                  {enemyRoomData && enemyRoomData.isReady ? (
-                    <img
-                      src={`${process.env.SERVER_URL}/public/ok_ready.png`}
-                      alt="ok_ready"
-                      width={25}
-                    />
-                  ) : (
-                    ""
-                  )}
+                <div className="guild-members">
+                  {enemyRoomData
+                    ? enemyRoomData.members.map((matchMember, index) => (
+                        <BattleMemberBox
+                          key={index}
+                          matchMember={matchMember}
+                        />
+                      ))
+                    : ""}
                 </div>
-              </div>
-              <div className="guild-members">
-                {enemyRoomData
-                  ? enemyRoomData.members.map((matchMember, index) => (
-                      <BattleMemberBox key={index} matchMember={matchMember} />
-                    ))
-                  : ""}
               </div>
             </div>
           </div>
 
-          <div className="battle-info-container">
-            <div className="info-action-buttons">
+          <div className="flex w-full h-[150px] justify-between p-1">
+            {/* Button */}
+            <div className="flex flex-col justify-between p-1 gap-1">
               {enemyRoomData &&
                 waitingRoomData.roomName &&
                 waitingRoomData.roomName.includes(member.memberName) && (
                   <button
                     type="button"
-                    className={isReady ? "ready-cancel-button" : "ready-button"}
+                    className="flex w-[230px] h-[65px] justify-center items-center gap-5 text-xl font-bold border border-slate-400 rounded"
                     onClick={readyBattle}
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      background: isReady
+                        ? "radial-gradient(circle at center 100%, #F59E0B 0%, #92400E 100%)"
+                        : "radial-gradient(circle at center 70%, #FCD34D 0%, #D97706 100%)",
+                    }}
                   >
-                    <img
-                      src={`${process.env.SERVER_URL}/public/ready.png`}
-                      alt="leave"
-                      width={40}
-                    />
-                    <div>{isReady ? "준비 취소" : "준비 완료"}</div>
+                    <div>{isReady ? "취소" : "준비 완료"}</div>
                   </button>
                 )}
 
@@ -608,20 +655,17 @@ const FightRoom = () => {
                   member.memberName && (
                   <button
                     type="button"
-                    className={
-                      isSearching
-                        ? "search-cancel-button"
-                        : allReady
-                        ? "start-button"
-                        : "search-button"
-                    }
+                    className="flex w-[230px] h-[65px] justify-center items-center gap-5 text-xl font-bold border border-slate-400 rounded"
                     onClick={searchBattleGuild}
+                    style={{
+                      cursor: "pointer",
+                      background: isSearching
+                        ? "radial-gradient(circle at center 70%, #B91C1C 0%, #991b1b 100%)"
+                        : allReady
+                        ? "radial-gradient(circle at center 70%, #86EFAC 0%, #16A34A 100%)"
+                        : "radial-gradient(circle at center 70%, #F87171 0%, #B91C1C 100%)",
+                    }}
                   >
-                    <img
-                      src={`${process.env.SERVER_URL}/public/search.png`}
-                      alt="leave"
-                      width={40}
-                    />
                     <div>
                       {isSearching
                         ? "매칭 취소"
@@ -633,15 +677,18 @@ const FightRoom = () => {
                 )}
             </div>
 
-            <div className="info-chat">
-              <div className="chat-tab">
+            {/* Chat */}
+            <div className="flex flex-col w-full h-full p-1">
+              <div className="flex w-full h-10 gap-1 text-sm items-center">
                 {tabArr.map((el, index) => (
                   <div
                     key={index}
-                    className={
-                      index === currentTab ? "subtab focused" : "subtab"
-                    }
                     onClick={() => selectTabHandler(index)}
+                    className={` w-[150px] relative tracking-[.5em] ${
+                      index === currentTab
+                        ? "border-b-2 border-white"
+                        : "border-b border-gray-300"
+                    }`}
                   >
                     {el.name}
                   </div>
@@ -649,18 +696,26 @@ const FightRoom = () => {
               </div>
 
               <div
-                className="tab-message-area"
+                className="h-full p-2 overflow-auto text-sm bg-gray-800"
                 ref={currentTab === 0 ? allMessageAreaRef : guildMessageAreaRef}
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#4A5568 #2D3748",
+                }}
               >
                 {(() => {
                   switch (currentTab) {
                     case 0:
                       return allMessage.map((message, index) => (
-                        <div key={index}>{message}</div>
+                        <div className="font-light" key={index}>
+                          {message}
+                        </div>
                       ));
                     case 1:
                       return guildMessage.map((message, index) => (
-                        <div key={index}>{message}</div>
+                        <div className="font-light" key={index}>
+                          {message}
+                        </div>
                       ));
                     default:
                       return null;
@@ -668,15 +723,9 @@ const FightRoom = () => {
                 })()}
               </div>
 
-              <div className="input-area">
-                <img
-                  src={`${process.env.SERVER_URL}/public/emoticon.png`}
-                  alt="emoticon"
-                  height={20}
-                  color="white"
-                />
+              <div className="flex items-center h-10 text-sm">
                 <input
-                  className="message-input"
+                  className="w-full bg-gray-800"
                   type="text"
                   placeholder="메세지보내기"
                   value={message}
@@ -686,33 +735,25 @@ const FightRoom = () => {
                   onCompositionUpdate={handleComposition}
                   onCompositionEnd={handleComposition}
                 />
-                <button
-                  type="button"
-                  className="send-button"
-                  onClick={sendMessage}
-                >
-                  <img
-                    src={`${process.env.SERVER_URL}/public/send.png`}
-                    alt="emoticon"
-                    height={20}
-                    color="white"
-                  />
-                </button>
               </div>
-            </div>
-
-            <div className="info-battle-type">
-              <div className="game-type">소환사의 협곡 / 5 vs 5</div>
-              <img
-                src={`${process.env.SERVER_URL}/public/gameType/Summoner'sRift.png`}
-                alt="leave"
-                height={140}
-              />
             </div>
           </div>
         </div>
       ) : (
-        <div className="fight-room-gaming">내전 진행중</div>
+        // 나중에 게임중일때 띄울 화면
+        // 현재 진행중인 게임에 대한 정보를 보여줄 수 있도록
+        <div className="fight-room-gaming">
+          내전 진행중{" "}
+          <div className="m-1 mx-2">
+            {enemyRoomData &&
+            enemyRoomData.members[0] &&
+            enemyRoomData.members[0].member.memberGuild
+              ? fightingRoom.team_A.roomName +
+                " VS " +
+                fightingRoom.team_B.roomName
+              : ""}
+          </div>
+        </div>
       )}
     </div>
   );

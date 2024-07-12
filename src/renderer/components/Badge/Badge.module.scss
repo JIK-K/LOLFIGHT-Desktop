@@ -1,4 +1,4 @@
-@use '../../_theme' as *;
+@use "../../_theme" as *;
 
 $height: 20px;
 
@@ -17,7 +17,7 @@ $height: 20px;
 }
 
 .text {
-  @include font('body');
+  @include font("body");
 }
 
 .icon {

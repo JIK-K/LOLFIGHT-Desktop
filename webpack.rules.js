@@ -35,4 +35,28 @@ module.exports = [
       },
     ],
   },
+  //여기서부터
+  {
+    test: /\.(sa|sc|c)ss$/,
+    exclude: [],
+    use: ["style-loader", "css-loader", "postcss-loader", "sass-loader"],
+  },
+  // {
+  //   test: /\.s[ac]ss$/i,
+  //   use: [
+  //     "style-loader", // Creates `style` nodes from JS strings
+  //     "css-loader", // Translates CSS into CommonJS
+  //     "postcss-loader", // PostCSS로 Tailwind CSS와 Autoprefixer
+  //     "sass-loader", // Compiles Sass to CSS
+  //   ],
+  // },
+  // {
+  //   test: /\.s[ac]ss$/i,
+  //   use: [
+  //     "sass-loader", // Compiles Sass to CSS
+  //     "postcss-loader", // PostCSS로 Tailwind CSS와 Autoprefixer 처리
+  //     "css-loader", // Translates CSS into CommonJS
+  //     "style-loader", // Creates `style` nodes from JS strings
+  //   ],
+  // },
 ];

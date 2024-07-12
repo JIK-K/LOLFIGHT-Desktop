@@ -5,6 +5,7 @@ import { login } from "../../../api/member.api";
 import CustomAlert from "../../../common/components/alert/CustomAlert";
 import { toast } from "react-hot-toast";
 import "./Login.scss";
+
 const { ipcRenderer } = window.require("electron");
 
 const LoginPage = () => {
@@ -60,23 +61,29 @@ const LoginPage = () => {
         <div className="logo-container">
           <div className="logo-image">
             <img
-              src={`${process.env.SERVER_URL}/public/image/icon-blue.png`}
+              src={`${process.env.SERVER_URL}/public/image/icon.png`}
               alt="logo"
-              width={40}
+              width={50}
             />
             LOLFIGHT
           </div>
-          <p className="logo-text">
+          <p className="font-bold text-white text-3xl">
             무자비하게 <br />
             우리와 함께하세요
           </p>
         </div>
         <div className="form-wrapper">
-          <div className="input-field">
-            <input type="text" placeholder="이메일" onChange={handleIdChange} />
-          </div>
-          <div className="input-field">
+          <div className="border border-black rounded-md my-2 text-black">
             <input
+              className="w-full h-40px rounded-md px-2 bg-gray-100"
+              type="text"
+              placeholder="이메일"
+              onChange={handleIdChange}
+            />
+          </div>
+          <div className="border border-black rounded-md my-2 text-black">
+            <input
+              className="w-full h-40px rounded-md px-2 bg-gray-100"
               type="password"
               placeholder="비밀번호"
               onChange={handlePwChange}
@@ -88,24 +95,23 @@ const LoginPage = () => {
           </button>
           <div className="link-container">
             <span className="link-item">
-              <a
-                href={`${process.env.SERVER_URL}/public/register`}
-                target="_blank"
-              >
+              {/* @todo 새로운 env 등록필요성 */}
+              <a href={`https://lolfight.kr/register`} target="_blank">
                 회원가입
               </a>
             </span>
             <span className="link-item">
-              <a
-                href={`${process.env.SERVER_URL}/public/register/find`}
-                target="_blank"
-              >
+              <a href={`https://lolfight.kr/register/find`} target="_blank">
                 비밀번호 찾기
               </a>
             </span>
           </div>
         </div>
-        <div className="personal-agreement">개인 약관 설명</div>
+        <div className="personal-agreement">
+          <a href={`https://lolfight.kr/policies/privacy`} target="_blank">
+            개인 약관 설명
+          </a>
+        </div>
       </div>
       <div
         style={{
@@ -117,13 +123,29 @@ const LoginPage = () => {
           backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
         }}
-      ></div>
+      >
+        <img src={backgroundURL} />
+      </div>
       <button type="button" className="button-close" onClick={closeWindow}>
-        <img
+        {/* <img
           src={`${process.env.SERVER_URL}/public/close.png`}
           alt="close"
           height={20}
-        />
+        /> */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
       </button>
     </div>
   );

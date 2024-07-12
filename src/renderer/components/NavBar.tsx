@@ -24,7 +24,9 @@ const NavItem: React.FC<NavItemProps> = ({ title, href }) => {
       }
       onClick={handleClick}
     >
-      <span>{title}</span>
+      <span className="font-light text-base text-gray-400 hover:underline underline-offset-4 hover:text-gray-200">
+        {title}
+      </span>
     </NavLink>
   );
 };
@@ -99,63 +101,16 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <div id="navbar">
-      <div
-        className="title-bar"
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
-      >
-        <div>
-          <p style={{ color: "white" }}>LOLFIGHT</p>
-        </div>
-        <div className="profile">
-          <SummonerIcon
-            size={35}
-            iconId={lcuData.me.icon}
-            availability={lcuData.me.availability}
-          />
-          {/* {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span> */}
-          {lcuData.me.lol.rankedLeagueTier === undefined ? (
-            <Badge
-              text={"UNRANKED"}
-              icon={<img src={`${RANK_CREST_URL}unranked.svg`} alt="Rank" />}
-              backgroundColor={COLORS.get("UNRANKED")}
-            />
-          ) : (
-            <Badge
-              text={getRankText()}
-              icon={
-                <img
-                  src={`${RANK_CREST_URL}${lcuData.me.lol.rankedLeagueTier.toLowerCase()}.svg`}
-                  alt="Rank"
-                />
-              }
-              backgroundColor={COLORS.get(lcuData.me.lol.rankedLeagueTier)}
-            />
-          )}
-        </div>
-        <div className="custom-button">
-          <button
-            type="button"
-            className="button-option"
-            onClick={minimizeWindow}
-          >
-            <img
-              src={`${process.env.SERVER_URL}/public/minimize.png`}
-              width={30}
-            />
-          </button>
-          <button type="button" className="button-option" onClick={closeWindow}>
-            <img
-              src={`${process.env.SERVER_URL}/public/close.png`}
-              alt="close"
-              height={15}
-            />
-          </button>
-        </div>
+    <div
+      className="sticky bg-gray-900 flex top-0 z-10 md:px-6 h-16 font-bold text-xl items-center border-b border-gray-800"
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseMove={onMouseMove}
+    >
+      <div className="flex items-center gap-2">
+        <p className="text-white h-6">LOLFIGHT</p>
       </div>
-      <div className="nav">
+      <div className="ml-32 mr-auto flex gap-4 sm:gap-6">
         <NavItem title="홈" href="/home" />
         {/* <NavItem title="Icon" href="/icons" /> */}
         {/* <NavItem title="Background" href="/backgrounds" /> */}
@@ -165,6 +120,91 @@ const NavBar: React.FC = () => {
         {/* <NavItem title="Challenges" href="/challenges" /> */}
         {/* <NavItem title="Chat Rank" href="/rank" /> */}
         <NavItem title="설정" href="/settings" />
+      </div>
+      <div className="profile">
+        <SummonerIcon
+          size={35}
+          iconId={lcuData.me.icon}
+          availability={lcuData.me.availability}
+        />
+        {/* {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span> */}
+        {lcuData.me.lol.rankedLeagueTier === undefined ? (
+          <Badge
+            text={"UNRANKED"}
+            icon={<img src={`${RANK_CREST_URL}unranked.svg`} alt="Rank" />}
+            backgroundColor={COLORS.get("UNRANKED")}
+          />
+        ) : (
+          <Badge
+            text={getRankText()}
+            icon={
+              <img
+                src={`${RANK_CREST_URL}${lcuData.me.lol.rankedLeagueTier.toLowerCase()}.svg`}
+                alt="Rank"
+              />
+            }
+            backgroundColor={COLORS.get(lcuData.me.lol.rankedLeagueTier)}
+          />
+        )}
+      </div>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          className="text-gray-400"
+          onClick={minimizeWindow}
+        >
+          {/* <img
+            className="text-white bg-white"
+            src={`${process.env.SERVER_URL}/public/minimize.png`}
+          /> */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-5"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
+          </svg>
+        </button>
+        <button type="button" className="text-gray-400">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.5 8.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v8.25A2.25 2.25 0 0 0 6 16.5h2.25m8.25-8.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-7.5A2.25 2.25 0 0 1 8.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 0 0-2.25 2.25v6"
+            />
+          </svg>
+        </button>
+        <button type="button" className="text-gray-400" onClick={closeWindow}>
+          {/* <img
+            className="bg-white"
+            src={`${process.env.SERVER_URL}/public/close.png`}
+            alt="close"
+          /> */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
