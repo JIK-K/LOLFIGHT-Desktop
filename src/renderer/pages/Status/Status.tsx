@@ -222,7 +222,7 @@ const Status: React.FC = () => {
     <div className="max-w-3xl mx-auto grid gap-8 px-4 md:px-6 py-8 md:py-12">
       <div className="grid gap-2">
         <div className="flex flex-col items-center rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
-          <div className="flex w-full space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
+          <div className="flex w-full bg-gray-900 rounded-t-lg space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
             상태 변경
           </div>
           <div className="flex items-center gap-2 p-4">
@@ -250,7 +250,7 @@ const Status: React.FC = () => {
         </div>
 
         <div className="flex flex-col items-center rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
-          <div className="flex w-full space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
+          <div className="flex w-full bg-gray-900 rounded-t-lg space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
             랭크 티어 변경
           </div>
           <div className="relative w-full justify-center flex items-center gap-2 p-4">
@@ -279,7 +279,7 @@ const Status: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-col items-center rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
-          <div className="flex w-full space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
+          <div className="flex w-full bg-gray-900 rounded-t-lg space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
             챌린지 변경
           </div>
           <div className="relative w-full justify-center flex items-center gap-2 p-4">

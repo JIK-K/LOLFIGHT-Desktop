@@ -321,11 +321,11 @@ const Guild: React.FC = () => {
         </div>
       ) : (
         <div className="max-w-3xl mx-auto gap-8 px-4 py-8 md:py-12">
-          <div className="flex flex-col rounded-lg border bg-gray-800 border-gray-700">
-            <div className="flex w-full space-y-1.5 p-6 bg-gray-900 border-b border-gray-700 px-6 py-4 rounded-t-lg">
+          <div className="flex flex-col rounded-lg bg-gradient-to-l from-gray-950 via-gray-800 to-gray-950">
+            <div className="flex w-full space-y-1.5 p-6 px-6 py-4">
               길드 리스트
             </div>
-            <div className="flex w-full h-full bg-gray-700 items-center px-4 gap-1">
+            <div className="flex w-full h-full items-center px-4 py-1 gap-1 border-y border-gray-800">
               <div className="w-[200px] text-center">길드명</div>
               <div className="w-[130px] text-center">래더</div>
               <div className="w-[70px] text-center">길드원</div>
