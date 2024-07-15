@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-const SecessionPage = () => {
+import { MemberDTO } from "../../../../common/DTOs/member/member.dto";
+import { useNavigate } from "react-router-dom";
+import { deleteMember } from "../../../../api/member.api";
+
+interface Props {
+  member: MemberDTO;
+}
+const SecessionPage = (props: Props) => {
+  const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
 
   const handleCheckboxChange = () => {
@@ -9,27 +17,18 @@ const SecessionPage = () => {
 
   const handleSecession = () => {
     if (checked) {
-      //   deleteMember(props.member.memberId)
-      //     .then((response) => {
-      //       sessionStorage.clear();
-      //       router.replace("/register");
-      //       CustomAlert(
-      //         "success",
-      //         "회원탈퇴",
-      //         "회원 탈퇴가 성공적으로 마무리 되었습니다."
-      //       );
-      //     })
-      //     .catch((error) => {
-      //       if (error.response.data._code === "COM001") {
-      //         CustomAlert(
-      //           "error",
-      //           "회원탈퇴",
-      //           "가입된 길드가 있는지 확인해주세요."
-      //         );
-      //       } else {
-      //         CustomAlert("error", "회원탈퇴", "에러");
-      //       }
-      //     });
+      deleteMember(props.member.memberId)
+        .then((response) => {
+          navigate("/");
+          toast.success("회원탈퇴가 성공적으로 마무리 되었습니다.");
+        })
+        .catch((error) => {
+          if (error.response.data._code === "COM001") {
+            toast.error("가입된 길드가 있는지 확인해주세요");
+          } else {
+            toast.error("회원탈퇴에러");
+          }
+        });
     } else {
       toast.error("주의사항 확인 체크를 활성화 시켜 주십시오.");
     }

@@ -4,9 +4,13 @@ import ProfilePage from "./components/ProfilePage";
 import ChangePasswordPage from "./components/ChangePasswordPage";
 import SummonerChangePage from "./components/SummonerChangePage";
 import SecessionPage from "./components/SecessionPage";
+import useMemberStore from "../../../common/zustand/member.zustand";
+import { useLcuData } from "../../../renderer/components/LcuContext";
 
 const Settings: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("profile");
+  const lcuData = useLcuData();
+  const { member } = useMemberStore();
 
   const changePage = (page: string) => {
     setCurrentPage(page);
@@ -35,7 +39,7 @@ const Settings: React.FC = () => {
               className="cursor-pointer"
               onClick={() => changePage("gameaccount")}
             >
-              롤 계정 변경
+              롤 계정 등록
             </div>
             <div
               className="cursor-pointer"
@@ -45,10 +49,12 @@ const Settings: React.FC = () => {
             </div>
           </div>
         </div>
-        {currentPage === "profile" && <ProfilePage />}
-        {currentPage === "password" && <ChangePasswordPage />}
-        {currentPage === "gameaccount" && <SummonerChangePage />}
-        {currentPage === "secession" && <SecessionPage />}
+        {currentPage === "profile" && <ProfilePage member={member} />}
+        {currentPage === "password" && <ChangePasswordPage member={member} />}
+        {currentPage === "gameaccount" && (
+          <SummonerChangePage member={member} lcuData={lcuData} />
+        )}
+        {currentPage === "secession" && <SecessionPage member={member} />}
       </div>
     </div>
   );
