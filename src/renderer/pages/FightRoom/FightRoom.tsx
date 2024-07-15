@@ -360,14 +360,14 @@ const FightRoom = () => {
         }
       } else {
         // @todo 주석해제
-        // if (waitingRoomData.members.length === 5) {
-        socket.emit("searchFight", {
-          roomName: waitingRoomData.roomName,
-        });
-        setIsSearching(!isSearching);
-        // } else {
-        //   toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
-        // }
+        if (waitingRoomData.members.length === 5) {
+          socket.emit("searchFight", {
+            roomName: waitingRoomData.roomName,
+          });
+          setIsSearching(!isSearching);
+        } else {
+          toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
+        }
       }
     }
   };
@@ -379,6 +379,8 @@ const FightRoom = () => {
       socket.emit("changeTeam", {
         fightRoomName: fightingRoom.fightRoomName,
       });
+    } else {
+      toast.error("매치리더만 진영을 변경 할 수 있습니다.");
     }
   };
 
@@ -505,7 +507,7 @@ const FightRoom = () => {
                   </div>
                   <img
                     src={`${process.env.SERVER_URL}/${guild.guildIcon}`}
-                    width={100}
+                    width={90}
                     className="rounded-lg border-2 border-gray-700"
                     alt="GuildIcon"
                   />
@@ -537,7 +539,7 @@ const FightRoom = () => {
             </div>
 
             {/* Center */}
-            <div className="flex flex-col items-center justify-center h-[450px]">
+            <div className="flex flex-col items-center justify-center w-[50px] h-[450px]">
               <img
                 src={`${process.env.SERVER_URL}/public/vs.png`}
                 alt="emoticon"
@@ -545,18 +547,26 @@ const FightRoom = () => {
                 color="white"
               />
               {enemyRoomData ? (
-                <button
-                  type="button"
-                  onClick={changeTeam}
-                  style={{ cursor: "pointer", backgroundColor: "transparent" }}
-                >
-                  <img
-                    src={`${process.env.SERVER_URL}/public/swap.png`}
-                    alt="swap"
-                    width={30}
-                    color="white"
-                  />
-                </button>
+                <div className="relative group">
+                  <button
+                    type="button"
+                    onClick={changeTeam}
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    <img
+                      src={`${process.env.SERVER_URL}/public/swap.png`}
+                      alt="swap"
+                      width={30}
+                      color="white"
+                    />
+                  </button>
+                  <div className="absolute w-[50px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    진영변경
+                  </div>
+                </div>
               ) : (
                 ""
               )}
@@ -593,7 +603,7 @@ const FightRoom = () => {
                       </div>
                       <img
                         src={`${process.env.SERVER_URL}/${enemyRoomData.members[0].member.memberGuild.guildIcon}`}
-                        width={100}
+                        width={90}
                         className="rounded-lg border-2 border-gray-700"
                         alt="GuildIcon"
                       />

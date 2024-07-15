@@ -1,0 +1,116 @@
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { MemberDTO } from "../../../../common/DTOs/member/member.dto";
+import { useNavigate } from "react-router-dom";
+import { deleteMember } from "../../../../api/member.api";
+
+interface Props {
+  member: MemberDTO;
+}
+const SecessionPage = (props: Props) => {
+  const navigate = useNavigate();
+  const [checked, setChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setChecked(!checked);
+  };
+
+  const handleSecession = () => {
+    if (checked) {
+      deleteMember(props.member.memberId)
+        .then((response) => {
+          navigate("/");
+          toast.success("회원탈퇴가 성공적으로 마무리 되었습니다.");
+        })
+        .catch((error) => {
+          if (error.response.data._code === "COM001") {
+            toast.error("가입된 길드가 있는지 확인해주세요");
+          } else {
+            toast.error("회원탈퇴에러");
+          }
+        });
+    } else {
+      toast.error("주의사항 확인 체크를 활성화 시켜 주십시오.");
+    }
+  };
+  return (
+    <div>
+      <div>
+        <p className="py-3 text-2xl font-bold border-b border-blue-800">
+          회원 탈퇴
+        </p>
+      </div>
+
+      <div className="flex flex-col items-center py-3">
+        <div className="font-medium self-start">▷ 회원 탈퇴 주의사항</div>
+        <div className="flex flex-col p-2 gap-5">
+          <div>
+            <span className="text-sky-400 dark:text-sky-700 font-bold">
+              1. 정보 유실
+            </span>
+            <p className="text-sm">
+              회원 탈퇴를 하면 개인 정보와 연결된 모든 데이터가 삭제될 수
+              있습니다. 이는 계정 정보, 프로필 정보, 작성한 게시물 등을
+              포함합니다.
+            </p>
+          </div>
+          <div>
+            <span className="text-sky-400 dark:text-sky-700 font-bold">
+              2. 계정 접근 권한
+            </span>
+            <p className="text-sm">
+              회원 탈퇴를 하면 해당 계정으로 로그인하여 접근할 수 없게 됩니다.
+              따라서 탈퇴 전에 필요한 정보를 백업하거나 필요한 작업을 모두
+              완료했는지 확인해야 합니다.
+            </p>
+          </div>
+          <div>
+            <span className="text-sky-400 dark:text-sky-700 font-bold">
+              3. 서비스 이용 중단
+            </span>
+            <p className="text-sm">
+              회원 탈퇴 후에는 해당 서비스를 더 이상 이용할 수 없게 됩니다. 이는
+              해당 서비스의 모든 기능 및 혜택을 포기해야 함을 의미합니다
+            </p>
+          </div>
+          <div>
+            <span className="text-sky-400 dark:text-sky-700 font-bold">
+              4. 계정 재사용 불가능
+            </span>
+            <p className="text-sm">
+              회원 탈퇴 후에는 동일한 이메일 주소나 사용자 이름으로 계정을 다시
+              생성할 수 없습니다. 따라서 탈퇴하기 전에 재가입을 원하는 경우를
+              고려해야 합니다.
+            </p>
+          </div>
+          <div>
+            <span className="text-sky-400 dark:text-sky-700 font-bold">
+              5. 서비스 연관성
+            </span>
+            <p className="text-sm">
+              회원 탈퇴 시 해당 서비스의 모든 연관된 기능 및 서비스에 대한 접근
+              권한이 상실될 수 있습니다. 이는 예를 들어 온라인 커뮤니티의 경우
+              게시물 작성 및 댓글 달기와 같은 활동에도 영향을 줄 수 있습니다.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 py-4">
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={handleCheckboxChange}
+          />
+          주의사항을 모두 확인하였습니다.
+        </div>
+        <button
+          className="w-40 bg-red-500 rounded p-2"
+          onClick={handleSecession}
+        >
+          <p className="text-white font-bold tracking-widest">회원탈퇴</p>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default SecessionPage;

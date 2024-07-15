@@ -99,3 +99,33 @@ export const leaveMember = async (
 
   return axios.patch(url);
 };
+
+/**
+ * member 탈퇴
+ * @param id
+ * @returns
+ */
+export const deleteMember = async (
+  id: string
+): Promise<AxiosResponse<ResponseDTO<MemberDTO>>> => {
+  let url = `${baseUrl}`;
+
+  let queryParams = `?id=${id}`;
+  url += queryParams;
+  return await axios.delete(url);
+};
+
+/**
+ * member LOL계정 삭제
+ * @param memberId
+ * @returns
+ */
+export const deleteSummonerData = async (
+  memberId: string
+): Promise<AxiosResponse<ResponseDTO<MemberDTO>>> => {
+  let url = `${baseUrl}/deleteSummoner`;
+
+  let queryParams = `?memberId=${memberId}`;
+  url += queryParams;
+  return await axios.patch(url);
+};

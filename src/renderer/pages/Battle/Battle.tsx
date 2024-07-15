@@ -19,7 +19,7 @@ const Battle: React.FC = () => {
           <div className="flex flex-col rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
             <div className="w-full h-32">
               <img
-                src={`${process.env.SERVER_URL}/public/다리우스.png`}
+                src={`${process.env.SERVER_URL}/public/banner/illi.png`}
                 alt="close"
                 className="rounded-t-lg h-32 object-none w-full object-top"
               />

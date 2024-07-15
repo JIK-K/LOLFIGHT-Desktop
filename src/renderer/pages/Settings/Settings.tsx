@@ -1,28 +1,60 @@
-import * as React from "react";
-import { exportFavorites, importFavorites } from "../../utils/ipcBridge";
-import { Button } from "../../components";
-import { toast } from "react-hot-toast";
+import React, { useEffect, useState } from "react";
 import "./Settings.scss";
+import ProfilePage from "./components/ProfilePage";
+import ChangePasswordPage from "./components/ChangePasswordPage";
+import SummonerChangePage from "./components/SummonerChangePage";
+import SecessionPage from "./components/SecessionPage";
+import useMemberStore from "../../../common/zustand/member.zustand";
+import { useLcuData } from "../../../renderer/components/LcuContext";
 
 const Settings: React.FC = () => {
-  async function handleImport() {
-    const success = await importFavorites();
-    if (success) toast.success("Imported favorites");
-    else toast.error("Failed to import");
-  }
+  const [currentPage, setCurrentPage] = useState("profile");
+  const lcuData = useLcuData();
+  const { member } = useMemberStore();
 
-  async function handleExport() {
-    const success = await exportFavorites();
-    if (success) toast.success("Exported favorites");
-    else toast.error("Failed to export");
-  }
+  const changePage = (page: string) => {
+    setCurrentPage(page);
+  };
   return (
-    <div className="settings-page px-4 md:px-6 py-8 md:py-12">
-      <div className="flex flex-col items-center rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700">
-        <div className="flex w-full bg-gray-900 rounded-t-lg space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
-          내정보
+    <div className="max-w-3xl mx-auto py-4">
+      <div className="flex flex-col h-full w-full bg-gray-900 p-3">
+        <div className="fixed w-[200px] h-[220px] left-[80px] top-[81px] bg-gray-900">
+          <div className="flex flex-col p-4 gap-2">
+            <div className="py-3 text-xl font-bold border-b border-blue-800">
+              설정
+            </div>
+            <div
+              className="pt-2 cursor-pointer"
+              onClick={() => changePage("profile")}
+            >
+              회원 정보
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => changePage("password")}
+            >
+              비밀번호 변경
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => changePage("gameaccount")}
+            >
+              롤 계정 등록
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => changePage("secession")}
+            >
+              회원 탈퇴
+            </div>
+          </div>
         </div>
-        <div className="relative w-full justify-center flex items-center gap-2 p-4"></div>
+        {currentPage === "profile" && <ProfilePage member={member} />}
+        {currentPage === "password" && <ChangePasswordPage member={member} />}
+        {currentPage === "gameaccount" && (
+          <SummonerChangePage member={member} lcuData={lcuData} />
+        )}
+        {currentPage === "secession" && <SecessionPage member={member} />}
       </div>
     </div>
   );
