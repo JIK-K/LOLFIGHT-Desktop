@@ -54,9 +54,9 @@ const SummonerChangePage = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <div>
-        <p className="py-3 text-2xl font-bold border-b border-blue-800">
+        <p className="py-3 text-2xl font-bold border-b border-gray-700">
           롤 계정 정보
         </p>
       </div>
@@ -81,7 +81,7 @@ const SummonerChangePage = (props: Props) => {
             지금 로그인한 계정으로 변경
           </div>
           <button
-            className="w-[100px] bg-lime-500 rounded m-1 self-center "
+            className="w-[100px] bg-lime-500 rounded m-2 self-center text-base"
             onClick={changeSummoner}
           >
             변경 하기
@@ -92,7 +92,7 @@ const SummonerChangePage = (props: Props) => {
             등록한 롤 계정 삭제
           </div>
           <button
-            className="w-[100px] bg-red-500 rounded m-1 self-center "
+            className="w-[100px] bg-red-500 rounded m-2 self-center "
             onClick={deleteSummoner}
           >
             삭제하기

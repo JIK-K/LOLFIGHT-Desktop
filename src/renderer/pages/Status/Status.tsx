@@ -218,6 +218,7 @@ const Status: React.FC = () => {
       console.log("Set challenges rank to", { tier: tier, points: points });
     });
   };
+
   return (
     <div className="max-w-3xl mx-auto grid gap-8 px-4 md:px-6 py-8 md:py-12">
       <div className="grid gap-2">

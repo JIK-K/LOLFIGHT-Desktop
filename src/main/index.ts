@@ -28,7 +28,7 @@ declare const MAIN_WEBPACK_ENTRY: string;
 // const isDevelopment = process.env.NODE_ENV !== "production";
 //@todo dev모드 false 까먹지않기
 // const isDevelopment = true;
-const isDevelopment = false;
+const isDevelopment = true;
 let mouseDiffX = 0;
 let mouseDiffY = 0;
 let mainWindow: BrowserWindow;
