@@ -20,9 +20,11 @@ import { GuildInviteDTO } from "../../../common/DTOs/guild/guild_invite.dto";
 import GuildListBox from "./components/GuildListBox";
 import GuildApplicant from "./components/GuildApplicant";
 import ButtonAlert from "../../../common/components/alert/ButtonAlert";
+import { useLcuData } from "../../../renderer/components/LcuContext";
 
 const Guild: React.FC = () => {
   const navigate = useNavigate();
+  const lcuData = useLcuData();
   const { member, setMember } = useMemberStore();
   const { guild, setGuild } = useGuildStore();
   const [guildList, setGuildList] = useState<GuildDTO[]>();
@@ -36,6 +38,7 @@ const Guild: React.FC = () => {
   const messageAreaRef = useRef(null);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteMembers, setInviteMembers] = useState<GuildInviteDTO[]>([]);
+  const [waitingRoomCount, setWaitingRoomCount] = useState<number>();
 
   useEffect(() => {
     if (!member.memberGuild) {
@@ -57,7 +60,6 @@ const Guild: React.FC = () => {
       if (member.memberName === member.memberGuild.guildMaster) {
         getInviteGuildList(member.memberGuild.guildName)
           .then((response) => {
-            console.log(response);
             setInviteMembers(response.data.data);
           })
           .catch((error) => {
@@ -82,8 +84,14 @@ const Guild: React.FC = () => {
         setGuildRooms(guildRoomList);
       });
 
+      socket.on("waitingRoom", (roomLength: number) => {
+        console.log("waiting Room Count : ", roomLength);
+        setWaitingRoomCount(roomLength);
+      });
+
       socket.emit("online", { guildName: member.memberGuild.guildName });
       socket.emit("roomList", { guildName: member.memberGuild.guildName });
+      socket.emit("waitingRoom");
 
       // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
       return () => {
@@ -94,6 +102,17 @@ const Guild: React.FC = () => {
       };
     }
   }, []);
+
+  useEffect(() => {
+    const sorted = [...guildMembers].sort((a, b) => {
+      const aOnline = onlineMembers.includes(a.memberName);
+      const bOnline = onlineMembers.includes(b.memberName);
+      if (aOnline && !bOnline) return -1; //a를 b보다 앞으로 정렬
+      if (!aOnline && bOnline) return 1; //b를 a보다 앞으로 정렬
+      return 0;
+    });
+    setGuildMembers(sorted);
+  }, [onlineMembers]);
 
   useEffect(() => {
     if (messageAreaRef.current) {
@@ -138,14 +157,23 @@ const Guild: React.FC = () => {
       isLeader: false,
     };
     if (matchMember.member.memberGame !== null || undefined) {
-      socket.emit("createRoom", {
-        members: matchMember,
-        roomName: member.memberName,
-        memberCount: 1,
-        isReady: false,
-        status: "대기중",
-      });
-      navigate("/fightroom");
+      if (
+        matchMember.member.memberGame.gameName !==
+        lcuData.me.gameName + "#" + lcuData.me.gameTag
+      ) {
+        toast.error(
+          "등록되어있는 롤 계정과 로그인한 롤 계정이 일치하지 않습니다."
+        );
+      } else {
+        socket.emit("createRoom", {
+          members: matchMember,
+          roomName: member.memberName,
+          memberCount: 1,
+          isReady: false,
+          status: "대기중",
+        });
+        navigate("/fightroom");
+      }
     } else {
       toast.error("롤 계정이 등록되어있는 유저만 입장 가능합니다.");
     }
@@ -237,14 +265,14 @@ const Guild: React.FC = () => {
           </div>
 
           {/* 길드 채팅방 */}
-          <div className="guild-top grid md:grid-cols-[200px_1fr]">
-            <div className="bg-gray-800 border border-gray-700 rounded-l-lg flex-1">
+          <div className="guild-top grid md:grid-cols-[200px_1fr] h-[400px]">
+            <div className="bg-gray-800 border border-gray-700 rounded-l-lg flex-1 overflow-y-auto">
               {/* <div className="flex items-center justify-between mb-4 border-b border-gray-700">
                 <h2 className="text-lg font-bold text-gray-200 p-6">
                   길드원
                 </h2>
               </div> */}
-              <div className="flex flex-col p-3 overflow-y-auto gap-5 text-normal">
+              <div className="flex flex-col p-3 overflow-y-auto gap-3 text-normal">
                 {guildMembers.map((member) => (
                   <GuildMemberBox
                     key={member.id}
@@ -299,16 +327,25 @@ const Guild: React.FC = () => {
               </div>
             </div>
           </div>
+
           <div className="guild-bottom bg-gray-800 border-gray-700 border rounded">
             <div className="guild-fight-room">
-              <div className="flex border-b border-gray-700 justify-between text-center items-center">
+              <div className="flex border-b border-gray-700 justify-between text-center items-center relative">
                 <span className="ml-4">길드전 방 목록</span>
+
                 <button
                   className="border bg-blue-950 border-gray-700 rounded-lg m-2 p-2 hover:bg-blue-900"
                   onClick={createBattleRoom}
                 >
                   <span className="text-sm">길드전 내전방 생성</span>
                 </button>
+
+                <div className="absolute top-[17px] left-[150px]">
+                  전체 내전 대기 방 수 :{" "}
+                  <span className="text-emerald-400 font-lg">
+                    {waitingRoomCount}
+                  </span>
+                </div>
               </div>
 
               <div className="fight-room-list bg-gray-900 hover:bg-gray-800">

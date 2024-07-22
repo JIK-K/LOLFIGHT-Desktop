@@ -5,6 +5,7 @@ import useSocketStore from "../../../../common/zustand/socket.zustand";
 import { MatchMembersDTO } from "../../../../common/DTOs/room/matchMembers.dto";
 import useMemberStore from "../../../../common/zustand/member.zustand";
 import toast from "react-hot-toast";
+import { useLcuData } from "../../../../renderer/components/LcuContext";
 
 interface Props {
   roomData: WaitingRoomDTO;
@@ -12,6 +13,7 @@ interface Props {
 const GuildFightRoomBox = (props: Props) => {
   const status: string = props.roomData.status;
   const navigate = useNavigate();
+  const lcuData = useLcuData();
   const { socket } = useSocketStore();
   const { member } = useMemberStore();
 
@@ -37,10 +39,19 @@ const GuildFightRoomBox = (props: Props) => {
       isLeader: false,
     };
     if (matchMember.member.memberGame !== null || undefined) {
-      socket.emit("joinRoom", {
-        roomName: props.roomData.roomName,
-        matchMember: matchMember,
-      });
+      if (
+        matchMember.member.memberGame.gameName !==
+        lcuData.me.gameName + "#" + lcuData.me.gameTag
+      ) {
+        toast.error(
+          "등록되어있는 롤 계정과 로그인한 롤 계정이 일치하지 않습니다."
+        );
+      } else {
+        socket.emit("joinRoom", {
+          roomName: props.roomData.roomName,
+          matchMember: matchMember,
+        });
+      }
     } else {
       toast.error("롤 계정이 등록되어있는 유저만 입장 가능합니다.");
     }
@@ -61,7 +72,10 @@ const GuildFightRoomBox = (props: Props) => {
   };
 
   return (
-    <div className="h-10 flex items-center justify-between p-2 border-b border-gray-700 cursor-pointer" onClick={handleJoinRoom}>
+    <div
+      className="h-10 flex items-center justify-between p-2 border-b border-gray-700 cursor-pointer"
+      onClick={handleJoinRoom}
+    >
       <div className="match-leader">{props.roomData.roomName} 의방</div>
       <div className="players-count">{props.roomData.memberCount}/5</div>
       <div className="match-status" style={{ color: getStatusColor() }}>

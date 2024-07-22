@@ -360,14 +360,14 @@ const FightRoom = () => {
         }
       } else {
         // @todo 주석해제
-        if (waitingRoomData.members.length === 5) {
-          socket.emit("searchFight", {
-            roomName: waitingRoomData.roomName,
-          });
-          setIsSearching(!isSearching);
-        } else {
-          toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
-        }
+        // if (waitingRoomData.members.length === 5) {
+        //   socket.emit("searchFight", {
+        //     roomName: waitingRoomData.roomName,
+        //   });
+        setIsSearching(!isSearching);
+        // } else {
+        //   toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
+        // }
       }
     }
   };
