@@ -17,7 +17,7 @@ const GuildMemberBox = (props: Props) => {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
       <img
         src={`${process.env.SERVER_URL}/public/rank/${getGameTier()}.png`}
         width={30}
