@@ -73,7 +73,7 @@ const Connect: React.FC = () => {
           />
         </svg>
       </button>
-      <span className="version">v.1.1.0</span>
+      <span className="version">v.1.2.0</span>
     </div>
   );
 };
