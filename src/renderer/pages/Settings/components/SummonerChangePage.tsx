@@ -78,13 +78,13 @@ const SummonerChangePage = (props: Props) => {
         </div>
         <div className="flex border-y border-gray-700">
           <div className="w-[250px] bg-gray-800 py-2 px-3">
-            지금 로그인한 계정으로 변경
+            지금 로그인한 계정으로 등록
           </div>
           <button
             className="w-[100px] bg-lime-500 rounded m-2 self-center text-base"
             onClick={changeSummoner}
           >
-            변경 하기
+            등록 하기
           </button>
         </div>
         <div className="flex border-y border-gray-700">

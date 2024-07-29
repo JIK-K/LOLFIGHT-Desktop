@@ -42,7 +42,8 @@ const LoginPage = () => {
       })
       .catch((error: any) => {
         // CustomAlert("warning", "로그인", "아이디 비밀번호를 확인해주세요.");
-        toast.success("error");
+        console.log(error);
+        toast.success("존재하지 않는 아이디 입니다.");
       });
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

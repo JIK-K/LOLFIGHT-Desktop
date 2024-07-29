@@ -224,7 +224,7 @@ const Guild: React.FC = () => {
                     {member.memberGuild.createdAt.toString().split("T")[0]}
                   </div>
                   {member.memberGuild.guildMaster === member.memberName && (
-                    <div className="relative w-[65px]">
+                    <div className="relative w-[65px] justify-center rounded shadow-lg shadow-gray-800 shadow-inner">
                       <button onClick={viewInviteGuild}>가입신청자</button>
                       {inviteMembers.length > 0 && (
                         <div className="w-[8px] h-[8px] bg-red-500 absolute top-0 right-0 rounded-full transform translate-x-1/2 -translate-y-1/2" />
