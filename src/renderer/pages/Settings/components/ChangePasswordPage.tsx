@@ -62,9 +62,9 @@ const ChangePasswordPage = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <div>
-        <p className="py-3 text-2xl font-bold border-b border-blue-800 items-center">
+        <p className="py-3 text-2xl font-bold border-b border-gray-700 items-center">
           비밀번호 변경
         </p>
       </div>

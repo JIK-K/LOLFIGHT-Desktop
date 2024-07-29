@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import { useLcuData } from "./LcuContext";
 import { Badge, SummonerIcon } from "../components";
+import useMemberStore from "../../common/zustand/member.zustand";
+import toast from "react-hot-toast";
 const { ipcRenderer } = window.require("electron");
 interface NavItemProps {
   title: string;
@@ -47,8 +49,10 @@ const COLORS = new Map<string, string>([
 ]);
 
 const NavBar: React.FC = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const lcuData = useLcuData();
+  const { setMember } = useMemberStore();
   const [isDrag, setIsDrag] = useState(false);
   const minimizeWindow = () => {
     ipcRenderer.send("minimize-window");
@@ -100,9 +104,16 @@ const NavBar: React.FC = () => {
     }
   };
 
+  const logoutMember = () => {
+    setMember(undefined);
+    sessionStorage.clear();
+    navigate("/");
+    toast.success("로그아웃 되었습니다.");
+  };
+
   return (
     <div
-      className="sticky bg-gray-900 flex top-0 z-10 md:px-6 h-16 font-bold text-xl items-center border-b border-gray-800"
+      className="sticky bg-gray-900 flex top-0 z-10 md:px-6 h-16 font-bold text-xl items-center border-b border-gray-800 gap-1"
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onMouseMove={onMouseMove}
@@ -121,13 +132,22 @@ const NavBar: React.FC = () => {
         {/* <NavItem title="Chat Rank" href="/rank" /> */}
         <NavItem title="설정" href="/settings" />
       </div>
-      <div className="profile">
+      <div className="profile flex items-center gap-2">
         <SummonerIcon
           size={35}
           iconId={lcuData.me.icon}
           availability={lcuData.me.availability}
         />
-        {/* {lcuData.me.name} <span className="id">#{lcuData.me.gameTag}</span> */}
+        <p className="text-sm font-light">
+          {lcuData.me.gameName}{" "}
+          <span className="id">#{lcuData.me.gameTag}</span>
+        </p>
+        <div
+          className="text-base font-normal justify-center rounded bg-gray-800 px-2 py-1 shadow-inner cursor-pointer hover:bg-gray-950"
+          onClick={logoutMember}
+        >
+          로그아웃
+        </div>
         {lcuData.me.lol.rankedLeagueTier === undefined ? (
           <Badge
             text={"UNRANKED"}

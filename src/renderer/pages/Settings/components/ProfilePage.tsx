@@ -6,9 +6,9 @@ interface Props {
 }
 const ProfilePage = (props: Props) => {
   return (
-    <div>
+    <div className="w-full">
       <div>
-        <p className="py-3 text-2xl font-bold border-b border-blue-800">
+        <p className="py-3 text-2xl font-bold border-b border-gray-700">
           회원 정보
         </p>
       </div>
