@@ -252,7 +252,7 @@ const Home: React.FC = () => {
               {/* 모스트챔피언  */}
               <div className="p-6 px-6 py-4">
                 <div className="grid gap-4">
-                  {lcuData.mostChampions.slice(0, 5).map((data, index) => (
+                  {lcuData.mostChampions.slice(0, 10).map((data, index) => (
                     <ChampionBox
                       key={index}
                       championId={data.championsId}
@@ -314,8 +314,25 @@ const Home: React.FC = () => {
                     <div className="text-sm text-gray-400 mt-2">맵 장악</div>
                   </div>
                 </div>
-                플레이한 시간, 플레이한 게임 KDA, 킬관여율, 기여한피해량,
-                데스당피해량, 팀원보조점수
+              </div>
+
+              <div className="">
+                <div className="flex flex-col space-y-1.5 border-y border-gray-700 px-6 py-2">
+                  <h3 className="text-lg font-bold text-gray-200">
+                    플레이한 시간
+                  </h3>
+                  <div className="bg-gradient-to-b from-yellow-300 to-amber-700 bg-clip-text text-transparent text-xl font-bold">
+                    3<span className="text-[15px]">시간</span>
+                  </div>
+                </div>
+                <div className="flex flex-col space-y-1.5border-y border-gray-700 px-6 py-2">
+                  <h3 className="text-lg font-bold text-gray-200">
+                    플레이한 게임
+                  </h3>
+                  <div className="bg-gradient-to-b from-yellow-300 to-amber-700 bg-clip-text text-transparent text-xl font-bold">
+                    151<span className="text-[15px]">판</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -324,5 +341,5 @@ const Home: React.FC = () => {
     </div>
   );
 };
-
+// KDA, 킬관여율, 기여한피해량,데스당피해량, 팀원보조점수
 export default Home;
