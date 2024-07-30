@@ -128,6 +128,13 @@ type State = {
   leaguePoint: RankInfo;
   flexRank: FlexRankInfo;
   gameData: GameStats;
+  mostChampions: MostChampions[];
+};
+
+type MostChampions = {
+  championsId: number;
+  count: number;
+  victory: number;
 };
 
 const DEFAULT_STATE: State = {
@@ -176,6 +183,7 @@ const DEFAULT_STATE: State = {
     visionScore: 0,
     victory: 0,
   },
+  mostChampions: [],
 };
 
 const context = React.createContext<State>(DEFAULT_STATE);
@@ -257,8 +265,8 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
         `/lol-career-stats/v1/summoner-games/${response.puuid}`
       ).then((response: any) => {
         const recentData: GameStats[] = response.slice(-30);
-
-        const statsData: GameStats[] = recentData.map((game: any) => ({
+        const championsMap: { [key: number]: MostChampions } = {};
+        const statsData: GameStats[] = response.map((game: any) => ({
           kills: game.stats?.["CareerStats.js"].kills,
           deaths: game.stats?.["CareerStats.js"].deaths,
           assists: game.stats?.["CareerStats.js"].assists,
@@ -297,9 +305,31 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           victory: totalVictory / statsData.length,
         };
 
+        response.forEach((game: any) => {
+          if (championsMap[game.championId]) {
+            championsMap[game.championId].count += 1;
+            if (game.stats?.["CareerStats.js"].victory === 1) {
+              championsMap[game.championId].victory += 1;
+            }
+          } else {
+            championsMap[game.championId] = {
+              championsId: game.championId,
+              count: 1,
+              victory: game.stats?.["CareerStats.js"].victory,
+            };
+          }
+        });
+
+        const championsData: MostChampions[] = Object.values(championsMap);
+        championsData.sort((a: MostChampions, b: MostChampions) => {
+          return b.count - a.count;
+        });
+        console.log(championsData);
+
         setState((oldState) => ({
           ...oldState,
           gameData: averageStats,
+          mostChampions: championsData,
         }));
       });
     });

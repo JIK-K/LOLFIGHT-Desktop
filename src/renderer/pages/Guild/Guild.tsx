@@ -112,6 +112,7 @@ const Guild: React.FC = () => {
       return 0;
     });
     setGuildMembers(sorted);
+    console.log(guildMembers);
   }, [onlineMembers]);
 
   useEffect(() => {
