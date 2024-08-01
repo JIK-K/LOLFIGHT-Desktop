@@ -53,11 +53,6 @@ const Connect: React.FC = () => {
         <div className="loader"></div>
       </div>
       <button type="button" className="button-option" onClick={closeWindow}>
-        {/* <img
-          src={`${process.env.SERVER_URL}/public/close.png`}
-          alt="close"
-          height={20}
-        /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

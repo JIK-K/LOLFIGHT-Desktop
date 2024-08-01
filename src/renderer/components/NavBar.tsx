@@ -173,10 +173,6 @@ const NavBar: React.FC = () => {
           className="text-gray-400"
           onClick={minimizeWindow}
         >
-          {/* <img
-            className="text-white bg-white"
-            src={`${process.env.SERVER_URL}/public/minimize.png`}
-          /> */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -205,11 +201,6 @@ const NavBar: React.FC = () => {
           </svg>
         </button>
         <button type="button" className="text-gray-400" onClick={closeWindow}>
-          {/* <img
-            className="bg-white"
-            src={`${process.env.SERVER_URL}/public/close.png`}
-            alt="close"
-          /> */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

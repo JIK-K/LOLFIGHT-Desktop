@@ -298,11 +298,6 @@ const Guild: React.FC = () => {
                 </div>
               </div>
               <div className="w-full mt-4">
-                {/* <img
-                    src={`${process.env.SERVER_URL}/public/emoticon.png`}
-                    alt="emoticon"
-                    color="white"
-                  /> */}
                 <input
                   className="rounded-br-lg bg-gray-900 p-2 w-full"
                   type="text"
@@ -314,17 +309,6 @@ const Guild: React.FC = () => {
                   onCompositionUpdate={handleComposition}
                   onCompositionEnd={handleComposition}
                 />
-                {/* <button
-                  type="button"
-                  className="send-button"
-                  onClick={sendMessage}
-                >
-                  <img
-                      src={`${process.env.SERVER_URL}/public/send.png`}
-                      alt="emoticon"
-                      color="white"
-                    />
-                </button> */}
               </div>
             </div>
           </div>
