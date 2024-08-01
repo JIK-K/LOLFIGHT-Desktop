@@ -13,6 +13,7 @@ import SummonerRank from "./components/SummonerRank";
 import SummonerStatsBox from "./components/SummonerStatsBox";
 import SocketIOClient, { Socket } from "socket.io-client";
 import ChampionBox from "./components/ChampionBox";
+import HexagonChart from "./components/HexagonChart";
 
 const RANK_CREST_URL =
   "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/";
@@ -29,50 +30,11 @@ const COLORS = new Map<string, string>([
   ["CHALLENGER", "#288fc7"],
 ]);
 
-function HexagonIcon(
-  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-    </svg>
-  );
-}
-
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const lcuData = useLcuData();
   const { member, setMember } = useMemberStore();
   const { socket, setSocket } = useSocketStore();
-  const data = {
-    kill: 0,
-    deaths: 0,
-    assists: 0,
-    damage: 0,
-    gold: 0,
-    visionScore: 0,
-    victory: 0,
-  };
-
-  const getRankText = () => {
-    const rank = lcuData.me.lol.rankedLeagueTier;
-    const division = lcuData.me.lol.rankedLeagueDivision;
-
-    return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${
-      division === "NA" ? "" : division
-    }`;
-  };
 
   useEffect(() => {
     if (socket) {
@@ -251,8 +213,8 @@ const Home: React.FC = () => {
               </div>
               {/* 모스트챔피언  */}
               <div className="p-6 px-6 py-4">
-                <div className="grid gap-4">
-                  {lcuData.mostChampions.slice(0, 10).map((data, index) => (
+                <div className="grid gap-5">
+                  {lcuData.mostChampions.slice(0, 7).map((data, index) => (
                     <ChampionBox
                       key={index}
                       championId={data.championsId}
@@ -269,50 +231,24 @@ const Home: React.FC = () => {
             <div className="rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700 h-full">
               <div className="flex flex-col space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
                 <h3 className="text-lg font-bold text-gray-200">
-                  Hexagonal Graph
+                  Player Graph
                 </h3>
               </div>
-              <div className="p-6 px-6 py-4">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="col-span-3 md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="relative w-full aspect-square">
-                      <div className="absolute inset-0 bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-200">
-                        72%
-                      </div>
-                      <div className="absolute inset-0 bg-gray-800 rounded-full flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] bg-gray-950 rounded-full flex items-center justify-center">
-                          <HexagonIcon className="w-10 h-10 text-gray-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 mt-2">전투</div>
-                  </div>
-                  <div className="col-span-3 md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="relative w-full aspect-square">
-                      <div className="absolute inset-0 bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-200">
-                        92%
-                      </div>
-                      <div className="absolute inset-0 bg-gray-800 rounded-full flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] bg-gray-950 rounded-full flex items-center justify-center">
-                          <HexagonIcon className="w-10 h-10 text-gray-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 mt-2">성장</div>
-                  </div>
-                  <div className="col-span-3 md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="relative w-full aspect-square">
-                      <div className="absolute inset-0 bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-200">
-                        88%
-                      </div>
-                      <div className="absolute inset-0 bg-gray-800 rounded-full flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] bg-gray-950 rounded-full flex items-center justify-center">
-                          <HexagonIcon className="w-10 h-10 text-gray-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 mt-2">맵 장악</div>
-                  </div>
+              <div className="px-6 py-2">
+                <div className="flex w-full h-[300px] justify-center items-center gap-4">
+                  <HexagonChart
+                    kda={parseFloat(
+                      (
+                        (lcuData.gameData.kills + lcuData.gameData.assists) /
+                        lcuData.gameData.deaths
+                      ).toFixed(2)
+                    )}
+                    damage={Math.floor(lcuData.gameData.damage)}
+                    gold={Math.floor(lcuData.gameData.gold)}
+                    visionScore={Math.floor(lcuData.gameData.visionScore)}
+                    kill={parseFloat(lcuData.gameData.kills.toFixed(2))}
+                    text={"전투"}
+                  />
                 </div>
               </div>
 
