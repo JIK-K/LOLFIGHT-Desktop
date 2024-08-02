@@ -120,6 +120,18 @@ type ChallengesState = {
   title: number;
 };
 
+type MostChampions = {
+  championsId: number;
+  count: number;
+  victory: number;
+};
+
+type TimedPlayData = {
+  played: number;
+  timePlayedDay: number;
+  timePlayedHour: number;
+};
+
 type State = {
   me: MeState;
   wallet: WalletState;
@@ -129,12 +141,7 @@ type State = {
   flexRank: FlexRankInfo;
   gameData: GameStats;
   mostChampions: MostChampions[];
-};
-
-type MostChampions = {
-  championsId: number;
-  count: number;
-  victory: number;
+  timedPlay: TimedPlayData;
 };
 
 const DEFAULT_STATE: State = {
@@ -184,6 +191,11 @@ const DEFAULT_STATE: State = {
     victory: 0,
   },
   mostChampions: [],
+  timedPlay: {
+    played: 0,
+    timePlayedDay: 0,
+    timePlayedHour: 0,
+  },
 };
 
 const context = React.createContext<State>(DEFAULT_STATE);
@@ -265,6 +277,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
         `/lol-career-stats/v1/summoner-games/${response.puuid}`
       ).then((response: any) => {
         const recentData: GameStats[] = response.slice(-30);
+        let totalPlayTime: number = 0;
         const championsMap: { [key: number]: MostChampions } = {};
         const statsData: GameStats[] = response.map((game: any) => ({
           kills: game.stats?.["CareerStats.js"].kills,
@@ -275,6 +288,7 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           visionScore: game.stats?.["CareerStats.js"].visionScore,
           victory: game.stats?.["CareerStats.js"].victory,
         }));
+        console.log(response);
 
         let totalKills = 0;
         let totalDeaths = 0;
@@ -318,18 +332,28 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
               victory: game.stats?.["CareerStats.js"].victory,
             };
           }
+          totalPlayTime += game.stats?.["CareerStats.js"].timePlayed || 0;
         });
 
         const championsData: MostChampions[] = Object.values(championsMap);
         championsData.sort((a: MostChampions, b: MostChampions) => {
           return b.count - a.count;
         });
-        console.log(championsData);
+        const totalHours = Math.floor(totalPlayTime / (1000 * 60 * 60));
+        const totalDays = Math.floor(totalHours / 24);
+        const remainingHours = Math.floor(totalHours % 24);
+
+        const timedPlay: TimedPlayData = {
+          played: response.length,
+          timePlayedDay: totalDays,
+          timePlayedHour: remainingHours,
+        };
 
         setState((oldState) => ({
           ...oldState,
           gameData: averageStats,
           mostChampions: championsData,
+          timedPlay: timedPlay,
         }));
       });
     });

@@ -258,7 +258,10 @@ const Home: React.FC = () => {
                     플레이한 시간
                   </h3>
                   <div className="bg-gradient-to-b from-yellow-300 to-amber-700 bg-clip-text text-transparent text-xl font-bold">
-                    3<span className="text-[15px]">시간</span>
+                    {lcuData.timedPlay.timePlayedDay}
+                    <span className="text-[15px]">일</span>
+                    {lcuData.timedPlay.timePlayedHour}
+                    <span className="text-[15px]">시간</span>
                   </div>
                 </div>
                 <div className="flex flex-col space-y-1.5border-y border-gray-700 px-6 py-2">
@@ -266,7 +269,8 @@ const Home: React.FC = () => {
                     플레이한 게임
                   </h3>
                   <div className="bg-gradient-to-b from-yellow-300 to-amber-700 bg-clip-text text-transparent text-xl font-bold">
-                    151<span className="text-[15px]">판</span>
+                    {lcuData.timedPlay.played}
+                    <span className="text-[15px]">판</span>
                   </div>
                 </div>
               </div>
