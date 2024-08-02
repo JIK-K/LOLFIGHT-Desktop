@@ -226,7 +226,6 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
       if (response.data.data.memberGuild !== null) {
         getGuildInfo(response.data.data.memberGuild.guildName).then(
           (response) => {
-            console.log(response);
             setGuild(response.data.data);
           }
         );
@@ -288,7 +287,6 @@ export const LcuContext = ({ children }: { children: ReactNode }) => {
           visionScore: game.stats?.["CareerStats.js"].visionScore,
           victory: game.stats?.["CareerStats.js"].victory,
         }));
-        console.log(response);
 
         let totalKills = 0;
         let totalDeaths = 0;
