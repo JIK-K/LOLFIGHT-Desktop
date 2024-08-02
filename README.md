@@ -8,4 +8,4 @@ League of Legends Guild Scream Match Service Desktop App
 ## 💾 Installation
 
 - [Windows](https://github.com/JIK-K/LOLFIGHT-Desktop/releases/download/v1.2.0/lolfight-desktop-1.2.0.Setup.exe)
-- Linux (Coming soon)
+- [Windows](https://github.com/JIK-K/LOLFIGHT-Desktop/releases/download/v1.2.0/LOLFIGHT-1.2.0-full.nupkg)
