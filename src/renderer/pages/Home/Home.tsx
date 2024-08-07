@@ -12,6 +12,8 @@ import { Blur, SummonerIcon } from "../../components";
 import SummonerRank from "./components/SummonerRank";
 import SummonerStatsBox from "./components/SummonerStatsBox";
 import SocketIOClient, { Socket } from "socket.io-client";
+import ChampionBox from "./components/ChampionBox";
+import HexagonChart from "./components/HexagonChart";
 
 const RANK_CREST_URL =
   "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/";
@@ -28,50 +30,11 @@ const COLORS = new Map<string, string>([
   ["CHALLENGER", "#288fc7"],
 ]);
 
-function HexagonIcon(
-  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-    </svg>
-  );
-}
-
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const lcuData = useLcuData();
   const { member, setMember } = useMemberStore();
   const { socket, setSocket } = useSocketStore();
-  const data = {
-    kill: 0,
-    deaths: 0,
-    assists: 0,
-    damage: 0,
-    gold: 0,
-    visionScore: 0,
-    victory: 0,
-  };
-
-  const getRankText = () => {
-    const rank = lcuData.me.lol.rankedLeagueTier;
-    const division = lcuData.me.lol.rankedLeagueDivision;
-
-    return `${rank.charAt(0) + rank.substring(1).toLowerCase()} ${
-      division === "NA" ? "" : division
-    }`;
-  };
 
   useEffect(() => {
     if (socket) {
@@ -183,7 +146,8 @@ const Home: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-400">
             <div>
-              승률 <span style={{ fontSize: "12px" }}>(최근 30판)</span>
+              {/* 승률 <span style={{ fontSize: "12px" }}>(최근 30판)</span> */}
+              승률
             </div>
             <div className="flex-1 bg-gray-800 rounded-full h-2.5 dark:bg-gray-700">
               <div
@@ -241,158 +205,72 @@ const Home: React.FC = () => {
         </div>
       </div>
       <div className="relative">
-        <Blur />
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-3 md:col-span-2 lg:col-span-1">
             <div className="rounded-lg border text-card-goreground shadow-sm bg-gray-800 border-gray-700 h-full">
               <div className="flex flex-col space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
                 <h3 className="text-lg font-bold text-gray-200">Most</h3>
               </div>
-              {/* 
-            모스트챔피언 
-            */}
+              {/* 모스트챔피언  */}
               <div className="p-6 px-6 py-4">
-                <div className="grid gap-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center text-sm font-bold text-gray-200">
-                        1
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-200">
-                          볼리베어
-                        </div>
-                        <div className="text-sm text-gray-400">Rank: #C</div>
-                      </div>
-                    </div>
-                    <div className="text-2xl font-bold text-gray-200">10</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center text-sm font-bold text-gray-200">
-                        2
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-200">제이스</div>
-                        <div className="text-sm text-gray-400">Rank: #B</div>
-                      </div>
-                    </div>
-                    <div className="text-2xl font-bold text-gray-200">9</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center text-sm font-bold text-gray-200">
-                        3
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-200">스카너</div>
-                        <div className="text-sm text-gray-400">Rank: #A</div>
-                      </div>
-                    </div>
-                    <div className="text-2xl font-bold text-gray-200">8</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center text-sm font-bold text-gray-200">
-                        4
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-200">리븐</div>
-                        <div className="text-sm text-gray-400">Rank: #B</div>
-                      </div>
-                    </div>
-                    <div className="text-2xl font-bold text-gray-200">7</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center text-sm font-bold text-gray-200">
-                        5
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-200">잭스</div>
-                        <div className="text-sm text-gray-400">Rank: #S</div>
-                      </div>
-                    </div>
-                    <div className="text-2xl font-bold text-gray-200">5</div>
-                  </div>
-                  {/*  */}
+                <div className="grid gap-5">
+                  {lcuData.mostChampions.slice(0, 7).map((data, index) => (
+                    <ChampionBox
+                      key={index}
+                      championId={data.championsId}
+                      count={data.count}
+                      victory={data.victory}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
           </div>
+
           <div className="col-span-3 md:col-span-1 lg:col-span-2">
             <div className="rounded-lg border text-card-foreground shadow-sm bg-gray-800 border-gray-700 h-full">
               <div className="flex flex-col space-y-1.5 p-6 border-b border-gray-700 px-6 py-4">
                 <h3 className="text-lg font-bold text-gray-200">
-                  Hexagonal Graph
+                  Player Graph
                 </h3>
               </div>
-              <div className="p-6 px-6 py-4">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="col-span-3 md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="relative w-full aspect-square">
-                      <div className="absolute inset-0 bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-200">
-                        72%
-                      </div>
-                      <div className="absolute inset-0 bg-gray-800 rounded-full flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] bg-gray-950 rounded-full flex items-center justify-center">
-                          <HexagonIcon className="w-10 h-10 text-gray-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 mt-2">전투</div>
+              <div className="px-6 py-2">
+                <div className="flex w-full h-[300px] justify-center items-center gap-4">
+                  <HexagonChart
+                    kda={parseFloat(
+                      (
+                        (lcuData.gameData.kills + lcuData.gameData.assists) /
+                        lcuData.gameData.deaths
+                      ).toFixed(2)
+                    )}
+                    damage={Math.floor(lcuData.gameData.damage)}
+                    gold={Math.floor(lcuData.gameData.gold)}
+                    visionScore={Math.floor(lcuData.gameData.visionScore)}
+                    kill={parseFloat(lcuData.gameData.kills.toFixed(2))}
+                    text={"전투"}
+                  />
+                </div>
+              </div>
+
+              <div className="">
+                <div className="flex flex-col space-y-1.5 border-y border-gray-700 px-6 py-2">
+                  <h3 className="text-lg font-bold text-gray-200">
+                    플레이한 시간
+                  </h3>
+                  <div className="bg-gradient-to-b from-yellow-300 to-amber-700 bg-clip-text text-transparent text-xl font-bold">
+                    {lcuData.timedPlay.timePlayedDay}
+                    <span className="text-[15px]">일</span>
+                    {lcuData.timedPlay.timePlayedHour}
+                    <span className="text-[15px]">시간</span>
                   </div>
-                  <div className="col-span-3 md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="relative w-full aspect-square">
-                      <div className="absolute inset-0 bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-200">
-                        84%
-                      </div>
-                      <div className="absolute inset-0 bg-gray-800 rounded-full flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] bg-gray-950 rounded-full flex items-center justify-center">
-                          <HexagonIcon className="w-10 h-10 text-gray-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 mt-2">전략</div>
-                  </div>
-                  <div className="col-span-3 md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="relative w-full aspect-square">
-                      <div className="absolute inset-0 bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-200">
-                        92%
-                      </div>
-                      <div className="absolute inset-0 bg-gray-800 rounded-full flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] bg-gray-950 rounded-full flex items-center justify-center">
-                          <HexagonIcon className="w-10 h-10 text-gray-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 mt-2">성장</div>
-                  </div>
-                  <div className="col-span-3 md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="relative w-full aspect-square">
-                      <div className="absolute inset-0 bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-200">
-                        88%
-                      </div>
-                      <div className="absolute inset-0 bg-gray-800 rounded-full flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] bg-gray-950 rounded-full flex items-center justify-center">
-                          <HexagonIcon className="w-10 h-10 text-gray-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 mt-2">맵 장악</div>
-                  </div>
-                  <div className="col-span-3 md:col-span-1 flex flex-col items-center justify-center">
-                    <div className="relative w-full aspect-square">
-                      <div className="absolute inset-0 bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-200">
-                        95%
-                      </div>
-                      <div className="absolute inset-0 bg-gray-800 rounded-full flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] bg-gray-950 rounded-full flex items-center justify-center">
-                          <HexagonIcon className="w-10 h-10 text-gray-400" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 mt-2">지원</div>
+                </div>
+                <div className="flex flex-col space-y-1.5border-y border-gray-700 px-6 py-2">
+                  <h3 className="text-lg font-bold text-gray-200">
+                    플레이한 게임
+                  </h3>
+                  <div className="bg-gradient-to-b from-yellow-300 to-amber-700 bg-clip-text text-transparent text-xl font-bold">
+                    {lcuData.timedPlay.played}
+                    <span className="text-[15px]">판</span>
                   </div>
                 </div>
               </div>
@@ -403,5 +281,5 @@ const Home: React.FC = () => {
     </div>
   );
 };
-
+// KDA, 킬관여율, 기여한피해량,데스당피해량, 팀원보조점수
 export default Home;

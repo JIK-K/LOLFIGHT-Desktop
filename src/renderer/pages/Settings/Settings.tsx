@@ -19,7 +19,7 @@ const Settings: React.FC = () => {
     <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 md:py-12">
       <div className="flex gap-4">
         {/* 네비게이션 */}
-        <div className="setting-nav w-[200px] h-[220px] left-[80px] top-[81px] bg-gray-900 rounded-lg border border-gray-700">
+        <div className="setting-nav w-[200px] h-fit left-[80px] top-[81px] bg-gray-900 rounded-lg border border-gray-700">
           <div className="flex flex-col p-4 gap-2">
             <div className="text-xl pb-2 font-bold border-b border-gray-700">
               설정

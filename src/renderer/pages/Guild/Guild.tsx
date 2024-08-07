@@ -35,7 +35,7 @@ const Guild: React.FC = () => {
   const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
   const [guildRooms, setGuildRooms] = useState<WaitingRoomDTO[]>([]);
-  const messageAreaRef = useRef(null);
+  const messageAreaRef = useRef<HTMLDivElement>(null);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteMembers, setInviteMembers] = useState<GuildInviteDTO[]>([]);
   const [waitingRoomCount, setWaitingRoomCount] = useState<number>();
@@ -267,11 +267,6 @@ const Guild: React.FC = () => {
           {/* 길드 채팅방 */}
           <div className="guild-top grid md:grid-cols-[200px_1fr] h-[400px]">
             <div className="bg-gray-800 border border-gray-700 rounded-l-lg flex-1 overflow-y-auto">
-              {/* <div className="flex items-center justify-between mb-4 border-b border-gray-700">
-                <h2 className="text-lg font-bold text-gray-200 p-6">
-                  길드원
-                </h2>
-              </div> */}
               <div className="flex flex-col p-3 overflow-y-auto gap-3 text-normal">
                 {guildMembers.map((member) => (
                   <GuildMemberBox
@@ -283,25 +278,38 @@ const Guild: React.FC = () => {
               </div>
             </div>
             <div className="bg-gray-800 border border-gray-700 rounded-r-lg flex-1">
-              <div className="flex items-center justify-between mb-4 border-b border-gray-700">
+              <div className="flex items-center justify-between mb-2 border-b border-gray-700">
                 <h2 className="text-gray-200 p-2">길드 채팅방</h2>
               </div>
 
-              <div className="h-[300px] overflow-y-auto">
-                <div className="" ref={messageAreaRef}>
-                  {receivedMessages.map((receivedMessage, index) => (
-                    <div className="ml-2 font-light" key={index}>
-                      {receivedMessage}
+              <div className="h-[300px] overflow-auto" ref={messageAreaRef}>
+                {receivedMessages.map((message, index) => {
+                  const startIndex = message.indexOf("[");
+                  const endIndex = message.indexOf("]", startIndex);
+                  const sender = message.substring(startIndex + 1, endIndex);
+                  const isOwnMessage = sender === member.memberName;
+
+                  return (
+                    <div
+                      key={index}
+                      className={`flex mb-2 px-2 ${
+                        isOwnMessage ? "justify-end" : "justify-start"
+                      }`}
+                    >
+                      <div
+                        className={`max-w-[350px] p-2 rounded-lg ${
+                          isOwnMessage
+                            ? "bg-blue-400 text-white p-1"
+                            : "bg-gray-700 text-gray-300 p-1"
+                        }`}
+                      >
+                        {message}
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
               <div className="w-full mt-4">
-                {/* <img
-                    src={`${process.env.SERVER_URL}/public/emoticon.png`}
-                    alt="emoticon"
-                    color="white"
-                  /> */}
                 <input
                   className="rounded-br-lg bg-gray-900 p-2 w-full"
                   type="text"
@@ -313,17 +321,6 @@ const Guild: React.FC = () => {
                   onCompositionUpdate={handleComposition}
                   onCompositionEnd={handleComposition}
                 />
-                {/* <button
-                  type="button"
-                  className="send-button"
-                  onClick={sendMessage}
-                >
-                  <img
-                      src={`${process.env.SERVER_URL}/public/send.png`}
-                      alt="emoticon"
-                      color="white"
-                    />
-                </button> */}
               </div>
             </div>
           </div>

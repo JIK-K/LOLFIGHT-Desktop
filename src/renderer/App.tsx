@@ -14,12 +14,11 @@ import {
   Guild,
   Battle,
   FightRoom,
+  Help,
 } from "./pages";
 import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/login/Login";
 import "./tailwind.css";
-import ReactDOM from "react-dom";
-import ErrorBoundary from "../common/constant/ErrorBoundary";
 
 const App: React.FC = () => {
   return (
@@ -42,6 +41,7 @@ const App: React.FC = () => {
             {/* <Route path="/rank" element={<Rank />} /> */}
             <Route path="/settings" element={<Settings />} />
             <Route path="/fightroom" element={<FightRoom />} />
+            <Route path="/help" element={<Help />} />
           </Routes>
           <Toaster
             position="top-right"
