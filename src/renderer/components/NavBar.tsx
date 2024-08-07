@@ -131,6 +131,7 @@ const NavBar: React.FC = () => {
         {/* <NavItem title="Challenges" href="/challenges" /> */}
         {/* <NavItem title="Chat Rank" href="/rank" /> */}
         <NavItem title="설정" href="/settings" />
+        <NavItem title="도움말" href="/help" />
       </div>
       <div className="profile flex items-center gap-2">
         <SummonerIcon

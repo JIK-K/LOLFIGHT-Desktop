@@ -70,8 +70,6 @@ const FightRoom = () => {
   };
 
   useEffect(() => {
-    // console.log(data);
-    // console.log("guild : " + guild);
     if (data !== null || undefined) {
       setWaitingRoomData(data);
     }
@@ -297,9 +295,8 @@ const FightRoom = () => {
           }, 5000);
         })
         .catch((error) => {
-          // console.log(error);
+          console.log(error);
         });
-      // request("GET", "/lol-end-of-game/v1/eog-stats-block");
     }
   };
 
@@ -345,6 +342,7 @@ const FightRoom = () => {
 
   const searchBattleGuild = () => {
     if (isSearching) {
+      console.log(fightingRoom);
       toast.success("매칭 취소");
       socket.emit("searchCancel", { roomName: fightingRoom.fightRoomName });
       setIsSearching(!isSearching);
@@ -360,14 +358,14 @@ const FightRoom = () => {
         }
       } else {
         // @todo 주석해제
-        // if (waitingRoomData.members.length === 5) {
-        //   socket.emit("searchFight", {
-        //     roomName: waitingRoomData.roomName,
-        //   });
-        setIsSearching(!isSearching);
-        // } else {
-        //   toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
-        // }
+        if (waitingRoomData.members.length === 5) {
+          socket.emit("searchFight", {
+            roomName: waitingRoomData.roomName,
+          });
+          setIsSearching(!isSearching);
+        } else {
+          toast.error("매칭을 위해서는 최소 5명이 필요합니다.");
+        }
       }
     }
   };
